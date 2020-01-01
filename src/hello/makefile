@@ -94,7 +94,6 @@ checkit:
 	@echo "DEPDIR is $(DEPDIR)"
 	@echo "SRCS is $(SRCS)"
 	@echo "OBJS is $(OBJS)"
-	@echo "INCLUDES is $(INCLUDES)"
 	@echo "DEPS is $(DEPS)"
 
 # make the dependencies files PRECIOUS so they won't be deleted
