@@ -44,8 +44,12 @@ COMPILE.c = $(CC) -I$(INC_DIR) $(DEPFLAGS) $(CFLAGS) -c -o $@
 # use this command to save the dependencies files.
 SAVE.d = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d
 
-# default linking rule to build the program binary identified in
-# $(BINDIR)/$(BINBUILT) and composed of the objects in $(OBJS).
+# this is the default recipe to build a program binary. it should only
+# be invoked for a component that results in a finished binary (i.e.,
+# a program). do *not* use this rule if the intent of the component is 
+# just a set of object files that other components pick-and-chose from.
+# also, don't use this recipe to construct a library used for shared
+# or static linking.
 ${BIN_DIR}/${BINBUILT}: ${OBJS}
 	@echo ""
 	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
