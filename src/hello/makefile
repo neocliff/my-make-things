@@ -34,7 +34,7 @@ include ${I_AM_AT}/component.mk
 # as the directory for obj files, the INCDIR is a list of
 # directories that is scanned to locate header files. that
 # means we could have multiple paths.
-INC_DIR ?= include
+INC_DIR ?= ${I_AM_AT}/include
 
 # define the standard paths for everything else. these can be
 # redefined in the component.mk files using something like the
