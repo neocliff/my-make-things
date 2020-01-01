@@ -64,7 +64,7 @@ include ${BUILD_LIBRARY}/compiler_rules.mk
 # recipe to "${BIN_DIR}/${BINBUILT}". to build object files,
 # set the dependencies "${OBJS}". to build a library, set
 # the dependencies to "${TBD}".
-all: | $(BIN_DIR)/$(BINBUILT)
+#all: | $(BIN_DIR)/$(BINBUILT)
 
 # this is the target when we want to roll everything back to
 # the prebuild state (i.e., we just checked the code out of
