@@ -1,5 +1,5 @@
 # before anything define the shell
-SHELL = /bin/shell
+SHELL = /bin/sh
 
 # figure out where i'm located
 I_AM_AT = $(shell pwd)
