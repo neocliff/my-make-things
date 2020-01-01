@@ -1,4 +1,4 @@
-build_library - things like make files or configuration files that
+build_library is for things like make files or configuration files that
 are shared by the entire project. if a component somewhere in the 
 project requires a tailored version of one of these files and it 
 can't be tailored using the standard mechanisms, it should then it
