@@ -1,6 +1,9 @@
 # before anything define the shell
 SHELL = /bin/sh
 
+# figure out where the root of this repo is located
+ROOT_DIR ?= $(shell git rev-parse --show-toplevel)
+
 # figure out where i'm located
 I_AM_AT = $(shell pwd)
 
@@ -10,9 +13,16 @@ I_AM_AT = $(shell pwd)
 BUILD_TYPE ?= debug
 ARCH_TYPE  ?= x86_64
 
+# figure out where the build_system directories are located.
+# we need these to locate things like compiler_rules.mk and
+# defaults.mk.
+BUILD_SYSTEM = ${ROOT_DIR}/build_system
+BUILD_LIBRARY = ${BUILD_SYSTEM}/build_library
+BUILD_UTILITIES = ${BUILD_SYSTEM}/build_utilities
+
 # this file defines what we are building. in particular, we
 # need the list of source modules that make up the component.
-include component.mk
+include ${I_AM_AT}/component.mk
 
 .PHONY: all checkit clean
 .default: all
@@ -59,7 +69,7 @@ $(shell mkdir -p $(dir $(DEPS)) > /dev/null)
 
 # pull in the definition of the compiler rules, a generic set
 # of recipes that tell make how to transform x.y -> x.z
-include compiler_rules.mk
+include ${BUILD_LIBRARY}/compiler_rules.mk
 
 # this is the target that does it all. the ordered list of
 # dependencies (the list of things after the '|') has to be
@@ -84,17 +94,19 @@ cleanall:
 # this is the target that dumps variables so that we can check
 # the build process.
 checkit:
-	@echo "BUILD_TYPE is $(BUILD_TYPE)"
-	@echo "ARCH_TYPE is $(ARCH_TYPE)"
-	@echo "BINBUILT is $(BINBUILT)"
-	@echo "OBJ_ROOT is $(OBJ_ROOT)"
-	@echo "OBJDIR is $(OBJDIR)"
-	@echo "INCDIR is $(INCDIR)"
-	@echo "DEP_ROOT is $(DEP_ROOT)"
-	@echo "DEPDIR is $(DEPDIR)"
-	@echo "SRCS is $(SRCS)"
-	@echo "OBJS is $(OBJS)"
-	@echo "DEPS is $(DEPS)"
+	@echo "ROOT_DIR is ${ROOT_DIR}"
+	@echo "I_AM_AT is ${I_AM_AT}"
+	@echo "BUILD_TYPE is ${BUILD_TYPE}"
+	@echo "ARCH_TYPE is ${ARCH_TYPE}"
+	@echo "BINBUILT is ${BINBUILT}"
+	@echo "OBJ_ROOT is ${OBJ_ROOT}"
+	@echo "OBJDIR is ${OBJDIR}"
+	@echo "INCDIR is ${INCDIR}"
+	@echo "DEP_ROOT is ${DEP_ROOT}"
+	@echo "DEPDIR is ${DEPDIR}"
+	@echo "SRCS is ${SRCS}"
+	@echo "OBJS is ${OBJS}"
+	@echo "DEPS is ${DEPS}"
 
 # make the dependencies files PRECIOUS so they won't be deleted
 # if make aborts
