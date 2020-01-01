@@ -34,26 +34,26 @@ CFLAGS = \
 #		header files. this behavior is set by the '-MD' switch. you might
 #		want this if you are figure out x86_32 vs. x86_64 issues. if this
 #		becomes unweildy, use the '-MMD' switch instead.
-DEPFLAGS = -MT $@ -MD -MP -MF $(DEPDIR)/$*.Td
+DEPFLAGS = -MT $@ -MD -MP -MF $(DEP_DIR)/$*.Td
 
 # we are going to define some compiler rules. i wouldn't normally do it
 # this way but the example i'm using does. if you don't like this, break
 # if for your specific project.
-COMPILE.c = $(CC) -I$(INCDIR) $(DEPFLAGS) $(CFLAGS) -c -o $@
+COMPILE.c = $(CC) -I$(INC_DIR) $(DEPFLAGS) $(CFLAGS) -c -o $@
 
 # use this command to save the dependencies files.
-SAVE.d = mv -f $(DEPDIR)/$*.Td $(DEPDIR)/$*.d
+SAVE.d = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d
 
 # default linking rule to build the program binary identified in
 # $(BINDIR)/$(BINBUILT) and composed of the objects in $(OBJS).
-$(BINDIR)/$(BINBUILT): $(OBJS)
+${BIN_DIR}/${BINBUILT}: ${OBJS}
 	@echo ""
-	@echo "makefile: linking '$(BINDIR)/$(BINBUILT)' from '$(OBJS)'"
-	$(CC) -o $(BUILDIR)/$(BINBUILT) $(OBJS)
+	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
+	$(CC) -o ${BIN_DIR}/${BINBUILT} $(OBJS)
 
 # default compilation rule to turn a '.c' file into a '.o'
-$(OBJDIR)/%.o: %.c
-$(OBJDIR)/%.o: %.c $(DEPDIR)/%.d
+$(OBJ_DIR)/%.o: %.c
+$(OBJ_DIR)/%.o: %.c $(DEP_DIR)/%.d
 	@echo ""
 	@echo "makefile: compiling '$@' from '$<'"
 	$(COMPILE.c) $<

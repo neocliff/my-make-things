@@ -10,8 +10,8 @@
 int main (int, char **, char **);
 
 int main (int argc, char *argv[], char *envp[]) {
-    print("hello, world!\n");
-    print("built for BITSIZE: %d\n", BITSIZE)
+    printf("hello, world!\n");
+    printf("built for BITSIZE: %d\n", BITSIZE);
 
     return(0);
 }
