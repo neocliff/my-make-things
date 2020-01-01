@@ -1,17 +1,12 @@
 # before anything define the shell
 SHELL = /bin/sh
 
-# figure out where the root of this repo is located
+# figure out where the root of this repo is located. we have
+# do this here to be able to find files we are including.
 ROOT_DIR ?= $(shell git rev-parse --show-toplevel)
 
-# figure out where i'm located
+# now figure out where i'm located
 I_AM_AT = $(shell pwd)
-
-# building toward the insane complexity of the main project,
-# supply a default BUILD_TYPE and ARCH_TYPE in case the user
-# doesn't give it to us
-BUILD_TYPE ?= debug
-ARCH_TYPE  ?= x86_64
 
 # figure out where the build_system directories are located.
 # we need these to locate things like compiler_rules.mk and
@@ -80,33 +75,43 @@ cleanall:
 # this is the target that dumps variables so that we can check
 # the build process.
 checkit:
+	@echo "makefile configured variables.."
+	@echo "=============================="
+	@echo "tools..."
+	@echo "=============================="
 	@echo "SYS_BINDIR is ${SYS_BINDIR}"
 	@echo "USR_BINDIR is ${USR_BINDIR}"
-	@echo "ROOT_DIR is ${ROOT_DIR}"
-	@echo "I_AM_AT is ${I_AM_AT}"
-	@echo "SHELL is ${SHELL}"
-	@echo "CC is ${CC}"
-	@echo "CXX is ${CXX}"
-	@echo "LD is ${LD}"
-	@echo "TAR is ${TAR}"
-	@echo "AR is ${AR}"
+	@echo "GNU_BINDIR is ${GNU_BINDIR}"
+	@echo "SHELL      is ${SHELL}"
+	@echo "CC         is ${CC}"
+	@echo "CXX        is ${CXX}"
+	@echo "LD         is ${LD}"
+	@echo "TAR        is ${TAR}"
+	@echo "AR         is ${AR}"
 
+	@echo ""
+	@echo "=============================="
+	@echo "component stuff..."
+	@echo "=============================="
+	@echo "ROOT_DIR   is ${ROOT_DIR}"
+	@echo "I_AM_AT    is ${I_AM_AT}"
 	@echo "BUILD_TYPE is ${BUILD_TYPE}"
-	@echo "ARCH_TYPE is ${ARCH_TYPE}"
-	@echo "BIN_ROOT is ${BIN_ROOT}"
-	@echo "BIN_DIR is ${BIN_DIR}"
-	@echo "BINBUILT is ${BINBUILT}"
-	@echo "OBJ_ROOT is ${OBJ_ROOT}"
-	@echo "OBJ_DIR is ${OBJ_DIR}"
-	@echo "INC_DIR is ${INC_DIR}"
-	@echo "DEP_ROOT is ${DEP_ROOT}"
-	@echo "DEP_DIR is ${DEP_DIR}"
-	@echo "SRCS is ${SRCS}"
-	@echo "OBJS is ${OBJS}"
-	@echo "DEPS is ${DEPS}"
+	@echo "ARCH_TYPE  is ${ARCH_TYPE}"
+	@echo "BIN_ROOT   is ${BIN_ROOT}"
+	@echo "BIN_DIR    is ${BIN_DIR}"
+	@echo "BINBUILT   is ${BINBUILT}"
+	@echo "OBJ_ROOT   is ${OBJ_ROOT}"
+	@echo "OBJ_DIR    is ${OBJ_DIR}"
+	@echo "INC_DIR    is ${INC_DIR}"
+	@echo "DEP_ROOT   is ${DEP_ROOT}"
+	@echo "DEP_DIR    is ${DEP_DIR}"
+	@echo "SRCS       is ${SRCS}"
+	@echo "OBJS       is ${OBJS}"
+	@echo "DEPS       is ${DEPS}"
 
-# make the dependencies files PRECIOUS so they won't be deleted
-# if make aborts
+# once everything is loaded and configured, load the dependency
+# files if they exist. first, make the dependencies files as
+# PRECIOUS so they won't be deleted if make aborts.
 .PRECIOUS: $(DEP_DIR)/%.d
 $(DEP_DIR)/%.d: ;
 
