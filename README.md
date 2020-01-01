@@ -18,7 +18,7 @@ default recipes to comile, etc
 
 ## make Targets
 
-A standard set of targets are defined in the makefile. use
+A standard set of targets are defined in the makefile. Use
 these target to build, etc.
 * all - this is the default target and it directs make to build
 everything
