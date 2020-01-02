@@ -39,10 +39,10 @@ DEPFLAGS = -MT $@ -MD -MP -MF $(DEP_DIR)/$*.Td
 # we are going to define some compiler rules. i wouldn't normally do it
 # this way but the example i'm using does. if you don't like this, break
 # if for your specific project.
-COMPILE.c = $(CC) -I$(INC_DIR) $(DEPFLAGS) $(CFLAGS) -c -o $@
+COMPILE.c = ${CC} ${INC_DIR} ${DEPFLAGS} ${CFLAGS} -c -o $@
 
 # use this command to save the dependencies files.
-SAVE.d = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d
+SAVE.d = mv -f ${DEP_DIR}/$*.Td ${DEP_DIR}/$*.d
 
 # this is the default recipe to build a program binary. it should only
 # be invoked for a component that results in a finished binary (i.e.,
@@ -56,11 +56,11 @@ SAVE.d = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d
 #	$(CC) -o ${BIN_DIR}/${BINBUILT} ${OBJS}
 
 # default compilation rule to turn a '.c' file into a '.o'
-$(OBJ_DIR)/%.o: %.c
-$(OBJ_DIR)/%.o: %.c ${DEP_DIR}/%.d
+${OBJ_DIR}/%.o: %.c
+${OBJ_DIR}/%.o: %.c ${DEP_DIR}/%.d
 	@echo ""
 	@echo "makefile: compiling '$@' from '$<'"
 	${COMPILE.c} $<
-	@echo "makefile: moving dependency file to $(DEP_DIR)/$*.d"
-	$(SAVE.d)
+	@echo "makefile: moving dependency file to ${DEP_DIR}/$*.d"
+	${SAVE.d}
 

@@ -1,6 +1,7 @@
 # component.mk - component's description file
 
-INC_DIR = ${I_AM_AT}/include
+INC_DIR = \
+	-I${I_AM_AT}/include
 
 SRCS = a.c a2.c
 

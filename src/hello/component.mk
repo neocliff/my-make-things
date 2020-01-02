@@ -5,7 +5,7 @@ BINBUILT = hello
 
 # define the paths to the header files needed for this compoent
 INC_DIR = \
-	${I_AM_AT}/include \
+	-I${I_AM_AT}/include \
 	-I${PROJ_SRC_ROOT}/a_dir/include
 
 SRCS := hello.c
