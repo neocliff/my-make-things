@@ -6,13 +6,17 @@ BINBUILT = hello
 # define the paths to the header files needed for this compoent
 INC_DIR = \
 	-I${I_AM_AT}/include \
-	-I${PROJ_SRC_ROOT}/a_dir/include
+	-I${PROJ_SRC_ROOT}/a_dir/include \
+	-I${PROJ_SRC_ROOT}/b_dir/include \
 
 SRCS := hello.c
 
 OBJS_EXTRAS = \
 	${PROJ_SRC_ROOT}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a.o \
 	${PROJ_SRC_ROOT}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a2.o
+
+LIBS_EXTRAS = \
+	${PROJ_SRC_ROOT}/b_dir/lib/${BUILD_TYPE}/${ARCH_TYPE}/b_lib.ar
 
 # the next two rules shouldn't have to be changed for the component.
 # the first rule produces a list of object files that make up the
@@ -44,5 +48,7 @@ all: | ${BIN_DIR}/${BINBUILT}
 ${BIN_DIR}/${BINBUILT}: ${OBJS} ${OBJS_EXTRAS}
 	@echo ""
 	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
-	${CC}  ${CFLAGS} -Wl,-Map=${BIN_DIR}/linker_map.txt -Wl,-cref -o ${BIN_DIR}/${BINBUILT} ${OBJS} ${OBJS_EXTRAS}
+	@echo "          adding objects files: ${OBJS_EXTRAS}"
+	@echo "          adding archive files: ${LIBS_EXTRAS}"
+	${CC}  ${CFLAGS} -Wl,-Map=${BIN_DIR}/linker_map.txt -Wl,-cref -o ${BIN_DIR}/${BINBUILT} ${OBJS} ${OBJS_EXTRAS} ${LIBS_EXTRAS}
 	${POST_BUILD}

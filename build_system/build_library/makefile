@@ -31,13 +31,15 @@ include ${I_AM_AT}/component.mk
 
 # auto-build the directories we need. there are lots of ways
 # to do this. this is brute-force but it always works. note
-# the creation of the BINDIR directory is different from that
-# for the objects and dependencies. that later two preserve
-# intermediate directories (e.g., a/b/c.o gets us obj/a/b)
-# while the first is just a path to a directory. it can be
-# changed to behave the same as the other two if BIN (or BINS)
-# has a path and not just a file name.
+# the creation of the BINDIR and LIBDIR directories are
+# different from that for the objects and dependencies.
+# that later two preserve intermediate directories 
+# (e.g., a/b/c.o gets us obj/a/b) while the first two are just
+# paths to directories. they can be changed to behave the same
+# as the other two if BIN (or BINS) has a path and not just a
+# file name.
 $(shell mkdir -p $(BIN_DIR) > /dev/null)
+$(shell mkdir -p ${LIB_DIR} > /dev/null)
 $(shell mkdir -p $(dir $(OBJS)) > /dev/null)
 $(shell mkdir -p $(dir $(DEPS)) > /dev/null)
 
@@ -55,17 +57,21 @@ include ${BUILD_LIBRARY}/compiler_rules.mk
 #
 # the only targets defined in this makefile are generic targets.
 
-# first, this is the target when we want to roll everything back
-# to the prebuild state (i.e., we just checked the code out of
-# the repo)
+# first, the target to call when we need to delete the artifacts
+# of the build process
 clean:
 	rm -rf $(DEP_DIR)
 	rm -rf $(OBJ_DIR)
+	rm -rf $(LIB_DIR)
 	rm -rf $(BIN_DIR)
 
+# second, this is the target when we want to roll everything back
+# to the prebuild state (i.e., we just checked the code out of
+# the repo)
 cleanall:
 	rm -rf $(DEP_ROOT)
 	rm -rf $(OBJ_ROOT)
+	rm -rf $(LIB_ROOT)
 	rm -rf $(BIN_ROOT)
 
 # this is the target that dumps variables so that we can check
