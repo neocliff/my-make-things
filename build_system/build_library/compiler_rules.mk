@@ -7,6 +7,14 @@ CFLAGS = \
 		-Wall \
 		-pedantic
 
+# if we are doing a "debug" build, include the debugging information
+# (symbol tables, etc) but remove information for unused symbols. 
+# see the post-build steps in makefile for what to do for "release"
+# builds.
+ifeq (${BUILD_TYPE},debug)
+CFLAGS += -g -feliminate-unused-debug-symbols
+endif
+
 # set additonal CFLAGS values based on architecture type
 ifeq (${ARCH_TYPE},x86_32)
 CFLAGS += -m32 -DPROCESSOR_X86_32

@@ -25,7 +25,19 @@ LD		= ${GNU_BINDIR}/ld
 BUILD_TYPE ?= debug
 ARCH_TYPE  ?= x86_64
 
-# define the path to the project's src directory
+# sample pre-build step
+PRE_BUILD = 
+
+# sample post-build step
+POST_BUILD =
+ifeq (${BUILD_TYPE},release)
+ifneq (${BIN_BUILT},)
+POST_BUILD = strip ${BIN_DIR}/${BIN_BUILT}
+endif
+endif
+
+# define the path to the project's src directory. this is needed if
+# we need files that are not subordinate to ${I_AM_AT}.
 PROJ_SRC_ROOT ?= ${ROOT_DIR}/src
 
 # define the default path for header files. unlike this such
