@@ -93,6 +93,7 @@ checkit:
 	@echo "I_AM_AT    is ${I_AM_AT}"
 	@echo "BUILD_TYPE is ${BUILD_TYPE}"
 	@echo "ARCH_TYPE  is ${ARCH_TYPE}"
+	@echo "CFLAGS     is ${CFLAGS}"
 	@echo "BIN_ROOT   is ${BIN_ROOT}"
 	@echo "BIN_DIR    is ${BIN_DIR}"
 	@echo "BINBUILT   is ${BINBUILT}"
