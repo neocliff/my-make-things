@@ -25,17 +25,6 @@ include ${I_AM_AT}/component.mk
 .PHONY: all checkit clean
 .default: all
 
-# this rule produces a set of object files that make up the
-# binary defined in $(BINBUILT). this list of object files is
-# built in two parts:
-#	1. for each file in $(SRCS), change the .c to a .o suffix
-#	2. for each object file, prepend '$(BINDIR)/' in front
-#		of the file name
-OBJS = $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
-
-# in a similar fashion, make the include/header dependencies
-DEPS = $(addprefix $(DEP_DIR)/,$(SRCS:.c=.d))
-
 # auto-build the directories we need. there are lots of ways
 # to do this. this is brute-force but it always works. note
 # the creation of the BINDIR directory is different from that
@@ -56,18 +45,14 @@ include ${BUILD_LIBRARY}/compiler_rules.mk
 # TARGET definitions                                          #
 # ########################################################### #
 
-# this is the target that does it all. the ordered list of
-# dependencies (the list of things after the '|') has to be
-# built in order.
+# the top-level 'all' target is found in component.mk. it is
+# located there because what is ultimately built for a given
+# component is a program, a set of object files, or a library.
 #
-# note: to build a "program", set the dependencies of this
-# recipe to "${BIN_DIR}/${BINBUILT}". to build object files,
-# set the dependencies "${OBJS}". to build a library, set
-# the dependencies to "${TBD}".
-#all: | $(BIN_DIR)/$(BINBUILT)
+# the only targets defined in this makefile are generic targets.
 
-# this is the target when we want to roll everything back to
-# the prebuild state (i.e., we just checked the code out of
+# first, this is the target when we want to roll everything back
+# to the prebuild state (i.e., we just checked the code out of
 # the repo)
 clean:
 	rm -rf $(DEP_DIR)
@@ -107,6 +92,8 @@ checkit:
 	@echo "BIN_ROOT   is ${BIN_ROOT}"
 	@echo "BIN_DIR    is ${BIN_DIR}"
 	@echo "BINBUILT   is ${BINBUILT}"
+	@echo "LIB_ROOT   is ${LIB_ROOT}"
+	@echo "LIB_DIR    is ${LIB_DIR}"
 	@echo "OBJ_ROOT   is ${OBJ_ROOT}"
 	@echo "OBJ_DIR    is ${OBJ_DIR}"
 	@echo "INC_DIR    is ${INC_DIR}"

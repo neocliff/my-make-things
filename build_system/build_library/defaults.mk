@@ -25,6 +25,9 @@ LD		= ${GNU_BINDIR}/gold
 BUILD_TYPE ?= debug
 ARCH_TYPE  ?= x86_64
 
+# define the path to the project's src directory
+PROJ_SRC_ROOT ?= ${ROOT_DIR}/src
+
 # define the default path for header files. unlike this such
 # as the directory for obj files, the INC_DIR is a list of
 # directories that is scanned to locate header files. that
@@ -39,5 +42,7 @@ DEP_ROOT	?= ${I_AM_AT}/dep
 DEP_DIR		?= $(DEP_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
 OBJ_ROOT	?= ${I_AM_AT}/obj
 OBJ_DIR		?= $(OBJ_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
+LIB_ROOT	?= ${I_AM_AT}/lib
+LIB_DIR		?= ${LIB_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 BIN_ROOT	?= ${I_AM_AT}/bin
 BIN_DIR		?= $(BIN_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}

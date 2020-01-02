@@ -50,17 +50,17 @@ SAVE.d = mv -f $(DEP_DIR)/$*.Td $(DEP_DIR)/$*.d
 # just a set of object files that other components pick-and-chose from.
 # also, don't use this recipe to construct a library used for shared
 # or static linking.
-${BIN_DIR}/${BINBUILT}: ${OBJS}
-	@echo ""
-	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
-	$(CC) -o ${BIN_DIR}/${BINBUILT} $(OBJS)
+#${BIN_DIR}/${BINBUILT}: ${OBJS}
+#	@echo ""
+#	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
+#	$(CC) -o ${BIN_DIR}/${BINBUILT} ${OBJS}
 
 # default compilation rule to turn a '.c' file into a '.o'
 $(OBJ_DIR)/%.o: %.c
-$(OBJ_DIR)/%.o: %.c $(DEP_DIR)/%.d
+$(OBJ_DIR)/%.o: %.c ${DEP_DIR}/%.d
 	@echo ""
 	@echo "makefile: compiling '$@' from '$<'"
-	$(COMPILE.c) $<
-	@echo "makefile: moving dependency file to $(DEPDIR)/$*.d"
+	${COMPILE.c} $<
+	@echo "makefile: moving dependency file to $(DEP_DIR)/$*.d"
 	$(SAVE.d)
 
