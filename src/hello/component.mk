@@ -44,4 +44,4 @@ all: | ${BIN_DIR}/${BINBUILT}
 ${BIN_DIR}/${BINBUILT}: ${OBJS} ${OBJS_EXTRAS}
 	@echo ""
 	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
-	$(CC) -o ${BIN_DIR}/${BINBUILT} ${OBJS} ${OBJS_EXTRAS}
+	$(CC)  ${CFLAGS} -o ${BIN_DIR}/${BINBUILT} ${OBJS} ${OBJS_EXTRAS}
