@@ -1,6 +1,10 @@
 # before anything define the shell
 SHELL = /bin/sh
 
+# before we do much of anything, define the known suffixes
+.SUFFIX:
+.SUFFIX: .asm .c .o
+
 # figure out where the root of this repo is located. we have
 # do this here to be able to find files we are including.
 ROOT_DIR ?= $(shell git rev-parse --show-toplevel)
