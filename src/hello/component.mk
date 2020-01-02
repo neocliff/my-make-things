@@ -44,4 +44,4 @@ all: | ${BIN_DIR}/${BINBUILT}
 ${BIN_DIR}/${BINBUILT}: ${OBJS} ${OBJS_EXTRAS}
 	@echo ""
 	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
-	$(CC)  ${CFLAGS} -o ${BIN_DIR}/${BINBUILT} ${OBJS} ${OBJS_EXTRAS}
+	${CC}  ${CFLAGS} -Wl,-Map=${BIN_DIR}/linker_map.txt -Wl,-cref -o ${BIN_DIR}/${BINBUILT} ${OBJS} ${OBJS_EXTRAS}

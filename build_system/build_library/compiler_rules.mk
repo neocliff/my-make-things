@@ -14,6 +14,9 @@ else
 CFLAGS += -DPROCESSOR_X86_64
 endif
 
+# loader flags
+LDFLAGS = -L/lib/ -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -Map=${BIN_DIR}/linker_map.txt -cref /usr/lib/x86_64-linux-gnu/crti.o -lc
+
 # GNU MAKE'S AUTOMATIC VARIABLES
 #
 # a word is in order about GNU make's plethora of target and dependency

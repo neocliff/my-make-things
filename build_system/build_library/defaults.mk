@@ -19,7 +19,7 @@ AR		= ${GNU_BINDIR}/ar
 # use the new linker/loader called 'gold'. change it to 'ld' if
 # 'gold' is causing problems. what i found on the web says it's a
 # work-in-progress.
-LD		= ${GNU_BINDIR}/gold
+LD		= ${GNU_BINDIR}/ld
 
 # set the default build type and architecture
 BUILD_TYPE ?= debug
