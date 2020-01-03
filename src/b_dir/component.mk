@@ -2,7 +2,6 @@
 
 # this component builds an archive (library)
 LIBBUILT = b_lib.ar
-#LIBTOC = b_lib.toc.txt
 
 # define directory paths to header files we need
 INC_DIR = \
