@@ -85,5 +85,5 @@ are compiled to object files (.o's). The .o files are then added
 to an archive (or library). That .ar file is then linked into
 hello.
 
-As I said, this source is simple though crontrived and is intended
-to prove capability.
+As I said, this source is simple though contrived and is intended
+to prove capability of the make build system.
