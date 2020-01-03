@@ -38,10 +38,10 @@ include ${I_AM_AT}/component.mk
 # paths to directories. they can be changed to behave the same
 # as the other two if BIN (or BINS) has a path and not just a
 # file name.
-$(shell mkdir -p $(BIN_DIR) > /dev/null)
+$(shell mkdir -p ${BIN_DIR} > /dev/null)
 $(shell mkdir -p ${LIB_DIR} > /dev/null)
-$(shell mkdir -p $(dir $(OBJS)) > /dev/null)
-$(shell mkdir -p $(dir $(DEPS)) > /dev/null)
+$(shell mkdir -p ${dir $(OBJS}} > /dev/null)
+$(shell mkdir -p ${dir $(DEPS}} > /dev/null)
 
 # pull in the definition of the compiler rules, a generic set
 # of recipes that tell make how to transform x.y -> x.z
@@ -60,19 +60,20 @@ include ${BUILD_LIBRARY}/compiler_rules.mk
 # first, the target to call when we need to delete the artifacts
 # of the build process
 clean:
-	rm -rf $(DEP_DIR)
-	rm -rf $(OBJ_DIR)
-	rm -rf $(LIB_DIR)
-	rm -rf $(BIN_DIR)
+	rm -rf ${DEP_DIR}
+	rm -rf ${OBJ_DIR}
+	rm -rf ${LIB_DIR}
+	rm -rf ${BIN_DIR}
 
 # second, this is the target when we want to roll everything back
 # to the prebuild state (i.e., we just checked the code out of
 # the repo)
 cleanall:
-	rm -rf $(DEP_ROOT)
-	rm -rf $(OBJ_ROOT)
-	rm -rf $(LIB_ROOT)
-	rm -rf $(BIN_ROOT)
+	rm -rf ${DEP_ROOT}
+	rm -rf ${OBJ_ROOT}
+	rm -rf ${LIB_ROOT}
+	rm -rf ${BIN_ROOT}
+	rm -rf ${DOXY_OUTPUT_DIR}
 
 # this is the target that dumps variables so that we can check
 # the build process.
@@ -95,24 +96,37 @@ checkit:
 	@echo "=============================="
 	@echo "component stuff..."
 	@echo "=============================="
-	@echo "ROOT_DIR   is ${ROOT_DIR}"
-	@echo "I_AM_AT    is ${I_AM_AT}"
-	@echo "BUILD_TYPE is ${BUILD_TYPE}"
-	@echo "ARCH_TYPE  is ${ARCH_TYPE}"
-	@echo "CFLAGS     is ${CFLAGS}"
-	@echo "BIN_ROOT   is ${BIN_ROOT}"
-	@echo "BIN_DIR    is ${BIN_DIR}"
-	@echo "BINBUILT   is ${BINBUILT}"
-	@echo "LIB_ROOT   is ${LIB_ROOT}"
-	@echo "LIB_DIR    is ${LIB_DIR}"
-	@echo "OBJ_ROOT   is ${OBJ_ROOT}"
-	@echo "OBJ_DIR    is ${OBJ_DIR}"
-	@echo "INC_DIR    is ${INC_DIR}"
-	@echo "DEP_ROOT   is ${DEP_ROOT}"
-	@echo "DEP_DIR    is ${DEP_DIR}"
-	@echo "SRCS       is ${SRCS}"
-	@echo "OBJS       is ${OBJS}"
-	@echo "DEPS       is ${DEPS}"
+	@echo "ROOT_DIR        is ${ROOT_DIR}"
+	@echo "I_AM_AT         is ${I_AM_AT}"
+	@echo "BUILD_TYPE      is ${BUILD_TYPE}"
+	@echo "ARCH_TYPE       is ${ARCH_TYPE}"
+	@echo "CFLAGS          is ${CFLAGS}"
+	@echo "DOXY_OUTPUT_DIR is ${DOXY_OUTPUT_DIR}"
+	@echo "BIN_ROOT        is ${BIN_ROOT}"
+	@echo "BIN_DIR         is ${BIN_DIR}"
+	@echo "BINBUILT        is ${BINBUILT}"
+	@echo "LIB_ROOT        is ${LIB_ROOT}"
+	@echo "LIB_DIR         is ${LIB_DIR}"
+	@echo "OBJ_ROOT        is ${OBJ_ROOT}"
+	@echo "OBJ_DIR         is ${OBJ_DIR}"
+	@echo "INC_DIR         is ${INC_DIR}"
+	@echo "DEP_ROOT        is ${DEP_ROOT}"
+	@echo "DEP_DIR         is ${DEP_DIR}"
+	@echo "SRCS            is ${SRCS}"
+	@echo "OBJS            is ${OBJS}"
+	@echo "DEPS            is ${DEPS}"
+
+# next, a target to generate documentation using Doxygen
+docs:
+	@echo ""
+	@echo "makefile: generating Doxygen documentation"
+	@echo "deleting docs directory at: ${DOXY_OUTPUT_DIR}"
+	$(shell rm -rf ${DOXY_OUTPUT_DIR})
+	@echo "creating docs directory at: ${DOXY_OUTPUT_DIR}"
+	$(shell mkdir -p ${DOXY_OUTPUT_DIR})
+	@echo "lastly, generating documentation"
+	$(shell DOXY_OUTPUT_DIR=${DOXY_OUTPUT_DIR} ${DOXYGEN} doxygen.cfg)
+	@echo "makefile: done generating Doxygen documentation"
 
 # once everything is loaded and configured, load the dependency
 # files if they exist. first, make the dependencies files as

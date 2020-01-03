@@ -21,6 +21,9 @@ AR		= ${GNU_BINDIR}/ar
 # work-in-progress.
 LD		= ${GNU_BINDIR}/gold
 
+# tool used to run Doxygen for generating documentation from source
+DOXYGEN = ${USR_BINDIR}/doxygen
+
 # set the default build type and architecture
 BUILD_TYPE ?= debug
 ARCH_TYPE  ?= x86_64
@@ -58,3 +61,6 @@ LIB_ROOT	?= ${I_AM_AT}/lib
 LIB_DIR		?= ${LIB_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 BIN_ROOT	?= ${I_AM_AT}/bin
 BIN_DIR		?= $(BIN_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
+
+# create a few defaults for Doxygen document generation
+DOXY_OUTPUT_DIR ?= ${I_AM_AT}/docs
