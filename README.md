@@ -39,7 +39,14 @@ Now files for individual components that we are building for...
 
 * hello/component.mk - tailors the program to be built; gets
 functionality from a_dir object files
-* a_dir/component.mk - tailors the make system for this component
+* a_dir/component.mk - tailors the make system for this component;
+this component has two functions (as object files) used by hello.c's
+main()
+* b_dir/component.mk - tailors the make system for this component;
+this component has two functions used by hello.c's main(); the
+difference is these functions are in object files stored in an
+archive (a library made using the ar command); a table of contents
+is created from the archive file
 
 ## make Targets
 
