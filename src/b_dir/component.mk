@@ -2,7 +2,7 @@
 
 # this component builds an archive (library)
 LIBBUILT = b_lib.ar
-LIBTOC = b_lib.toc.txt
+#LIBTOC = b_lib.toc.txt
 
 # define directory paths to header files we need
 INC_DIR = \
@@ -21,6 +21,8 @@ OBJS = $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
 
 # in a similar fashion, make the include/header dependencies
 DEPS = $(addprefix $(DEP_DIR)/,$(SRCS:.c=.d))
+
+LIBTOC = $(addprefix $(LIB_DIR)/,$(LIBBUILT:.ar=.toc.txt))
 
 # define the 'all' target in this file rather than in 'makefile'.
 # the goal is to make component.mk personalize the make system
@@ -42,6 +44,8 @@ ${LIB_DIR}/${LIBBUILT}: | ${OBJS}
 	@$(shell rm -rf ${LIB_DIR}/${LIBBUILT})
 	@echo "createing the archive file"
 	@${AR} -qsv ${LIB_DIR}/${LIBBUILT} ${OBJS}
-	@echo "building table of contents"
-	@nm -s ${LIB_DIR}/${LIBBUILT} > ${LIB_DIR}/${LIBTOC}
+	@echo "building table of contents in: ${LIBTOC}"
+	@echo "Archive TOC for: ${LIB_DIR}/${LIBBUILT}" > ${LIBTOC}
+	@echo "This file is   : ${LIBTOC}" >> ${LIBTOC}
+	@nm --print-armap ${LIB_DIR}/${LIBBUILT} >> ${LIBTOC}
 	@echo "makefile: done building archive: ${LIB_DIR}/${LIBBUILT}"
