@@ -1,5 +1,12 @@
+# .gitignore - this Git should ignore when deciding what changed
+
+# directories
 bin
 lib
 obj
 dep
+
+# files
+*.toc.txt
+*.ar
 
