@@ -17,7 +17,7 @@
 
 int b2();
 
-**
+/**
  * b2() - returns a constant
  * 
  * @desc This is an "internal" function called from @c b1(). It just
