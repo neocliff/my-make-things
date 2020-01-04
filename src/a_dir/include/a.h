@@ -1,5 +1,12 @@
 /**
- * a.h is the include file needed by a.c and hello.c
+ * @file a.h
+ * @brief declares a prototype
+ * @author Cliff Williams
+ * 
+ * @desc This header file is used by a.c and
+ * externally by hello.c.
+ * 
+ * @bug no known bugs 
  */
 
 #ifndef _a_h
