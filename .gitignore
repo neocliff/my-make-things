@@ -1,6 +1,7 @@
 # .gitignore - this Git should ignore when deciding what changed
 
 # directories
+.vscode
 bin
 lib
 obj
