@@ -1,8 +1,13 @@
 /**
- * a.c contains the routine a() which is called by main().
+ * @file a.c
+ * @brief object file linked directly to hello program
+ * @author Cliff Williams
  * 
- * this proves we can include object files from other
- * directories in the project.
+ * @desc This is an object file that is directly linked into the
+ * hello program in src/hello. It proves we can link object files
+ * from sibling directories.
+ *
+ * @bug no known bugs 
  */
 
 #include <stdlib.h>
@@ -13,6 +18,16 @@
 
 int a();
 
+/**
+ * a()  - function to return a constant
+ * 
+ * @desc This is a "public" function called from @c main().
+ * 
+ * @return 0 - meaning success
+ * 
+ * @note This could have had a @c void return type. I was just feeling
+ * lazy.
+ */
 int a() {
     printf("you called a()\n");
     printf("calling a2()\n");
