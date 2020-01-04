@@ -5,6 +5,7 @@ bin
 lib
 obj
 dep
+doxy-docs
 
 # files
 *.toc.txt

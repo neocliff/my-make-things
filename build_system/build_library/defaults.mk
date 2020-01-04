@@ -64,4 +64,5 @@ BIN_DIR		?= $(BIN_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
 
 # create a few defaults for Doxygen document generation
 DOXY_CONFIG     ?= ${I_AM_AT}/Doxyfile
-DOXY_OUTPUT_DIR ?= ${I_AM_AT}/doxy-docs/${BUILD_TYPE}/${ARCH_TYPE}
+DOXY_ROOT       ?= ${I_AM_AT}/doxy-docs
+DOXY_OUTPUT_DIR ?= ${DOXY_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}

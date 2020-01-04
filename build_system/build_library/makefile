@@ -64,6 +64,7 @@ clean:
 	rm -rf ${OBJ_DIR}
 	rm -rf ${LIB_DIR}
 	rm -rf ${BIN_DIR}
+	rm -rf ${DOXY_OUTPUT_DIR}
 
 # second, this is the target when we want to roll everything back
 # to the prebuild state (i.e., we just checked the code out of
@@ -73,7 +74,7 @@ cleanall:
 	rm -rf ${OBJ_ROOT}
 	rm -rf ${LIB_ROOT}
 	rm -rf ${BIN_ROOT}
-	rm -rf ${DOXY_OUTPUT_DIR}
+	rm -rf ${DOXY_ROOT}
 
 # this is the target that dumps variables so that we can check
 # the build process.
@@ -101,7 +102,9 @@ checkit:
 	@echo "BUILD_TYPE      is ${BUILD_TYPE}"
 	@echo "ARCH_TYPE       is ${ARCH_TYPE}"
 	@echo "CFLAGS          is ${CFLAGS}"
+	@echo "DOXY_ROOT       is ${DOXY_ROOT}"
 	@echo "DOXY_OUTPUT_DIR is ${DOXY_OUTPUT_DIR}"
+	@echo "DOXY_CONFIG     is ${DOXY_CONFIG}"
 	@echo "BIN_ROOT        is ${BIN_ROOT}"
 	@echo "BIN_DIR         is ${BIN_DIR}"
 	@echo "BINBUILT        is ${BINBUILT}"
