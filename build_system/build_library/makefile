@@ -40,8 +40,8 @@ include ${I_AM_AT}/component.mk
 # file name.
 $(shell mkdir -p ${BIN_DIR} > /dev/null)
 $(shell mkdir -p ${LIB_DIR} > /dev/null)
-$(shell mkdir -p ${dir $(OBJS}} > /dev/null)
-$(shell mkdir -p ${dir $(DEPS}} > /dev/null)
+$(shell mkdir -p ${dir ${OBJS}} > /dev/null)
+$(shell mkdir -p ${dir ${DEPS}} > /dev/null)
 
 # pull in the definition of the compiler rules, a generic set
 # of recipes that tell make how to transform x.y -> x.z
@@ -116,7 +116,11 @@ checkit:
 	@echo "OBJS            is ${OBJS}"
 	@echo "DEPS            is ${DEPS}"
 
-# next, a target to generate documentation using Doxygen
+# next, a target to generate documentation using Doxygen. note the
+# doxygen command has a '-' in front of it. this allows the command
+# to return an error and make will ignore it. for some reason, my
+# installation of things is causing an error and i haven't figured
+# it out yet. the documentation does get generated though...
 docs:
 	@echo ""
 	@echo "makefile: generating Doxygen documentation"
@@ -125,7 +129,7 @@ docs:
 	@echo "creating docs directory at: ${DOXY_OUTPUT_DIR}"
 	$(shell mkdir -p ${DOXY_OUTPUT_DIR})
 	@echo "lastly, generating documentation"
-	$(shell DOXY_OUTPUT_DIR=${DOXY_OUTPUT_DIR} ${DOXYGEN} doxygen.cfg)
+	-$(shell DOXY_OUTPUT_DIR=${DOXY_OUTPUT_DIR} ${DOXYGEN} ${DOXY_CONFIG})
 	@echo "makefile: done generating Doxygen documentation"
 
 # once everything is loaded and configured, load the dependency
