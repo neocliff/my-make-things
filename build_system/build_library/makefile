@@ -55,6 +55,11 @@ include ${BUILD_LIBRARY}/compiler_rules.mk
 # located there because what is ultimately built for a given
 # component is a program, a set of object files, or a library.
 #
+# additionally, the top-level 'install' target is found in
+# component.mk as well. every component is responsible for 
+# "delivering" its content to the distribution directories
+# (if appropriate).
+#
 # the only targets defined in this makefile are generic targets.
 
 # first, the target to call when we need to delete the artifacts
