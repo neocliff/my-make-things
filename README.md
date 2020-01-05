@@ -86,6 +86,9 @@ that is controlled by an externally specified make file, component.mk.
 main() calls functions defined in a_dir and b_dir source code files.
 Those files are linked to hello and the include directories are
 added to the INC_DIR variable in component.mk.
+* src/hello/c_dir - This subdirectory of src/hello demonstrates that
+a component can have directories within it. This is a useful way of
+partitioning functionality.
 * src/a_dir - This directory has two source files, a.c and a2.c,
 each with a corresponding header file. The function in a.c (called
 a()) calls a function a2() in a2.c. These source files are compiled
@@ -98,4 +101,5 @@ to an archive (or library). That .ar file is then linked into
 hello.
 
 As I said, this source is simple though contrived and is intended
-to prove capability of the make build system.
+to prove capability of the make build system. Hopefully, you find it
+a useful starting point for your own projects.
