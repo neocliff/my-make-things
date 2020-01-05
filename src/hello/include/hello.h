@@ -3,7 +3,7 @@
  * @brief header file for hello program
  * @author Cliff Williams
  * 
- * @desc This is a header file used with the hello program.
+ * This is a header file used with the hello program.
  * This bit of code tests conditional compilation based on defines
  * indirectly set using the @c make command-line, like this...
  * 
@@ -30,6 +30,8 @@
 #define BITSIZE 32
 #elif PROCESSOR_X86_64
 #define BITSIZE 64
+#else
+#define BITSIZE 16
 #endif
 
 #endif /* _hello_h */

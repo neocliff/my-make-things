@@ -3,7 +3,7 @@
  * @brief object file linked directly to hello program
  * @author Cliff Williams
  * 
- * @desc This is a file in a sub-directory to src/hello. The point
+ * This is a file in a sub-directory to src/hello. The point
  * of this file is to prove the build system can handle subdirectories
  * in a component.
  *
@@ -20,7 +20,7 @@ char * c();
 /**
  * c()  - get a pointer to a static string
  * 
- * @desc This is an internal function to the hello component. It is
+ * This is an internal function to the hello component. It is
  * demonstrating a subdirectory to a component.
  * 
  * @return ptr to the character string

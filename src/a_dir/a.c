@@ -3,7 +3,7 @@
  * @brief object file linked directly to hello program
  * @author Cliff Williams
  * 
- * @desc This is an object file that is directly linked into the
+ * This is an object file that is directly linked into the
  * hello program in src/hello. It proves we can link object files
  * from sibling directories.
  *
@@ -21,7 +21,7 @@ int a();
 /**
  * a()  - function to return a constant
  * 
- * @desc This is a "public" function called from @c main().
+ * This is a "public" function called from @c main().
  * 
  * @return 0 - meaning success
  * 

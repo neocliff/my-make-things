@@ -3,7 +3,7 @@
  * @brief object file linked directly to hello program
  * @author Cliff Williams
  * 
- * @desc This is another object file that is directly linked into the
+ * This is another object file that is directly linked into the
  * hello program in src/hello. It proves we can link object files
  * from sibling directories.
  * 
@@ -24,7 +24,7 @@ int a2();
 /**
  * a2()  - A function called from a()
  * 
- * @desc This is an interal call from a(). It just returns a constant
+ * This is an interal call from a(). It just returns a constant
  * defined in a2.h.
  * 
  * @return the value of MY_CONSTANT

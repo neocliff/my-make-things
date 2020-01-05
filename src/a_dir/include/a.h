@@ -3,8 +3,7 @@
  * @brief declares a prototype
  * @author Cliff Williams
  * 
- * @desc This header file is used by a.c and
- * externally by hello.c.
+ * This header file is used by a.c and externally by hello.c.
  * 
  * @bug no known bugs 
  */

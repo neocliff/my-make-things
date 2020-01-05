@@ -3,7 +3,7 @@
  * @brief header file for c.c
  * @author Cliff Williams
  * 
- * @desc This header file is used with hello/c_dir/c.c. 
+ * This header file is used with hello/c_dir/c.c. 
  * 
  * @bug no known bugs 
  */

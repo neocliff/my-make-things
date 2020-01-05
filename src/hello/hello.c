@@ -3,7 +3,7 @@
  * @brief typical "hello world!" code enhanced for this project
  * @author Cliff Williams
  * 
- * @desc This is a typical "Hello, world!" program this project.
+ * This is a typical "Hello, world!" program this project.
  * The code is contrived to demonstrate various capabilities of the
  * build system. As such, it doesn't do anything gee-wiz.
  * 
@@ -29,7 +29,7 @@ int main (int argc, char *argv[], char *envp[]);
 /**
  * main() - The main() for the hello program.
  * 
- * @desc This is just like every other program's main() function.
+ * This is just like every other program's main() function.
  * 
  * @param[in] argc the number of CLI arguments
  * @param[in] argv the CLI arguments
