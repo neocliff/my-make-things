@@ -20,6 +20,7 @@
 #include <stdio.h>
 
 #include "hello.h"
+#include "c.h"
 #include "a.h"
 #include "b.h"
 
@@ -57,6 +58,10 @@ int main (int argc, char *argv[], char *envp[]) {
      */
     int b_res = b1();
     printf("called b1(), result is %d\n", b_res);
+
+    printf("calling c()...\n");
+    printf("got: %s\n", c());
+    printf("done with c()\n");
 
     /**
      * all done; return success

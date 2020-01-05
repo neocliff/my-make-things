@@ -6,10 +6,12 @@ BINBUILT = hello
 # define the paths to the header files needed for this compoent
 INC_DIR = \
 	-I${I_AM_AT}/include \
+	-I${I_AM_AT}/c_dir/include \
 	-I${PROJ_SRC_ROOT}/a_dir/include \
 	-I${PROJ_SRC_ROOT}/b_dir/include \
 
-SRCS := hello.c
+SRCS := hello.c \
+		c_dir/c.c
 
 OBJS_EXTRAS = \
 	${PROJ_SRC_ROOT}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a.o \
