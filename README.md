@@ -35,7 +35,7 @@ definitions of tools, etc used in this project
 * build_system/build_library/compiler_rules.mk - define's the
 default recipes to comile, etc
 
-Now files for individual components that we are building for...
+Now files for individual components that we are building...
 
 * hello/component.mk - tailors the program to be built; gets
 functionality from a_dir object files
