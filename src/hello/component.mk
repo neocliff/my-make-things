@@ -53,4 +53,5 @@ ${BIN_DIR}/${BINBUILT}: ${OBJS} ${OBJS_EXTRAS}
 	@echo "          adding objects files: ${OBJS_EXTRAS}"
 	@echo "          adding archive files: ${LIBS_EXTRAS}"
 	${CC}  ${CFLAGS} -Wl,-Map=${BIN_DIR}/linker_map.txt -Wl,-cref -o ${BIN_DIR}/${BINBUILT} ${OBJS} ${OBJS_EXTRAS} ${LIBS_EXTRAS}
-	${POST_BUILD}
+	@echo "makefile: calling post-build step"
+	${POST_BUILD} ${BIN_DIR}/${BINBUILT}

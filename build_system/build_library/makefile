@@ -92,6 +92,8 @@ checkit:
 	@echo "LD         is ${LD}"
 	@echo "TAR        is ${TAR}"
 	@echo "AR         is ${AR}"
+	@echo "PRE_BUILD  is ${PRE_BUILD}"
+	@echo "POST_BUILD is ${POST_BUILD}"
 
 	@echo ""
 	@echo "=============================="

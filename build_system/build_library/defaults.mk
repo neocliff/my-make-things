@@ -15,6 +15,7 @@ CC		= ${GNU_BINDIR}/gcc
 CXX		= ${GNU_BINDIR}/g++
 TAR		= ${SYS_BINDIR}/tar
 AR		= ${GNU_BINDIR}/ar
+STRIP   = ${USR_BINDIR}/strip
 
 # use the new linker/loader called 'gold'. change it to 'ld' if
 # 'gold' is causing problems. what i found on the web says it's a
@@ -31,12 +32,13 @@ ARCH_TYPE  ?= x86_64
 # sample pre-build step
 PRE_BUILD = 
 
-# sample post-build step
+# sample post-build step. note that we are setting this step
+# as a default to be used on all 'release' builds. if this isn't
+# what is needed for a particular component, tailor it in the
+# component.mk file.
 POST_BUILD =
 ifeq (${BUILD_TYPE},release)
-ifneq (${BIN_BUILT},)
-POST_BUILD = strip ${BIN_DIR}/${BIN_BUILT}
-endif
+POST_BUILD = ${BUILD_UTILITIES}/post_build_strip.sh
 endif
 
 # define the path to the project's src directory. this is needed if

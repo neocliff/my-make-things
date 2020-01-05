@@ -25,6 +25,20 @@ endif
 # loader flags
 LDFLAGS = -L/lib/ -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -Map=${BIN_DIR}/linker_map.txt -cref /usr/lib/x86_64-linux-gnu/crti.o -lc
 
+# PRIMER ON GNU MAKE'S LEXICON
+#
+# this is a quick-and-dirty primer on terms used in GNU make.
+#
+# [target]+: [pre-requisite]*
+#	[rule]*
+#
+# recipe - the description of how to make something; think cooking and
+#		you're on the right track
+# target - the thing (or things) to be made; see '$@' below
+# pre-requisite -: zero or more things that must be up-to-date to make
+#		the target
+# rule	- zero or more steps to be executed to make the target
+#
 # GNU MAKE'S AUTOMATIC VARIABLES
 #
 # a word is in order about GNU make's plethora of target and dependency
