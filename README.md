@@ -80,7 +80,7 @@ on that.
 This project is a glorified "Hello, World!". I created enough
 in the way of source code to test the build system. It contains:
 
-* src/hello - This is the directory has hello.c containing main()
+* [src/hello] - This is the directory has hello.c containing main()
 and a single header, include/hello.h. The header has a BITSIZE #define
 that is controlled by an externally specified make file, component.mk.
 main() calls functions defined in a_dir and b_dir source code files.
