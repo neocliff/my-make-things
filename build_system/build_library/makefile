@@ -79,9 +79,10 @@ cleanall:
 	rm -rf ${OBJ_ROOT}
 	rm -rf ${LIB_ROOT}
 	rm -rf ${BIN_ROOT}
-	rm -rf ${DOXY_ROOT}
-	rm -rf ${LIB_ROOT}
-	rm -rf ${DOXY_PUB_ROOT}
+	rm -rf ${DOXY_OUTPUT_DIR}
+	rm -rf ${PROJ_OBJ}
+	rm -rf ${PROJ_LIB}
+	rm -rf ${PROJ_DOXY_DOCS}
 
 # this is the target that dumps variables so that we can check
 # the build process.
@@ -111,7 +112,7 @@ checkit:
 	@echo "PROJ_SRC_SHARED is ${PROJ_SRC_SHARED}"
 	@echo "PROJ_LIB        is ${PROJ_LIB}"
 	@echo "PROJ_LIB_SHARED is ${PROJ_LIB_SHARED}"
-	@echo "DOXY_PUB_ROOT   is ${DOXY_PUB_ROOT}"
+	@echo "PROJ_DOXY_DOCS  is ${PROJ_DOXY_DOCS}"
 	@echo "I_AM_AT         is ${I_AM_AT}"
 	@echo "BUILD_TYPE      is ${BUILD_TYPE}"
 	@echo "ARCH_TYPE       is ${ARCH_TYPE}"

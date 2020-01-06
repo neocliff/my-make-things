@@ -49,10 +49,12 @@ endif
 # that is built into a library and then "installed" into a lib
 # directory.
 PROJ_SRC        ?= ${PROJ_ROOT}/src
-PROJ_SRC_SHARED ?= ${PROJ_SRC}/src/shared
+PROJ_SRC_SHARED ?= ${PROJ_SRC}/shared
+PROJ_OBJ        ?= ${PROJ_ROOT}/obj
+PROJ_OBJ_SHARED ?= ${PROJ_OBJ}/shared
 PROJ_LIB        ?= ${PROJ_ROOT}/lib
 PROJ_LIB_SHARED ?= ${PROJ_LIB}/shared
-DOXY_PUB_ROOT   ?= ${PROJ_ROOT}/doxy-docs
+PROJ_DOXY_DOCS  ?= ${PROJ_ROOT}/doxy-docs
 
 # define the default path for header files. unlike this such
 # as the directory for obj files, the INC_DIR is a list of
