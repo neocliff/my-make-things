@@ -105,8 +105,8 @@ files are used. On a large project with multiple binaries and
 components, it is not out of the question that multiple versions
 of the same library would be used. The best way to deal with this
 is to rationalize the library into a single version however that isn't
-always possible. The file src/hello/component.mk has details for
-secting the library version.
+always possible. The file (src/hello/component.mk)[https://github.com/neocliff/my-make-things/blob/master/src/hello/component.mk]
+has details for secting the library version.
 
 As I said, this source is contrived and is intended to prove
 capability of the make build system. Hopefully, you find it
