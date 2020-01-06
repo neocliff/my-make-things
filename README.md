@@ -58,6 +58,12 @@ of the same component
 
 ## make Targets
 
+Using the build system is straightforward:
+
+`make BUILD_TYPE={release|debug} ARCH_TYPE={x86_32|x86_64}
+-f ../../build_system/build_utilities/makefile
+{all|clean|cleanall|checkit|docs}`
+
 A standard set of targets are defined in the makefile. Use
 these target to build, etc.
 
