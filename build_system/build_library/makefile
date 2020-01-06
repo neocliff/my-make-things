@@ -31,7 +31,7 @@ include ${I_AM_AT}/component.mk
 
 # auto-build the directories we need. there are lots of ways
 # to do this. this is brute-force but it always works. note
-# the creation of the BINDIR and LIBDIR directories are
+# the creation of the BIN_DIR and LIB_DIR directories are
 # different from that for the objects and dependencies.
 # that later two preserve intermediate directories 
 # (e.g., a/b/c.o gets us obj/a/b) while the first two are just
@@ -63,7 +63,7 @@ include ${BUILD_LIBRARY}/compiler_rules.mk
 # the only targets defined in this makefile are generic targets.
 
 # first, the target to call when we need to delete the artifacts
-# of the build process
+# of the build process. this only takes place within the component.
 clean:
 	rm -rf ${DEP_DIR}
 	rm -rf ${OBJ_DIR}
@@ -80,6 +80,7 @@ cleanall:
 	rm -rf ${LIB_ROOT}
 	rm -rf ${BIN_ROOT}
 	rm -rf ${DOXY_OUTPUT_DIR}
+
 	rm -rf ${PROJ_OBJ}
 	rm -rf ${PROJ_LIB}
 	rm -rf ${PROJ_DOXY_DOCS}
