@@ -3,7 +3,7 @@ SHELL = /bin/sh
 
 # before we do much of anything, define the known suffixes
 .SUFFIX:
-.SUFFIX: .asm .c .o
+.SUFFIX: .asm .s .c .cpp .o
 
 # figure out where the root of this repo is located. we have
 # do this here to be able to find files we are including.
@@ -23,7 +23,7 @@ BUILD_UTILITIES = ${BUILD_SYSTEM}/build_utilities
 include ${BUILD_LIBRARY}/defaults.mk
 
 # this file defines what we are building. in particular, we
-# need the list of source modules that make up the component.
+# need the list of source files that make up the component.
 include ${I_AM_AT}/component.mk
 
 .PHONY: all checkit clean
