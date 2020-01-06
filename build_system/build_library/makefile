@@ -1,9 +1,10 @@
 # before anything define the shell
 SHELL = /bin/sh
 
-# before we do much of anything, define the known suffixes
+# before we do much of anything, define the known suffixes. i've
+# added a couple variants that i often see.
 .SUFFIX:
-.SUFFIX: .asm .s .c .cpp .o
+.SUFFIX: .asm .s .c .cpp .cxx .h .o
 
 # figure out where the root of this repo is located. we have
 # do this here to be able to find files we are including.

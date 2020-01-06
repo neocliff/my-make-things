@@ -81,6 +81,8 @@ Doxygen
 
 ## Other Trivia
 
+### Doxygen and Doxyfile
+
 Every subdirectory under src should have its own Doxyfile,
 the configuration file used with Doxygen to generate project
 documentation. This is the only file (along with component.mk)

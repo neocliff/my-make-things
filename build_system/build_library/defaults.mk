@@ -8,19 +8,28 @@ GNU_BINDIR ?= ${USR_BINDIR}
 
 # define all the default tools the project uses. note that we are
 # using '=' rather than '?=' because GNU make defines several of these
-# tools as defaults. the idea is you don't have to define them if you
-# don't want to. we are defining them here to allow the project to
-# use tools that are not in the standard locations.
+# tools implicitly. the idea is you don't have to define them if you
+# don't want to do so. we are defining them here to allow the project
+# to use tools that are not in the standard locations.
 CC		= ${GNU_BINDIR}/gcc
-CXX		= ${GNU_BINDIR}/g++
-TAR		= ${SYS_BINDIR}/tar
-AR		= ${GNU_BINDIR}/ar
-STRIP   = ${USR_BINDIR}/strip
+CXX     = ${GNU_BINDIR}/g++
+AS      = ${GNU_BINDIR}/as
 
 # use the new linker/loader called 'gold'. change it to 'ld' if
 # 'gold' is causing problems. what i found on the web says it's a
 # work-in-progress.
 LD		= ${GNU_BINDIR}/gold
+
+# by default, GNU make defines GPP as '${CC} -E' which just runs the 
+# C/C++ compiler's preprocessor. i prefer explcitly calling the
+# compiler to run the preprocessor rather than use ${CPP} to do it.a
+# i've reset the vaule to prevent confusion.
+GPP     =
+
+# define more useful tools
+TAR		= ${SYS_BINDIR}/tar
+AR		= ${GNU_BINDIR}/ar
+STRIP   = ${USR_BINDIR}/strip
 
 # tool used to run Doxygen for generating documentation from source
 DOXYGEN = ${USR_BINDIR}/doxygen
