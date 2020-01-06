@@ -48,11 +48,11 @@ endif
 # directory. a similar concept can be used for third-party source
 # that is built into a library and then "installed" into a lib
 # directory.
-SRC_ROOT        ?= ${ROOT_DIR}/src
-SRC_SHARED_ROOT ?= ${SRC_ROOT}/src/shared
-LIB_ROOT        ?= ${ROOT_DIR}/lib
-LIB_SHARED_ROOT ?= ${LIB_ROOT}/shared
-DOXY_PUB_ROOT   ?= ${ROOT_DIR}/doxy-docs
+PROJ_SRC        ?= ${PROJ_ROOT}/src
+PROJ_SRC_SHARED ?= ${PROJ_SRC}/src/shared
+PROJ_LIB        ?= ${PROJ_ROOT}/lib
+PROJ_LIB_SHARED ?= ${PROJ_LIB}/shared
+DOXY_PUB_ROOT   ?= ${PROJ_ROOT}/doxy-docs
 
 # define the default path for header files. unlike this such
 # as the directory for obj files, the INC_DIR is a list of

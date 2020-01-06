@@ -7,7 +7,7 @@ SHELL = /bin/sh
 
 # figure out where the root of this repo is located. we have
 # do this here to be able to find files we are including.
-ROOT_DIR ?= $(shell git rev-parse --show-toplevel)
+PROJ_ROOT ?= $(shell git rev-parse --show-toplevel)
 
 # now figure out where i'm located
 I_AM_AT = $(shell pwd)
@@ -15,7 +15,7 @@ I_AM_AT = $(shell pwd)
 # figure out where the build_system directories are located.
 # we need these to locate things like compiler_rules.mk and
 # defaults.mk.
-BUILD_SYSTEM = ${ROOT_DIR}/build_system
+BUILD_SYSTEM = ${PROJ_ROOT}/build_system
 BUILD_LIBRARY = ${BUILD_SYSTEM}/build_library
 BUILD_UTILITIES = ${BUILD_SYSTEM}/build_utilities
 
@@ -106,11 +106,11 @@ checkit:
 	@echo "=============================="
 	@echo "component stuff..."
 	@echo "=============================="
-	@echo "ROOT_DIR        is ${ROOT_DIR}"
-	@echo "SRC_ROOT        is ${SRC_ROOT}"
-	@echo "SRC_SHARED_ROOT is ${SRC_SHARED_ROOT}"
-	@echo "LIB_ROOT        is ${LIB_ROOT}"
-	@echo "LIB_SHARED_ROOT is ${LIB_SHARED_ROOT}"
+	@echo "PROJ_ROOT       is ${PROJ_ROOT}"
+	@echo "PROJ_SRC        is ${PROJ_SRC}"
+	@echo "PROJ_SRC_SHARED is ${PROJ_SRC_SHARED}"
+	@echo "PROJ_LIB        is ${PROJ_LIB}"
+	@echo "PROJ_LIB_SHARED is ${PROJ_LIB_SHARED}"
 	@echo "DOXY_PUB_ROOT   is ${DOXY_PUB_ROOT}"
 	@echo "I_AM_AT         is ${I_AM_AT}"
 	@echo "BUILD_TYPE      is ${BUILD_TYPE}"
