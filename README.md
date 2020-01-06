@@ -80,13 +80,15 @@ on that.
 This project is a glorified "Hello, World!". I created enough
 in the way of source code to test the build system. It contains:
 
-* [src/hello] - This is the directory has hello.c containing main()
+* [src/hello](https://github.com/neocliff/my-make-things/blob/master/src/hello) -
+This is the directory has hello.c containing main()
 and a single header, include/hello.h. The header has a BITSIZE #define
 that is controlled by an externally specified make file, component.mk.
 main() calls functions defined in a_dir and b_dir source code files.
 Those files are linked to hello and the include directories are
 added to the INCLUDE_DIRS variable in component.mk.
-* src/hello/c_dir - This subdirectory of src/hello demonstrates that
+* [src/hello/c_dir](https://github.com/neocliff/my-make-things/blob/master/src/hello/c_dir) -
+This subdirectory of src/hello demonstrates that
 a component can have directories within it. This is a useful way of
 partitioning functionality.
 * src/a_dir - This directory has two source files, a.c and a2.c,
