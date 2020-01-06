@@ -85,7 +85,7 @@ and a single header, include/hello.h. The header has a BITSIZE #define
 that is controlled by an externally specified make file, component.mk.
 main() calls functions defined in a_dir and b_dir source code files.
 Those files are linked to hello and the include directories are
-added to the INC_DIR variable in component.mk.
+added to the INCLUDE_DIRS variable in component.mk.
 * src/hello/c_dir - This subdirectory of src/hello demonstrates that
 a component can have directories within it. This is a useful way of
 partitioning functionality.

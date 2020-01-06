@@ -23,7 +23,7 @@ CFLAGS += -DPROCESSOR_X86_64
 endif
 
 # loader flags
-LDFLAGS = -L/lib/ -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -Map=${BIN_DIR}/linker_map.txt -cref /usr/lib/x86_64-linux-gnu/crti.o -lc
+LDFLAGS = -L/lib/ -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -Map=${COMP_BIN_DIR}/linker_map.txt -cref /usr/lib/x86_64-linux-gnu/crti.o -lc
 
 # PRIMER ON GNU MAKE'S LEXICON
 #
@@ -122,17 +122,17 @@ LDFLAGS = -L/lib/ -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -Map=${BIN_DIR}/linker
 #		header files. this behavior is set by the '-MD' switch. you might
 #		want this if you are figure out x86_32 vs. x86_64 issues. if this
 #		becomes unweildy, use the '-MMD' switch instead.
-DEPFLAGS = -MT $@ -MD -MP -MF $(DEP_DIR)/$*.Td
+DEPFLAGS = -MT $@ -MD -MP -MF $(COMP_DEP_DIR)/$*.Td
 
 # use this command to save the dependencies files.
-SAVE.d = mv -f ${DEP_DIR}/$*.Td ${DEP_DIR}/$*.d
+SAVE.d = mv -f ${COMP_DEP_DIR}/$*.Td ${COMP_DEP_DIR}/$*.d
 
 # COMPILATION, ASSEMBLY, ETC DEFAULT RULES
 #
 # we are going to define some compiler rules. i wouldn't normally do it
 # this way but the example i'm using does. if you don't like this, break
 # if for your specific project.
-COMPILE.c = ${CC} ${INC_DIR} ${DEPFLAGS} ${CFLAGS} -c -o $@
+COMPILE.c = ${CC} ${INCLUDE_DIRS} ${DEPFLAGS} ${CFLAGS} -c -o $@
 
 # this is the default recipe to build a program binary. it should only
 # be invoked for a component that results in a finished binary (i.e.,
@@ -140,16 +140,16 @@ COMPILE.c = ${CC} ${INC_DIR} ${DEPFLAGS} ${CFLAGS} -c -o $@
 # just a set of object files that other components pick-and-chose from.
 # also, don't use this recipe to construct a library used for shared
 # or static linking.
-#${BIN_DIR}/${BINBUILT}: ${OBJS}
+#${COMP_BIN_DIR}/${BIN_BUILT}: ${OBJ_FILES}
 #	@echo ""
-#	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
-#	$(CC) -o ${BIN_DIR}/${BINBUILT} ${OBJS}
+#	@echo "makefile: linking '${COMP_BIN_DIR}/${BIN_BUILT}' from '${OBJ_FILES}'"
+#	$(CC) -o ${COMP_BIN_DIR}/${BIN_BUILT} ${OBJ_FILES}
 
 # default compilation rule to turn a '.c' file into a '.o'
-${OBJ_DIR}/%.o: %.c
-${OBJ_DIR}/%.o: %.c ${DEP_DIR}/%.d
+${COMP_OBJ_DIR}/%.o: %.c
+${COMP_OBJ_DIR}/%.o: %.c ${COMP_DEP_DIR}/%.d
 	@echo ""
 	@echo "makefile: compiling '$@' from '$<'"
 	${COMPILE.c} $<
-	@echo "makefile: moving dependency file to ${DEP_DIR}/$*.d"
+	@echo "makefile: moving dependency file to ${COMP_DEP_DIR}/$*.d"
 	${SAVE.d}

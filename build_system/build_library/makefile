@@ -31,17 +31,17 @@ include ${I_AM_AT}/component.mk
 
 # auto-build the directories we need. there are lots of ways
 # to do this. this is brute-force but it always works. note
-# the creation of the BIN_DIR and LIB_DIR directories are
+# the creation of the COMP_BIN_DIR and COMP_LIB_DIR directories are
 # different from that for the objects and dependencies.
 # that later two preserve intermediate directories 
 # (e.g., a/b/c.o gets us obj/a/b) while the first two are just
 # paths to directories. they can be changed to behave the same
 # as the other two if BIN (or BINS) has a path and not just a
 # file name.
-$(shell mkdir -p ${BIN_DIR} > /dev/null)
-$(shell mkdir -p ${LIB_DIR} > /dev/null)
-$(shell mkdir -p ${dir ${OBJS}} > /dev/null)
-$(shell mkdir -p ${dir ${DEPS}} > /dev/null)
+$(shell mkdir -p ${COMP_BIN_DIR} > /dev/null)
+$(shell mkdir -p ${COMP_LIB_DIR} > /dev/null)
+$(shell mkdir -p ${dir ${OBJ_FILES}} > /dev/null)
+$(shell mkdir -p ${dir ${DEP_FILES}} > /dev/null)
 
 # pull in the definition of the compiler rules, a generic set
 # of recipes that tell make how to transform x.y -> x.z
@@ -65,20 +65,20 @@ include ${BUILD_LIBRARY}/compiler_rules.mk
 # first, the target to call when we need to delete the artifacts
 # of the build process. this only takes place within the component.
 clean:
-	rm -rf ${DEP_DIR}
-	rm -rf ${OBJ_DIR}
-	rm -rf ${LIB_DIR}
-	rm -rf ${BIN_DIR}
+	rm -rf ${COMP_DEP_DIR}
+	rm -rf ${COMP_OBJ_DIR}
+	rm -rf ${COMP_LIB_DIR}
+	rm -rf ${COMP_BIN_DIR}
 	rm -rf ${DOXY_OUTPUT_DIR}
 
 # second, this is the target when we want to roll everything back
 # to the prebuild state (i.e., we just checked the code out of
 # the repo)
 cleanall:
-	rm -rf ${DEP_ROOT}
-	rm -rf ${OBJ_ROOT}
-	rm -rf ${LIB_ROOT}
-	rm -rf ${BIN_ROOT}
+	rm -rf ${COMP_DEP_ROOT}
+	rm -rf ${COMP_OBJ_ROOT}
+	rm -rf ${COMP_LIB_ROOT}
+	rm -rf ${COMP_BIN_ROOT}
 	rm -rf ${DOXY_OUTPUT_DIR}
 
 	rm -rf ${PROJ_OBJ}
@@ -121,19 +121,19 @@ checkit:
 	@echo "DOXY_ROOT       is ${DOXY_ROOT}"
 	@echo "DOXY_OUTPUT_DIR is ${DOXY_OUTPUT_DIR}"
 	@echo "DOXY_CONFIG     is ${DOXY_CONFIG}"
-	@echo "BIN_ROOT        is ${BIN_ROOT}"
-	@echo "BIN_DIR         is ${BIN_DIR}"
-	@echo "BINBUILT        is ${BINBUILT}"
-	@echo "LIB_ROOT        is ${LIB_ROOT}"
-	@echo "LIB_DIR         is ${LIB_DIR}"
-	@echo "OBJ_ROOT        is ${OBJ_ROOT}"
-	@echo "OBJ_DIR         is ${OBJ_DIR}"
-	@echo "INC_DIR         is ${INC_DIR}"
-	@echo "DEP_ROOT        is ${DEP_ROOT}"
-	@echo "DEP_DIR         is ${DEP_DIR}"
-	@echo "SRCS            is ${SRCS}"
-	@echo "OBJS            is ${OBJS}"
-	@echo "DEPS            is ${DEPS}"
+	@echo "COMP_BIN_ROOT   is ${COMP_BIN_ROOT}"
+	@echo "COMP_BIN_DIR    is ${COMP_BIN_DIR}"
+	@echo "BIN_BUILT       is ${BIN_BUILT}"
+	@echo "COMP_LIB_ROOT   is ${COMP_LIB_ROOT}"
+	@echo "COMP_LIB_DIR    is ${COMP_LIB_DIR}"
+	@echo "COMP_OBJ_ROOT   is ${COMP_OBJ_ROOT}"
+	@echo "COMP_OBJ_DIR    is ${COMP_OBJ_DIR}"
+	@echo "INCLUDE_DIRS    is ${INCLUDE_DIRS}"
+	@echo "COMP_DEP_ROOT   is ${COMP_DEP_ROOT}"
+	@echo "COMP_DEP_DIR    is ${COMP_DEP_DIR}"
+	@echo "C_SRC_FILES     is ${C_SRC_FILES}"
+	@echo "OBJ_FILES       is ${OBJ_FILES}"
+	@echo "DEP_FILES       is ${DEP_FILES}"
 
 # next, a target to generate documentation using Doxygen. note the
 # doxygen command has a '-' in front of it. this allows the command
@@ -154,7 +154,7 @@ docs:
 # once everything is loaded and configured, load the dependency
 # files if they exist. first, make the dependencies files as
 # PRECIOUS so they won't be deleted if make aborts.
-.PRECIOUS: $(DEP_DIR)/%.d
-$(DEP_DIR)/%.d: ;
+.PRECIOUS: $(COMP_DEP_DIR)/%.d
+$(COMP_DEP_DIR)/%.d: ;
 
--include $(DEPS)
+-include $(DEP_FILES)

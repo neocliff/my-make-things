@@ -4,24 +4,24 @@
 LIBBUILT = b_lib.ar
 
 # define directory paths to header files we need
-INC_DIR = \
+INCLUDE_DIRS = \
 	-I${I_AM_AT}/include
 
 # identify source files in this component
-SRCS = b1.c b2.c
+C_SRC_FILES = b1.c b2.c
 
 # this rule produces a set of object files that make up the
-# binary defined in $(BINBUILT). this list of object files is
+# binary defined in $(BIN_BUILT). this list of object files is
 # built in two parts:
-#	1. for each file in $(SRCS), change the .c to a .o suffix
+#	1. for each file in $(C_SRC_FILES), change the .c to a .o suffix
 #	2. for each object file, prepend '$(BINDIR)/' in front
 #		of the file name
-OBJS = $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
+OBJ_FILES = $(addprefix $(COMP_OBJ_DIR)/,$(C_SRC_FILES:.c=.o))
 
 # in a similar fashion, make the include/header dependencies
-DEPS = $(addprefix $(DEP_DIR)/,$(SRCS:.c=.d))
+DEP_FILES = $(addprefix $(COMP_DEP_DIR)/,$(C_SRC_FILES:.c=.d))
 
-LIBTOC = $(addprefix $(LIB_DIR)/,$(LIBBUILT:.ar=.toc.txt))
+LIBTOC = $(addprefix $(COMP_LIB_DIR)/,$(LIBBUILT:.ar=.toc.txt))
 
 # define the 'all' target in this file rather than in 'makefile'.
 # the goal is to make component.mk personalize the make system
@@ -31,20 +31,20 @@ LIBTOC = $(addprefix $(LIB_DIR)/,$(LIBBUILT:.ar=.toc.txt))
 #
 # note: 
 #	- to build a "program", set the dependencies of this
-#	  recipe to "${BIN_DIR}/${BINBUILT}"
-#	- to build object files, set the dependencies "${OBJS}"
+#	  recipe to "${COMP_BIN_DIR}/${BIN_BUILT}"
+#	- to build object files, set the dependencies "${OBJ_FILES}"
 #	- to build a library, set the dependencies to "${TBD}".
-all: | ${LIB_DIR}/${LIBBUILT}
+all: | ${COMP_LIB_DIR}/${LIBBUILT}
 
-${LIB_DIR}/${LIBBUILT}: | ${OBJS}
+${COMP_LIB_DIR}/${LIBBUILT}: | ${OBJ_FILES}
 	@echo ""
-	@echo "makefile: building archive: ${LIB_DIR}/${LIBBUILT}"
+	@echo "makefile: building archive: ${COMP_LIB_DIR}/${LIBBUILT}"
 	@echo "deleting old archive copy..."
-	@$(shell rm -rf ${LIB_DIR}/${LIBBUILT})
+	@$(shell rm -rf ${COMP_LIB_DIR}/${LIBBUILT})
 	@echo "createing the archive file"
-	@${AR} -qsv ${LIB_DIR}/${LIBBUILT} ${OBJS}
+	@${AR} -qsv ${COMP_LIB_DIR}/${LIBBUILT} ${OBJ_FILES}
 	@echo "building table of contents in: ${LIBTOC}"
-	@echo "Archive TOC for: ${LIB_DIR}/${LIBBUILT}" > ${LIBTOC}
+	@echo "Archive TOC for: ${COMP_LIB_DIR}/${LIBBUILT}" > ${LIBTOC}
 	@echo "This file is   : ${LIBTOC}" >> ${LIBTOC}
-	@nm --print-armap ${LIB_DIR}/${LIBBUILT} >> ${LIBTOC}
-	@echo "makefile: done building archive: ${LIB_DIR}/${LIBBUILT}"
+	@nm --print-armap ${COMP_LIB_DIR}/${LIBBUILT} >> ${LIBTOC}
+	@echo "makefile: done building archive: ${COMP_LIB_DIR}/${LIBBUILT}"

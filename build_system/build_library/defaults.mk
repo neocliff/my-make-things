@@ -57,23 +57,23 @@ PROJ_LIB_SHARED ?= ${PROJ_LIB}/shared
 PROJ_DOXY_DOCS  ?= ${PROJ_ROOT}/doxy-docs
 
 # define the default path for header files. unlike this such
-# as the directory for obj files, the INC_DIR is a list of
+# as the directory for obj files, the INCLUDE_DIRS is a list of
 # directories that is scanned to locate header files. that
 # means we could have multiple paths.
-INC_DIR ?= ${I_AM_AT}/include
+INCLUDE_DIRS ?= ${I_AM_AT}/include
 
 # define the default paths for everything else. these can be
 # redefined in the component.mk files using something like the
 # following syntax:
 #		OBJDIR = my/obj/dir/path
-DEP_ROOT	?= ${I_AM_AT}/dep
-DEP_DIR		?= $(DEP_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
-OBJ_ROOT	?= ${I_AM_AT}/obj
-OBJ_DIR		?= $(OBJ_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
-LIB_ROOT	?= ${I_AM_AT}/lib
-LIB_DIR		?= ${LIB_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
-BIN_ROOT	?= ${I_AM_AT}/bin
-BIN_DIR		?= $(BIN_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
+COMP_DEP_ROOT	?= ${I_AM_AT}/dep
+COMP_DEP_DIR		?= $(COMP_DEP_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
+COMP_OBJ_ROOT	?= ${I_AM_AT}/obj
+COMP_OBJ_DIR		?= $(COMP_OBJ_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
+COMP_LIB_ROOT	?= ${I_AM_AT}/lib
+COMP_LIB_DIR		?= ${COMP_LIB_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
+COMP_BIN_ROOT	?= ${I_AM_AT}/bin
+COMP_BIN_DIR		?= $(COMP_BIN_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
 
 # create a few defaults for Doxygen document generation
 DOXY_CONFIG     ?= ${I_AM_AT}/Doxyfile

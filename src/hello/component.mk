@@ -1,16 +1,16 @@
 # component.mk - component's description file
 
 # this component results in a finished binary program so name it
-BINBUILT = hello
+BIN_BUILT = hello
 
 # define the paths to the header files needed for this compoent
-INC_DIR = \
+INCLUDE_DIRS = \
 	-I${I_AM_AT}/include \
 	-I${I_AM_AT}/c_dir/include \
 	-I${PROJ_SRC}/a_dir/include \
 	-I${PROJ_SRC}/b_dir/include \
 
-SRCS := hello.c \
+C_SRC_FILES := hello.c \
 		c_dir/c.c
 
 OBJS_EXTRAS = \
@@ -22,15 +22,15 @@ LIBS_EXTRAS = \
 
 # the next two rules shouldn't have to be changed for the component.
 # the first rule produces a list of object files that make up the
-# binary defined in $(BINBUILT). this list of object files is
+# binary defined in $(BIN_BUILT). this list of object files is
 # built in two parts:
-#	1. for each file in $(SRCS), change the .c to a .o suffix
+#	1. for each file in $(C_SRC_FILES), change the .c to a .o suffix
 #	2. for each object file, prepend '$(BINDIR)/' in front
 #		of the file name
-OBJS = ${addprefix ${OBJ_DIR}/,${SRCS:.c=.o}}
+OBJ_FILES = ${addprefix ${COMP_OBJ_DIR}/,${C_SRC_FILES:.c=.o}}
 
 # in a similar fashion, make the include/header dependencies
-DEPS = ${addprefix ${DEP_DIR}/,${SRCS:.c=.d}}
+DEP_FILES = ${addprefix ${COMP_DEP_DIR}/,${C_SRC_FILES:.c=.d}}
 
 # TAILORING REQUIRED...
 #
@@ -42,16 +42,16 @@ DEPS = ${addprefix ${DEP_DIR}/,${SRCS:.c=.d}}
 #
 # note: 
 #	- to build a "program", set the dependencies of this
-#	  recipe to "${BIN_DIR}/${BINBUILT}"
-#	- to build object files, set the dependencies "${OBJS}"
+#	  recipe to "${COMP_BIN_DIR}/${BIN_BUILT}"
+#	- to build object files, set the dependencies "${OBJ_FILES}"
 #	- to build a library, set the dependencies to "${TBD}".
-all: | ${BIN_DIR}/${BINBUILT}
+all: | ${COMP_BIN_DIR}/${BIN_BUILT}
 
-${BIN_DIR}/${BINBUILT}: ${OBJS} ${OBJS_EXTRAS}
+${COMP_BIN_DIR}/${BIN_BUILT}: ${OBJ_FILES} ${OBJS_EXTRAS}
 	@echo ""
-	@echo "makefile: linking '${BIN_DIR}/${BINBUILT}' from '${OBJS}'"
+	@echo "makefile: linking '${COMP_BIN_DIR}/${BIN_BUILT}' from '${OBJ_FILES}'"
 	@echo "          adding objects files: ${OBJS_EXTRAS}"
 	@echo "          adding archive files: ${LIBS_EXTRAS}"
-	${CC}  ${CFLAGS} -Wl,-Map=${BIN_DIR}/linker_map.txt -Wl,-cref -o ${BIN_DIR}/${BINBUILT} ${OBJS} ${OBJS_EXTRAS} ${LIBS_EXTRAS}
+	${CC}  ${CFLAGS} -Wl,-Map=${COMP_BIN_DIR}/linker_map.txt -Wl,-cref -o ${COMP_BIN_DIR}/${BIN_BUILT} ${OBJ_FILES} ${OBJS_EXTRAS} ${LIBS_EXTRAS}
 	@echo "makefile: calling post-build step"
-	${POST_BUILD} ${BIN_DIR}/${BINBUILT}
+	${POST_BUILD} ${COMP_BIN_DIR}/${BIN_BUILT}

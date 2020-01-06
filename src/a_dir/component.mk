@@ -1,20 +1,20 @@
 # component.mk - component's description file
 
-INC_DIR = \
+INCLUDE_DIRS = \
 	-I${I_AM_AT}/include
 
-SRCS = a.c a2.c
+C_SRC_FILES = a.c a2.c
 
 # this rule produces a set of object files that make up the
-# binary defined in $(BINBUILT). this list of object files is
+# binary defined in $(BIN_BUILT). this list of object files is
 # built in two parts:
-#	1. for each file in $(SRCS), change the .c to a .o suffix
+#	1. for each file in $(C_SRC_FILES), change the .c to a .o suffix
 #	2. for each object file, prepend '$(BINDIR)/' in front
 #		of the file name
-OBJS = $(addprefix $(OBJ_DIR)/,$(SRCS:.c=.o))
+OBJ_FILES = $(addprefix $(COMP_OBJ_DIR)/,$(C_SRC_FILES:.c=.o))
 
 # in a similar fashion, make the include/header dependencies
-DEPS = $(addprefix $(DEP_DIR)/,$(SRCS:.c=.d))
+DEP_FILES = $(addprefix $(COMP_DEP_DIR)/,$(C_SRC_FILES:.c=.d))
 
 # define the 'all' target in this file rather than in 'makefile'.
 # the goal is to make component.mk personalize the make system
@@ -24,7 +24,7 @@ DEPS = $(addprefix $(DEP_DIR)/,$(SRCS:.c=.d))
 #
 # note: 
 #	- to build a "program", set the dependencies of this
-#	  recipe to "${BIN_DIR}/${BINBUILT}"
-#	- to build object files, set the dependencies "${OBJS}"
+#	  recipe to "${COMP_BIN_DIR}/${BIN_BUILT}"
+#	- to build object files, set the dependencies "${OBJ_FILES}"
 #	- to build a library, set the dependencies to "${TBD}".
-all: | ${OBJS}
+all: | ${OBJ_FILES}
