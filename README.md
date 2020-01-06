@@ -27,16 +27,17 @@ them.
 
 How the make system is laid out. First the build system files...
 
-* build_system/build_library/makefile - this the main driver for
+* [build_system/build_library/makefile](https://github.com/neocliff/my-make-things/blob/master/build_system/build_library/makefile) -
+this the main driver for
 all components is the same across the project; tailoring happens
 in the component.mk file for each component
-* build_system/build_library/defaults.mk - contains the default
-definitions of tools, etc used in this project
-* build_system/build_library/compiler_rules.mk - define's the
+* [build_system/build_library/defaults.mk](https://github.com/neocliff/my-make-things/blob/master/build_system/build_library/defaults.mk) -
+contains the default definitions of tools, etc used in this project
+* [build_system/build_library/compiler_rules.mk](https://github.com/neocliff/my-make-things/blob/master/build_system/build_library/compiler_rules.mk) - define's the
 default recipes to comile, etc
-* build_system/build_utilities/post_build_strip.sh - a toy script
-that accepts a single parameter, a binary, and strips the symbols,
-debug information, etc.
+* [build_system/build_utilities/post_build_strip.sh](https://github.com/neocliff/my-make-things/blob/master/build_system/build_utilities/post_build_strip.sh) -
+a toy script that accepts a single parameter, a binary, and strips the symbols,
+debug information, etc. using /usr/bin/strip
 
 Now files for individual components that we are building...
 
