@@ -34,6 +34,9 @@ in the component.mk file for each component
 definitions of tools, etc used in this project
 * build_system/build_library/compiler_rules.mk - define's the
 default recipes to comile, etc
+* build_system/build_utilities/post_build_strip.sh - a toy script
+that accepts a single parameter, a binary, and strips the symbols,
+debug information, etc.
 
 Now files for individual components that we are building...
 
@@ -47,6 +50,10 @@ this component has two functions used by hello.c's main(); the
 difference is these functions are in object files stored in an
 archive (a library made using the ar command); a table of contents
 is created from the archive file
+* shared/s_dir_YYMMDD/component.mk - tailors the build system to
+construct an archive containing a single object file with a single
+function in it; this was an expirement in handling different revisions
+of the same component
 
 ## make Targets
 
@@ -111,7 +118,10 @@ components, it is not out of the question that multiple versions
 of the same library would be used. The best way to deal with this
 is to rationalize the library into a single version however that isn't
 always possible. The file [src/hello/component.mk](https://github.com/neocliff/my-make-things/blob/master/src/hello/component.mk)
-has details for secting the library version.
+has details for selecting the library version. Of course there are
+limits to this: you can't have a single binary with two components
+each of which requires a different revision of the same library.
+If that happens to you, you've got problems!
 
 As I said, this source is contrived and is intended to prove
 capability of the make build system. Hopefully, you find it
