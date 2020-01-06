@@ -72,8 +72,8 @@ the configuration file used with Doxygen to generate project
 documentation. This is the only file (along with component.mk)
 that every component should have. For a really large project,
 it may be worth looking at creating a generic Doxyfile for the
-project (or portions of the project). See issue \#1 for ideas
-on that.
+project (or portions of the project). See [issue \#1](https://github.com/neocliff/my-make-things/issues/1)
+for ideas on that.
 
 ## About the Project
 
@@ -91,17 +91,20 @@ added to the INCLUDE_DIRS variable in component.mk.
 This subdirectory of src/hello demonstrates that
 a component can have directories within it. This is a useful way of
 partitioning functionality.
-* src/a_dir - This directory has two source files, a.c and a2.c,
+* [src/a_dir](https://github.com/neocliff/my-make-things/blob/master/src/a_dir) -
+This directory has two source files, a.c and a2.c,
 each with a corresponding header file. The function in a.c (called
 a()) calls a function a2() in a2.c. These source files are compiled
 to object code (.o files) and the .o files are linked into hello.
-* src/b_dir - This directory has two source files, b1.c and b2.c,
+* [src/b_dir](https://github.com/neocliff/my-make-things/blob/master/src/b_dir) -
+This directory has two source files, b1.c and b2.c,
 and a single header file called include/b.h. hello's main() calls
 b1() (b1.c) and b1() calls b2() (in b2.c). These source files
 are compiled to object files (.o's). The .o files are then added
 to an archive (or library). That .ar file is then linked into
 hello.
-* src/shared/s_dir_YYMMDD - These two subdirectories present an
+* [src/shared/s_dir_YYMMDD](https://github.com/neocliff/my-make-things/blob/master/src/shared) -
+The two subdirectories in src/shared present an
 approach for handling instances where multiple versions of the same
 files are used. On a large project with multiple binaries and
 components, it is not out of the question that multiple versions
