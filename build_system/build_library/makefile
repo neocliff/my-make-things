@@ -80,6 +80,8 @@ cleanall:
 	rm -rf ${LIB_ROOT}
 	rm -rf ${BIN_ROOT}
 	rm -rf ${DOXY_ROOT}
+	rm -rf ${LIB_ROOT}
+	rm -rf ${DOXY_PUB_ROOT}
 
 # this is the target that dumps variables so that we can check
 # the build process.
@@ -105,6 +107,11 @@ checkit:
 	@echo "component stuff..."
 	@echo "=============================="
 	@echo "ROOT_DIR        is ${ROOT_DIR}"
+	@echo "SRC_ROOT        is ${SRC_ROOT}"
+	@echo "SRC_SHARED_ROOT is ${SRC_SHARED_ROOT}"
+	@echo "LIB_ROOT        is ${LIB_ROOT}"
+	@echo "LIB_SHARED_ROOT is ${LIB_SHARED_ROOT}"
+	@echo "DOXY_PUB_ROOT   is ${DOXY_PUB_ROOT}"
 	@echo "I_AM_AT         is ${I_AM_AT}"
 	@echo "BUILD_TYPE      is ${BUILD_TYPE}"
 	@echo "ARCH_TYPE       is ${ARCH_TYPE}"

@@ -7,18 +7,18 @@ BINBUILT = hello
 INC_DIR = \
 	-I${I_AM_AT}/include \
 	-I${I_AM_AT}/c_dir/include \
-	-I${PROJ_SRC_ROOT}/a_dir/include \
-	-I${PROJ_SRC_ROOT}/b_dir/include \
+	-I${SRC_ROOT}/a_dir/include \
+	-I${SRC_ROOT}/b_dir/include \
 
 SRCS := hello.c \
 		c_dir/c.c
 
 OBJS_EXTRAS = \
-	${PROJ_SRC_ROOT}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a.o \
-	${PROJ_SRC_ROOT}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a2.o
+	${SRC_ROOT}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a.o \
+	${SRC_ROOT}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a2.o
 
 LIBS_EXTRAS = \
-	${PROJ_SRC_ROOT}/b_dir/lib/${BUILD_TYPE}/${ARCH_TYPE}/b_lib.ar
+	${SRC_ROOT}/b_dir/lib/${BUILD_TYPE}/${ARCH_TYPE}/b_lib.ar
 
 # the next two rules shouldn't have to be changed for the component.
 # the first rule produces a list of object files that make up the

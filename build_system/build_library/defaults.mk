@@ -32,7 +32,7 @@ ARCH_TYPE  ?= x86_64
 # sample pre-build step
 PRE_BUILD = 
 
-# sample post-build step. note that we are setting this step
+# standard post-build step. note that we are setting this step
 # as a default to be used on all 'release' builds. if this isn't
 # what is needed for a particular component, tailor it in the
 # component.mk file.
@@ -42,8 +42,17 @@ POST_BUILD = ${BUILD_UTILITIES}/post_build_strip.sh
 endif
 
 # define the path to the project's src directory. this is needed if
-# we need files that are not subordinate to ${I_AM_AT}.
-PROJ_SRC_ROOT ?= ${ROOT_DIR}/src
+# we need files that are not subordinate to ${I_AM_AT}. we also
+# need to keep track of where the shared source code is kept. on
+# some projects it is gathered components under a single 'shared'
+# directory. a similar concept can be used for third-party source
+# that is built into a library and then "installed" into a lib
+# directory.
+SRC_ROOT        ?= ${ROOT_DIR}/src
+SRC_SHARED_ROOT ?= ${SRC_ROOT}/src/shared
+LIB_ROOT        ?= ${ROOT_DIR}/lib
+LIB_SHARED_ROOT ?= ${LIB_ROOT}/shared
+DOXY_PUB_ROOT   ?= ${ROOT_DIR}/doxy-docs
 
 # define the default path for header files. unlike this such
 # as the directory for obj files, the INC_DIR is a list of
