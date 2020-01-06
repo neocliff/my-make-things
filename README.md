@@ -99,7 +99,15 @@ b1() (b1.c) and b1() calls b2() (in b2.c). These source files
 are compiled to object files (.o's). The .o files are then added
 to an archive (or library). That .ar file is then linked into
 hello.
+* src/shared/s_dir_YYMMDD - These two subdirectories present an
+approach for handling instances where multiple versions of the same
+files are used. On a large project with multiple binaries and
+components, it is not out of the question that multiple versions
+of the same library would be used. The best way to deal with this
+is to rationalize the library into a single version however that isn't
+always possible. The file src/hello/component.mk has details for
+secting the library version.
 
-As I said, this source is simple though contrived and is intended
-to prove capability of the make build system. Hopefully, you find it
+As I said, this source is contrived and is intended to prove
+capability of the make build system. Hopefully, you find it
 a useful starting point for your own projects.
