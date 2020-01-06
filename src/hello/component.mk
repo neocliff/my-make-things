@@ -3,12 +3,18 @@
 # this component results in a finished binary program so name it
 BIN_BUILT = hello
 
+# this is an idea of how to deal with components needing different
+# versions of a library, where versions cannot be rationalized into
+# a single "super-version".
+S_DIR_VERSION = 200105
+
 # define the paths to the header files needed for this compoent
 INCLUDE_DIRS = \
 	-I${I_AM_AT}/include \
 	-I${I_AM_AT}/c_dir/include \
 	-I${PROJ_SRC}/a_dir/include \
 	-I${PROJ_SRC}/b_dir/include \
+	-I${PROJ_SRC}/shared/s_dir_${S_DIR_VERSION}/include \
 
 C_SRC_FILES := hello.c \
 		c_dir/c.c
@@ -18,7 +24,8 @@ OBJS_EXTRAS = \
 	${PROJ_SRC}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a2.o
 
 LIBS_EXTRAS = \
-	${PROJ_SRC}/b_dir/lib/${BUILD_TYPE}/${ARCH_TYPE}/b_lib.ar
+	${PROJ_SRC}/b_dir/lib/${BUILD_TYPE}/${ARCH_TYPE}/b_lib.ar \
+	${PROJ_SRC}/shared/s_dir_${S_DIR_VERSION}/lib/${BUILD_TYPE}/${ARCH_TYPE}/s_lib.ar
 
 # the next two rules shouldn't have to be changed for the component.
 # the first rule produces a list of object files that make up the

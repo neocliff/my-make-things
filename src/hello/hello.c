@@ -23,6 +23,7 @@
 #include "c.h"
 #include "a.h"
 #include "b.h"
+#include "s.h"
 
 int main (int argc, char *argv[], char *envp[]);
 
@@ -43,6 +44,11 @@ int main (int argc, char *argv[], char *envp[]) {
      * this next line checks conditional compilation
      * based on CLI argument to make */
     printf("built for BITSIZE: %d\n", BITSIZE);
+
+    /**
+     * call s() and print what is returned
+     */
+    printf("s() returned %d\n", s());
 
     /**
      * call made to function (a()) in object file in src/a_dir which is

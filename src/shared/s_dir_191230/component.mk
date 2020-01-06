@@ -1,14 +1,14 @@
 # component.mk - component's description file
 
 # this component builds an archive (library)
-LIB_BUILT = b_lib.ar
+LIB_BUILT = s_lib.ar
 
 # define directory paths to header files we need
 INCLUDE_DIRS = \
 	-I${I_AM_AT}/include
 
 # identify source files in this component
-C_SRC_FILES = b1.c b2.c
+C_SRC_FILES = s.c
 
 # this rule produces a set of object files that make up the
 # binary defined in $(BIN_BUILT). this list of object files is
