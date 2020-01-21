@@ -20,16 +20,17 @@ AS      = ${GNU_BINDIR}/as
 # work-in-progress.
 LD		= ${GNU_BINDIR}/gold
 
-# by default, GNU make defines GPP as '${CC} -E' which just runs the 
+# by default, GNU make defines CPP as '${CC} -E' which just runs the 
 # C/C++ compiler's preprocessor. i prefer explcitly calling the
 # compiler to run the preprocessor rather than use ${CPP} to do it.a
 # i've reset the vaule to prevent confusion.
-GPP     =
+CPP     =
 
 # define more useful tools
-TAR		= ${SYS_BINDIR}/tar
-AR		= ${GNU_BINDIR}/ar
-STRIP   = ${USR_BINDIR}/strip
+TAR		?= ${SYS_BINDIR}/tar
+AR		?= ${GNU_BINDIR}/ar
+STRIP   ?= ${USR_BINDIR}/strip
+INSTALL ?= ${USR_BINDIR}/install
 
 # tool used to run Doxygen for generating documentation from source
 DOXYGEN = ${USR_BINDIR}/doxygen
