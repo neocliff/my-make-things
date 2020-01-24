@@ -5,7 +5,7 @@ LIB_BUILT = s_lib.ar
 
 # define directory paths to header files we need
 INCLUDE_DIRS = \
-	-I${I_AM_AT}/include
+	${I_AM_AT}/include
 
 # identify source files in this component
 C_SRC_FILES = s.c
@@ -17,6 +17,9 @@ C_SRC_FILES = s.c
 #	2. for each object file, prepend '$(BINDIR)/' in front
 #		of the file name
 OBJ_FILES = $(addprefix $(COMP_OBJ_DIR)/,$(C_SRC_FILES:.c=.o))
+
+# next, build the list of include directories for the compiler
+C_INCLUDE_DIRS = ${addprefix -I,${INCLUDE_DIRS}}
 
 # in a similar fashion, make the include/header dependencies
 DEP_FILES = $(addprefix $(COMP_DEP_DIR)/,$(C_SRC_FILES:.c=.d))
