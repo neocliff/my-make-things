@@ -109,32 +109,39 @@ checkit:
 	@echo "=============================="
 	@echo "component stuff..."
 	@echo "=============================="
-	@echo "PROJ_ROOT       is ${PROJ_ROOT}"
-	@echo "PROJ_SRC        is ${PROJ_SRC}"
-	@echo "PROJ_SRC_SHARED is ${PROJ_SRC_SHARED}"
-	@echo "PROJ_LIB        is ${PROJ_LIB}"
-	@echo "PROJ_LIB_SHARED is ${PROJ_LIB_SHARED}"
-	@echo "PROJ_DOXY_DOCS  is ${PROJ_DOXY_DOCS}"
-	@echo "I_AM_AT         is ${I_AM_AT}"
-	@echo "BUILD_TYPE      is ${BUILD_TYPE}"
-	@echo "ARCH_TYPE       is ${ARCH_TYPE}"
-	@echo "CFLAGS          is ${CFLAGS}"
-	@echo "DOXY_ROOT       is ${DOXY_ROOT}"
-	@echo "DOXY_OUTPUT_DIR is ${DOXY_OUTPUT_DIR}"
-	@echo "DOXY_CONFIG     is ${DOXY_CONFIG}"
-	@echo "COMP_BIN_ROOT   is ${COMP_BIN_ROOT}"
-	@echo "COMP_BIN_DIR    is ${COMP_BIN_DIR}"
-	@echo "BIN_BUILT       is ${BIN_BUILT}"
-	@echo "COMP_LIB_ROOT   is ${COMP_LIB_ROOT}"
-	@echo "COMP_LIB_DIR    is ${COMP_LIB_DIR}"
-	@echo "COMP_OBJ_ROOT   is ${COMP_OBJ_ROOT}"
-	@echo "COMP_OBJ_DIR    is ${COMP_OBJ_DIR}"
-	@echo "INCLUDE_DIRS    is ${INCLUDE_DIRS}"
-	@echo "COMP_DEP_ROOT   is ${COMP_DEP_ROOT}"
-	@echo "COMP_DEP_DIR    is ${COMP_DEP_DIR}"
-	@echo "C_SRC_FILES     is ${C_SRC_FILES}"
-	@echo "OBJ_FILES       is ${OBJ_FILES}"
-	@echo "DEP_FILES       is ${DEP_FILES}"
+	@echo "PROJ_ROOT                 is ${PROJ_ROOT}"
+	@echo "PROJ_SRC                  is ${PROJ_SRC}"
+	@echo "PROJ_SRC_SHARED           is ${PROJ_SRC_SHARED}"
+	@echo "PROJ_LIB                  is ${PROJ_LIB}"
+	@echo "PROJ_LIB_SHARED           is ${PROJ_LIB_SHARED}"
+	@echo "PROJ_DOXY_DOCS            is ${PROJ_DOXY_DOCS}"
+	@echo "I_AM_AT                   is ${I_AM_AT}"
+	@echo "BUILD_TYPE                is ${BUILD_TYPE}"
+	@echo "ARCH_TYPE                 is ${ARCH_TYPE}"
+	@echo "CFLAGS                    is ${CFLAGS}"
+	@echo "DOXY_ROOT                 is ${DOXY_ROOT}"
+	@echo "DOXY_OUTPUT_DIR           is ${DOXY_OUTPUT_DIR}"
+	@echo "DOXY_CONFIG               is ${DOXY_CONFIG}"
+	@echo "DOXY_COMPONENT            is ${DOXY_COMPONENT}"
+	@echo "DOXY_INPUT_DIR            is ${DOXY_INPUT_DIR}"
+	@echo "DOXY_README               is ${DOXY_README}"
+	@echo "DOXY_NUMBER               is ${DOXY_NUMBER}"
+	@echo "DOXY_INCLUDE_DIRS         is ${DOXY_INCLUDE_DIRS}"
+	@echo "DOXY_PREPROCESSOR_DEFINES is ${DOXY_PREPROCESSOR_DEFINES}"
+	@echo "COMP_BIN_ROOT             is ${COMP_BIN_ROOT}"
+	@echo "COMP_BIN_DIR              is ${COMP_BIN_DIR}"
+	@echo "BIN_BUILT                 is ${BIN_BUILT}"
+	@echo "COMP_LIB_ROOT             is ${COMP_LIB_ROOT}"
+	@echo "COMP_LIB_DIR              is ${COMP_LIB_DIR}"
+	@echo "COMP_OBJ_ROOT             is ${COMP_OBJ_ROOT}"
+	@echo "COMP_OBJ_DIR              is ${COMP_OBJ_DIR}"
+	@echo "C_PREPROCESSOR_DEFINES    is ${C_PREPROCESSOR_DEFINES}"
+	@echo "C_INCLUDE_DIRS            is ${C_INCLUDE_DIRS}"
+	@echo "COMP_DEP_ROOT             is ${COMP_DEP_ROOT}"
+	@echo "COMP_DEP_DIR              is ${COMP_DEP_DIR}"
+	@echo "C_SRC_FILES               is ${C_SRC_FILES}"
+	@echo "OBJ_FILES                 is ${OBJ_FILES}"
+	@echo "DEP_FILES                 is ${DEP_FILES}"
 
 # next, a target to generate documentation using Doxygen. note the
 # doxygen command has a '-' in front of it. this allows the command
@@ -149,7 +156,15 @@ docs:
 	@echo "creating docs directory at: ${DOXY_OUTPUT_DIR}"
 	$(shell mkdir -p ${DOXY_OUTPUT_DIR})
 	@echo "lastly, generating documentation"
-	-$(shell DOXY_OUTPUT_DIR=${DOXY_OUTPUT_DIR} ${DOXYGEN} ${DOXY_CONFIG})
+	-$(shell DOXY_OUTPUT_DIR=${DOXY_OUTPUT_DIR} \
+			 DOXY_NUMBER=${DOXY_NUMBER} \
+			 DOXY_COMPONENT="${DOXY_COMPONENT}" \
+			 DOXY_INPUT_DIR="${DOXY_INPUT_DIR}" \
+			 DOXY_README="${DOXY_README}" \
+			 DOXY_PREPROCESSOR_DEFINES="${DOXY_PREPROCESSOR_DEFINES}" \
+			 DOXY_INCLUDE_DIRS="${DOXY_INCLUDE_DIRS}" \
+			 ${DOXYGEN} ${DOXY_CONFIG} \
+	  )
 	@echo "makefile: done generating Doxygen documentation"
 
 # once everything is loaded and configured, load the dependency

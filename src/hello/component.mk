@@ -8,13 +8,15 @@ BIN_BUILT = hello
 # a single "super-version".
 S_DIR_VERSION = 200105
 
-# define the paths to the header files needed for this compoent
+# define the paths to the header files needed for this component. this variable
+# is passed to Doxygen as is *and* is transformed into C_INCLUDE_DIRS below.
+# Doxygen doesn't want the '-I' but the compiler does.
 INCLUDE_DIRS = \
-	-I${I_AM_AT}/include \
-	-I${I_AM_AT}/c_dir/include \
-	-I${PROJ_SRC}/a_dir/include \
-	-I${PROJ_SRC}/b_dir/include \
-	-I${PROJ_SRC}/shared/s_dir_${S_DIR_VERSION}/include \
+	${I_AM_AT}/include \
+	${I_AM_AT}/c_dir/include \
+	${PROJ_SRC}/a_dir/include \
+	${PROJ_SRC}/b_dir/include \
+	${PROJ_SRC}/shared/s_dir_${S_DIR_VERSION}/include \
 
 C_SRC_FILES := hello.c \
 		c_dir/c.c
@@ -27,7 +29,7 @@ LIBS_EXTRAS = \
 	${PROJ_SRC}/b_dir/lib/${BUILD_TYPE}/${ARCH_TYPE}/b_lib.ar \
 	${PROJ_SRC}/shared/s_dir_${S_DIR_VERSION}/lib/${BUILD_TYPE}/${ARCH_TYPE}/s_lib.ar
 
-# the next two rules shouldn't have to be changed for the component.
+# the next few rules shouldn't have to be changed for the component.
 # the first rule produces a list of object files that make up the
 # binary defined in $(BIN_BUILT). this list of object files is
 # built in two parts:
@@ -35,6 +37,9 @@ LIBS_EXTRAS = \
 #	2. for each object file, prepend '$(BINDIR)/' in front
 #		of the file name
 OBJ_FILES = ${addprefix ${COMP_OBJ_DIR}/,${C_SRC_FILES:.c=.o}}
+
+# next, build the list of include directories for the compiler
+C_INCLUDE_DIRS = ${addprefix -I,${INCLUDE_DIRS}}
 
 # in a similar fashion, make the include/header dependencies
 DEP_FILES = ${addprefix ${COMP_DEP_DIR}/,${C_SRC_FILES:.c=.d}}

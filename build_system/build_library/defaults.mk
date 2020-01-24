@@ -77,15 +77,21 @@ INCLUDE_DIRS ?= -I${I_AM_AT}/include
 # following syntax:
 #		OBJDIR = my/obj/dir/path
 COMP_DEP_ROOT	?= ${I_AM_AT}/dep
-COMP_DEP_DIR	?= $(COMP_DEP_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
+COMP_DEP_DIR	?= ${COMP_DEP_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 COMP_OBJ_ROOT	?= ${I_AM_AT}/obj
-COMP_OBJ_DIR	?= $(COMP_OBJ_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
+COMP_OBJ_DIR	?= ${COMP_OBJ_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 COMP_LIB_ROOT	?= ${I_AM_AT}/lib
 COMP_LIB_DIR	?= ${COMP_LIB_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 COMP_BIN_ROOT	?= ${I_AM_AT}/bin
-COMP_BIN_DIR	?= $(COMP_BIN_ROOT)/${BUILD_TYPE}/${ARCH_TYPE}
+COMP_BIN_DIR	?= ${COMP_BIN_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 
 # create a few defaults for Doxygen document generation
 DOXY_CONFIG     ?= ${I_AM_AT}/Doxyfile
 DOXY_ROOT       ?= ${I_AM_AT}/doxy-docs
 DOXY_OUTPUT_DIR ?= ${DOXY_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
+DOXY_COMPONENT  ?= $(shell echo ${I_AM_AT} | \
+						   sed -e 's,${PROJ_ROOT}/,,')
+DOXY_README     ?= ${I_AM_AT}/README.md
+DOXY_NUMBER     ?= $(shell git show --format="%h" --no-patch)
+DOXY_PREPROCESSOR_DEFINES ?= ${PREPROCESSOR_DEFINES}
+DOXY_INCLUDE_DIRS ?= ${INCLUDE_DIRS}

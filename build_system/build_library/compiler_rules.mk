@@ -2,6 +2,15 @@
 #	to transform source into objects and libraries, and objects and
 #	libraries into finished binaries.
 
+# Differences between CFLAGS and PREPROCESSOR_DEFINES...
+# 
+# because i am using Doxygen to generate documentation, we need to pass the
+# preprocessor defines. the C compiler want's '-D' in front of each while
+# Doxygen does not. rather than maintaining two lists of defines, we can use
+# make's addprefix trick to make the change. also, i like to seperate setting
+# the compiler flags from the defines. it makes things a bit wordier but i find
+# it clearer.
+
 # CFLAGS contains the default flags used to compile C code
 CFLAGS = \
 		-Wall \
@@ -12,18 +21,37 @@ CFLAGS = \
 # see the post-build steps in makefile for what to do for "release"
 # builds.
 ifeq (${BUILD_TYPE},debug)
-CFLAGS += -g -feliminate-unused-debug-symbols
+CFLAGS  += -g \
+		-feliminate-unused-debug-symbols
 endif
 
 # set additonal CFLAGS values based on architecture type
 ifeq (${ARCH_TYPE},x86_32)
 CFLAGS += -m32 -DPROCESSOR_X86_32
 else
-CFLAGS += -DPROCESSOR_X86_64
+CFLAGS += -m64 -DPROCESSOR_X86_64
 endif
 
+ifeq (${ARCH_TYPE},x86_32)
+PREPROCESSOR_DEFINES += PROCESSOR_X86_32
+else
+PREPROCESSOR_DEFINES += PROCESSOR_X86_64
+endif
+
+# last step for defines is to prepare the string for the compiler and then
+# add that string to the CFLAGS variable.
+#
+# note: this may not be the best way of doing this. if your project has a lot
+#	of one-offs for components (i.e., -DSOMETHING that is only used for one
+#	component), this may not be the right solution for you.
+C_PREPROCESSOR_DEFINES = ${addprefix -D,${PREPROCESSOR_DEFINES}}
+CFLAGS += C_PREPROCESSOR_DEFINES
+
 # loader flags
-LDFLAGS = -L/lib/ -L/usr/lib/ -L/usr/lib/x86_64-linux-gnu -Map=${COMP_BIN_DIR}/linker_map.txt -cref /usr/lib/x86_64-linux-gnu/crti.o -lc
+LDFLAGS = -L/lib/ \
+			-L/usr/lib/ \
+			-L/usr/lib/x86_64-linux-gnu -Map=${COMP_BIN_DIR}/linker_map.txt \
+			-cref /usr/lib/x86_64-linux-gnu/crti.o -lc
 
 # PRIMER ON GNU MAKE'S LEXICON
 #
@@ -132,7 +160,7 @@ SAVE.d = mv -f ${COMP_DEP_DIR}/$*.Td ${COMP_DEP_DIR}/$*.d
 # we are going to define some compiler rules. i wouldn't normally do it
 # this way but the example i'm using does. if you don't like this, break
 # if for your specific project.
-COMPILE.c = ${CC} ${INCLUDE_DIRS} ${DEPFLAGS} ${CFLAGS} -c -o $@
+COMPILE.c = ${CC} ${C_INCLUDE_DIRS} ${DEPFLAGS} ${CFLAGS} -c -o $@
 
 # this is the default recipe to build a program binary. it should only
 # be invoked for a component that results in a finished binary (i.e.,
