@@ -1,5 +1,7 @@
 # my-make-things
 
+## Introduction
+
 This repo contains a complete make system that (hopefully)
 scales-up to support building a complex project. This code
 started with maxtrua's Makefile project for handling dependency
@@ -10,18 +12,17 @@ At first glance, it will seem like there is an over-abundance of
 comments in the code files. This is intentional on my part for
 two reasons. First, people are so used to reading things on the
 web, anything that's not a two sentence paragraph or a bulleted
-list is ignored.
+list is ignored.  The second reason is a bit more controversial.
 
-The second reason is I don't believe in self-documenting
-code. It's like unicorns: we may dream of them but they don't
-exist. After more than 35 years of writing code, I've seen
-a *lot* of code. Much of it the author claimed was self-commenting.
-Yet, if you took the self-documenting code back to the author a
-few weeks or months later, they had to spend a fair amount of time
-studying it to figure out what it did.
+I don't believe in self-documenting code. It's like unicorns: we may
+dream of them but they don't exist. After more than 35 years of 
+writing code, I've seen a *lot* of code. Much of it the author
+claimed was "self-documenting".  Yet, if you took it back to the
+author a few weeks or months later, they had to spend a fair amount
+of time studying it to figure out what it did.
 
-Bottom line: if the comments are in the way, feel free to delete
-them.
+If the comments are in the way, feel free to delete them. You won't
+hurt my feelings.
 
 ## Organization of Make Files
 
@@ -88,12 +89,13 @@ the configuration file used with Doxygen to generate project
 documentation. This is the only file (along with component.mk)
 that every component should have. For a really large project,
 it may be worth looking at creating a generic Doxyfile for the
-project (or portions of the project). See [issue \#1](https://github.com/neocliff/my-make-things/issues/1)
+project (or portions of the project). See
+[issue \#1](https://github.com/neocliff/my-make-things/issues/1)
 for ideas on that.
 
 ## About the Project
 
-This project is a glorified "Hello, World!". I created enough
+This "project" is a glorified "Hello, World!". I created enough
 in the way of source code to test the build system. It contains:
 
 * [src/hello](https://github.com/neocliff/my-make-things/blob/master/src/hello) -
@@ -133,5 +135,6 @@ each of which requires a different revision of the same library.
 If that happens to you, you've got problems!
 
 As I said, this source is contrived and is intended to prove
-capability of the make build system. Hopefully, you find it
-a useful starting point for your own projects.
+capability of the build system not demonstrate I can write amazing
+code. Hopefully, you find it a useful starting point for your own
+projects.
