@@ -45,7 +45,7 @@ endif
 #	of one-offs for components (i.e., -DSOMETHING that is only used for one
 #	component), this may not be the right solution for you.
 C_PREPROCESSOR_DEFINES = ${addprefix -D,${PREPROCESSOR_DEFINES}}
-CFLAGS += C_PREPROCESSOR_DEFINES
+CFLAGS += ${C_PREPROCESSOR_DEFINES}
 
 # loader flags
 LDFLAGS = -L/lib/ \
