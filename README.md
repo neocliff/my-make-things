@@ -84,14 +84,13 @@ Doxygen
 
 ### Doxygen and Doxyfile
 
-Every subdirectory under src should have its own Doxyfile,
-the configuration file used with Doxygen to generate project
-documentation. This is the only file (along with component.mk)
-that every component should have. For a really large project,
-it may be worth looking at creating a generic Doxyfile for the
-project (or portions of the project). See
-[issue \#1](https://github.com/neocliff/my-make-things/issues/1)
-for ideas on that.
+Doxygen is used to generate developer documentation directly from the source.
+Rather than have every directory under src have its own Doxyfile (the name
+of the configuration file), I have a single project wide Doxyfile that is 
+configured using variables set in the make files. If you use the make system,
+generating the documentation is as simple as `make ... -f path/to/makefile
+docs`. The variables are automatically set and passed in on the call to 
+Doxygen.
 
 ## About the Project
 
@@ -136,5 +135,5 @@ If that happens to you, you've got problems!
 
 As I said, this source is contrived and is intended to prove
 capability of the build system not demonstrate I can write amazing
-code. Hopefully, you find it a useful starting point for your own
-projects.
+code. Hopefully, you find it has useful ideas as a starting point for
+your own projects.
