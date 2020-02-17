@@ -26,6 +26,10 @@ char * c();
  * @return ptr to the character string
  */
 char *c() {
+
+    MY_PRINT("I'm in c()\n");
+    MY_PRINT("I'm still in %s\n", "c()");
+
     static char *c_string = "This is a string from c().";
     return(c_string);
 }

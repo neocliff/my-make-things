@@ -14,7 +14,8 @@
 # CFLAGS contains the default flags used to compile C code
 CFLAGS = \
 		-Wall \
-		-pedantic
+		-Wpedantic \
+		-Wno-variadic-macros
 
 # if we are doing a "debug" build, include the debugging information
 # (symbol tables, etc) but remove information for unused symbols. 
