@@ -20,10 +20,19 @@
 #include <stdio.h>
 
 #include "hello.h"
+#include "hello_cfg.h"
 #include "c.h"
 #include "a.h"
 #include "b.h"
 #include "s.h"
+
+/**
+ * @brief version of this program
+ * 
+ * Right, more contrived code samples. The version is defined as a four-part
+ * tuple: major.minor.path.build. 
+ */
+MyVersion_t my_version_info = { VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, 0 };
 
 int main (int argc, char *argv[], char *envp[]);
 

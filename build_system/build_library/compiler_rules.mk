@@ -7,12 +7,13 @@
 # because i am using Doxygen to generate documentation, we need to pass the
 # preprocessor defines. the C compiler want's '-D' in front of each while
 # Doxygen does not. rather than maintaining two lists of defines, we can use
-# make's addprefix trick to make the change. also, i like to seperate setting
+# make's addprefix trick to make the change. also, i like to seperate settings of
 # the compiler flags from the defines. it makes things a bit wordier but i find
-# it clearer.
+# it cleaner and easier to understand.
 
 # CFLAGS contains the default flags used to compile C code
 CFLAGS = \
+		-std=gnu11 \
 		-Wall \
 		-Wpedantic \
 		-Wno-variadic-macros

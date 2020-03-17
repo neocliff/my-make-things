@@ -13,6 +13,7 @@
 
 #include <stdio.h>
 
+//#pragma GCC system_header
 /**
  * We are expiramenting with variadic argments in macros. The project at
  * the office uses them extensively. The problem is that they don't always
@@ -21,8 +22,8 @@
  * it) fixes the problem. Or you can use the GNU extensions but I've been 
  * trying to avoid that.
  * 
- * Compile with '-std=c11' and get a warning
- * Compile with '-std=gnu11'
+ * Compile with '-std=c11' and get a warning;
+ * Compile with '-std=gnu11' and get a warning
  */
 #define MY_PRINT(s, ...) printf(s, ##__VA_ARGS__)
 
