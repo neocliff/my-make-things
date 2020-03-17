@@ -185,3 +185,7 @@ Two of the packages require options for the `configure` commands:
 * For gcc-9.2.0: `$ ../gcc-9.2.0/configure --with-cpu-32=i686 --with-cpu-64=core2
 --with-multiarch --with-gnu-ld --with-gnu-as --with-multilib-list=m32,mx32,m64
 --enable-threads`
+
+Note that the "--with-cpu-32=i686 --with-cpu-64=core2" are not necessary. They
+simply provide default values for the target CPU when building for x86_32 and
+x86_64 chips.
