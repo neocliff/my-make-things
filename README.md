@@ -86,13 +86,13 @@ Doxygen
 
 Doxygen is used to generate developer documentation directly from the source.
 Rather than have every directory under src have its own Doxyfile (the name
-of the configuration file), I have a single project wide Doxyfile that is 
+of the configuration file), I have a single project wide Doxyfile that is
 configured using variables set in the make files. If you use the make system,
 generating the documentation is as simple as `make ... -f path/to/makefile
-docs`. The variables are automatically set and passed in on the call to 
+docs`. The variables are automatically set and passed in on the call to
 Doxygen.
 
-## About the Project
+## About this Project
 
 This "project" is a glorified "Hello, World!". I created enough
 in the way of source code to test the build system. It contains:
@@ -137,3 +137,51 @@ As I said, this source is contrived and is intended to prove
 capability of the build system not demonstrate I can write amazing
 code. Hopefully, you find it has useful ideas as a starting point for
 your own projects.
+
+## Tools I Used
+
+My VM is Ubuntu 18.04.1 64-bit desktop running GNOME. We made a decision on the
+project at work to upgrade the toolset now rather than "someday". Because
+"someday" never comes, right?
+
+Before you can build the final toolset, you need to install the following using
+your favorite package manager (_e.g._, `sudo apt install -y <package(s)>)`:
+
+* binutils
+* make
+* g++, g++-multilib, g++-7-multilib, gcc-7-doc libstdc++6-7-dbg libstdc++-7-doc
+* flex, bison
+* texinfo
+
+Other tools like Perl and GZip are pre-installed and are of a version sufficient
+to build the tools from source.
+
+You need to download the following source code packages.
+
+* m4-1.4.18
+* sed-4.8
+* gawk-5.0.1
+* binutils-2.33.1
+* make-4.3
+* gcc-9.2.0 with GMP (4.3.2 or later), MPFR (3.0.1 or later), MPC (1.0.1 or
+later), isl (0.15 or later), and zstd (latest)
+
+Everything except binutils and gcc is a stock build process:
+
+* download source package to your desktop
+* gunzip/untar/etc the archive: `$ gunzip --to-stdout ~/Desktop/<package>.tar.gz | tar -xv`
+* make a build directory: `$ mkdir ~/Desktop/build-<package>`
+* change to the build directory: `$ cd ~/Desktop/build-<package>`
+* run the command: `$ ../<package-rev>/configure`
+* make the code: `$ make`
+* drink coffee in varying amounts
+* install the package: `$ sudo make install`
+* update the shells knowledge: `hash -r`
+* check the version: `$ <program> --version`
+
+Two of the packages require options for the `configure` commands:
+
+* For binutils-2.33.1: `$ ../binutils-2.33.1/configure --enable-targets=all`
+* For gcc-9.2.0: `$ ../gcc-9.2.0/configure --with-cpu-32=i686 --with-cpu-64=core2
+--with-multiarch --with-gnu-ld --with-gnu-as --with-multilib-list=m32,mx32,m64
+--enable-threads`
