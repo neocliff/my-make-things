@@ -3,6 +3,8 @@
 This isn't the most amazing code but it accomplishes a purpose: prove the build
 system works and experiment with certain C constructs.
 
+## Notes
+
 * variadic arguments for macro -  This is an issue I'm encountering at work.
 We inherited some code from another team that uses variadic arguments in macro
 calls. They work fine unless you don't supply at least one argument. In that

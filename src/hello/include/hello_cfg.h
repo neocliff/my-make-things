@@ -36,17 +36,17 @@
  * 
  */
 typedef struct _my_version {
-    int version_major;
-    int version_minor;
-    int version_patch;
-    int version_build;
+    int version_major;      //< major version number (0-999)
+    int version_minor;      //< minor version number (0-999)
+    int version_patch;      //< patch version number (0-999)
+    int version_build;      //< build number (0-99999)
 } MyVersion_t;
 
 /**
  * @brief program version information
  * 
  * Declare the (externally visible) pointer to the structure containing the
- * version information. The pointer is initialized by main().
+ * version information. The pointer is initialized in @ref hello.c.
  */
 extern MyVersion_t *my_version_ptr;
 

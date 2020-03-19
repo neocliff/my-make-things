@@ -93,6 +93,7 @@ checkit:
 	@echo "=============================="
 	@echo "tools..."
 	@echo "=============================="
+	@echo "TERM       is ${TERM}"
 	@echo "SYS_BINDIR is ${SYS_BINDIR}"
 	@echo "USR_BINDIR is ${USR_BINDIR}"
 	@echo "GNU_BINDIR is ${GNU_BINDIR}"

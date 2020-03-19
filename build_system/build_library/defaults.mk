@@ -96,3 +96,26 @@ DOXY_README     ?= ${I_AM_AT}/README.md
 DOXY_NUMBER     ?= $(shell git show --format="%h" --no-patch)
 DOXY_PREPROCESSOR_DEFINES ?= ${PREPROCESSOR_DEFINES}
 DOXY_INCLUDE_DIRS ?= ${INCLUDE_DIRS}
+
+# define colors used in message output
+ifeq ($(TERM),$(filter $(TERM),xterm screen xterm-color xterm-256color))
+	ifdef USE_TPUT_COLOR
+		# using the tput command to do text coloring
+		COLOR_RED		= @tput setaf 1
+		COLOR_GREEN		= @tput setaf 2
+		COLOR_YELLOW	= @tput setaf 3
+		COLOR_BLUE		= @tput setaf 4
+		COLOR_MAGENTA	= @tput setaf 5
+		COLOR_CYAN		= @tput setaf 6
+		COLOR_NORMAL	= @tput sgr0
+	else
+		# using ansi escape codes to do text coloring
+		COLOR_RED		= \033[31m
+		COLOR_GREEN		= \033[32m
+		COLOR_YELLOW	= \033[33m
+		COLOR_BLUE		= \033[34m
+		COLOR_MAGENTA	= \033[35m
+		COLOR_CYAN		= \033[36m
+		COLOR_NORMAL	= \033[0m
+	endif
+endif

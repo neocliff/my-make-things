@@ -178,7 +178,7 @@ COMPILE.c = ${CC} ${C_INCLUDE_DIRS} ${DEPFLAGS} ${CFLAGS} -c -o $@
 ${COMP_OBJ_DIR}/%.o: %.c
 ${COMP_OBJ_DIR}/%.o: %.c ${COMP_DEP_DIR}/%.d
 	@echo ""
-	@echo "makefile: compiling '$@' from '$<'"
+	@echo "makefile: COMPILING '$@' FROM '$<'"
 	${COMPILE.c} $<
 	@echo "makefile: moving dependency file to ${COMP_DEP_DIR}/$*.d"
 	${SAVE.d}
