@@ -33,6 +33,7 @@
  * tuple: major.minor.path.build. 
  */
 MyVersion_t my_version_info = { VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, 0 };
+MyVersion_t *my_version_ptr = &my_version_info;
 
 int main (int argc, char *argv[], char *envp[]);
 
@@ -48,6 +49,12 @@ int main (int argc, char *argv[], char *envp[]);
  */
 int main (int argc, char *argv[], char *envp[]) {
     printf("hello, world!\n");
+
+    /**
+     * get the version information and print it
+     */
+    char *s_version_string = s_version();
+    printf("version string: %s\n", s_version_string);
 
     /**
      * this next line checks conditional compilation

@@ -5,6 +5,7 @@ LIB_BUILT = s_lib.ar
 
 # define directory paths to header files we need
 INCLUDE_DIRS = \
+	${PROJ_ROOT}/src/hello/include \
 	${I_AM_AT}/include
 
 # identify source files in this component

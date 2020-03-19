@@ -45,7 +45,8 @@ typedef struct _my_version {
 /**
  * @brief program version information
  * 
- * Declare the structure containing the version information.
+ * Declare the (externally visible) pointer to the structure containing the
+ * version information. The pointer is initialized by main().
  */
 extern MyVersion_t *my_version_ptr;
 
