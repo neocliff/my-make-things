@@ -15,8 +15,7 @@
 CFLAGS = \
 		-std=gnu11 \
 		-Wall \
-		-Wpedantic \
-		-Wno-variadic-macros
+		-Wpedantic
 
 # if we are doing a "debug" build, include the debugging information
 # (symbol tables, etc) but remove information for unused symbols. 

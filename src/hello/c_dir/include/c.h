@@ -31,7 +31,7 @@
  * you have to use it, make the code as small as possible.
  */
 #pragma GCC system_header
-#define MY_PRINT(s, ...) printf(s, ##__VA_ARGS__)
+#define MY_PRINT(s, ...)    printf(s, ##__VA_ARGS__)
 
 extern char *c();
 
