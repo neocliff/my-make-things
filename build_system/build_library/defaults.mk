@@ -18,7 +18,7 @@ AS      = ${GNU_BINDIR}/as
 # use the new linker/loader called 'gold'. change it to 'ld' if
 # 'gold' is causing problems. what i found on the web says it's a
 # work-in-progress.
-LD		= ${GNU_BINDIR}/gold
+LD		= ${GNU_BINDIR}/ld.gold
 
 # by default, GNU make defines CPP as '${CC} -E' which just runs the 
 # C/C++ compiler's preprocessor. i prefer explcitly calling the
