@@ -4,32 +4,27 @@
 # define paths to system directories
 SYS_BINDIR ?= /bin
 USR_BINDIR ?= /usr/bin
-GNU_BINDIR ?= ${USR_BINDIR}
+USR_LCL_BINDIR ?= /usr/local/bin
 
 # define all the default tools the project uses. note that we are
 # using '=' rather than '?=' because GNU make defines several of these
 # tools implicitly. the idea is you don't have to define them if you
 # don't want to do so. we are defining them here to allow the project
 # to use tools that are not in the standard locations.
-CC		= ${GNU_BINDIR}/gcc
-CXX     = ${GNU_BINDIR}/g++
-AS      = ${GNU_BINDIR}/as
+CC		= ${USR_LCL_BINDIR}/gcc
+CPP		= ${USR_LCL_BINDIR}/cpp
+CXX     = ${USR_LCL_BINDIR}/g++
+AS      = ${USR_LCL_BINDIR}/as
 
 # use the new linker/loader called 'gold'. change it to 'ld' if
 # 'gold' is causing problems. what i found on the web says it's a
 # work-in-progress.
-LD		= ${GNU_BINDIR}/ld.gold
-
-# by default, GNU make defines CPP as '${CC} -E' which just runs the 
-# C/C++ compiler's preprocessor. i prefer explcitly calling the
-# compiler to run the preprocessor rather than use ${CPP} to do it.a
-# i've reset the vaule to prevent confusion.
-CPP     =
+LD		= ${USR_LCL_BINDIR}/ld.gold
 
 # define more useful tools
 TAR		?= ${SYS_BINDIR}/tar
-AR		?= ${GNU_BINDIR}/ar
-STRIP   ?= ${USR_BINDIR}/strip
+AR		?= ${USR_LCL_BINDIR}/ar
+STRIP   ?= ${USR_LCL_BINDIR}/strip
 INSTALL ?= ${USR_BINDIR}/install
 
 # tool used to run Doxygen for generating documentation from source
