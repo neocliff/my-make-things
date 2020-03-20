@@ -3,7 +3,7 @@ FROM ubuntu:18.04
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -y \
-    binutils make g++ g++-multilib \
+    binutils git make g++ g++-multilib \
     g++-7-multilib gcc-7-doc apt-utils \
     libstdc++6-7-dbg libstdc++-7-doc libacl1-dev \
     flex bison texinfo wget xz-utils doxygen libtool build-essential \
@@ -62,7 +62,7 @@ RUN cd /make-${make_v} \
     && rm -rf /make-${make_v}*
 
 RUN cd /binutils-${binutils_v} \
-    && ./configure --enable-targets=all --enable-gold \
+    && ./configure --enable-targets=all --enable-gold --enable-lto \
     && make -j$((`nproc`+1)) \
     && make install-strip \
     && rm -rf /binutils-${binutils_v}*
@@ -76,3 +76,7 @@ RUN mkdir /gcc-${gcc_v}/build \
     && make -j$((`nproc`+1)) \
     && make install-strip \
     && rm -rf /gcc-${gcc_v}*
+
+RUN useradd -rm -d /home/user -s /bin/bash -u 1000 user
+USER user
+WORKDIR /home/user
