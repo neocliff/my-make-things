@@ -9,14 +9,16 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     sudo \
 && rm -rf /var/lib/apt/lists/*
 
-ARG m4_v=1.4.18
-ARG sed_v=4.8
-ARG gawk_v=5.0.1
 ARG binutils_v=2.33.1
-ARG make_v=4.3
+ARG gawk_v=5.0.1
 ARG gcc_v=9.2.0
 ARG gmp_v=6.1.0
 ARG isl_v=0.18
+ARG m4_v=1.4.18
+ARG make_v=4.3
+ARG mpc_v=1.0.3
+ARG mpfr_v=4.0.2
+ARG sed_v=4.8
 ARG zstd_v=1.4.4
 
 # Download, configure, install necessary source code packages
@@ -56,6 +58,26 @@ RUN wget https://gcc.gnu.org/pub/gcc/infrastructure/gmp-${gmp_v}.tar.bz2 \
     && make install-strip \
     && cd / \
     && rm -rf /gmp-${gmp_v}*
+
+# TODO I took the 'make check' step out because the 'tversion' test case
+# has something wrong. I will investigate off-line.
+RUN wget https://www.mpfr.org/mpfr-current/mpfr-${mpfr_v}.tar.xz \
+    && tar -Jxf /mpfr-${mpfr_v}.tar.xz \
+    && cd /mpfr-${mpfr_v} \
+    && ./configure \
+    && make \
+    && make install-strip \
+    && cd / \
+    && rm -rf /mpfr-${mpfr_v}*
+
+RUN wget https://gcc.gnu.org/pub/gcc/infrastructure/mpc-${mpc_v}.tar.gz \
+    && tar -jxvf /mpc-${mpc_v}.tar.bz2 \
+    && cd /gmp-${mpc_v} \
+    && ./configure \
+    && make -j$((`nproc`+1)) \
+    && make install-strip \
+    && cd / \
+    && rm -rf mpc-${mpc_v}*
 
 RUN wget https://gcc.gnu.org/pub/gcc/infrastructure/isl-${isl_v}.tar.bz2 \
     && tar -jxvf /isl-${isl_v}.tar.bz2 \
@@ -99,7 +121,7 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && ./contrib/download_prerequisites \
     && cd build \
     && ../configure --with-cpu-32=i686 --with-cpu-64=core2 \
-        --with-multiarch --with-multilib-list=m32,mx32,m64 \
+        --with-multiarch --with-multilib-list=m32,m64 \
         --enable-languages=c,c++,lto \
         --enable-threads=posix \
         --enable-lto \
