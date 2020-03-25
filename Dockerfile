@@ -26,7 +26,7 @@ RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
     && make -j$((`nproc`+1)) \
     && make install-strip \
     && cd / \
-    && rm -rf /m4-${m4_v}
+    && rm -rf /m4-${m4_v}*
 
 RUN wget https://ftp.gnu.org/gnu/sed/sed-${sed_v}.tar.xz \
     && tar -Jxf sed-${sed_v}.tar.xz \
