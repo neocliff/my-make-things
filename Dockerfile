@@ -71,7 +71,7 @@ RUN wget https://www.mpfr.org/mpfr-current/mpfr-${mpfr_v}.tar.xz \
     && rm -rf /mpfr-${mpfr_v}*
 
 RUN wget https://gcc.gnu.org/pub/gcc/infrastructure/mpc-${mpc_v}.tar.gz \
-    && tar -jxvf /mpc-${mpc_v}.tar.bz2 \
+    && tar -jxvf /mpc-${mpc_v}.tar.gz \
     && cd /gmp-${mpc_v} \
     && ./configure \
     && make -j$((`nproc`+1)) \
