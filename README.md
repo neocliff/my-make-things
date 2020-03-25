@@ -164,9 +164,15 @@ You need to download the following source code packages.
 * binutils-2.33.1
 * make-4.3
 * gcc-9.2.0 with GMP (4.3.2 or later), MPFR (3.0.1 or later), MPC (1.0.1 or
-later), isl (0.15 or later), and zstd (latest)
+later), isl^ (0.15 or later), and zstd^ (latest)
 
-Everything except binutils and gcc is a stock build process:
+^ The isl and zstd libraries are required to use the Link-Time Optimization
+features in GCC and the new linker/loader, gold.
+
+Everything except binutils and gcc is a stock build process. Best practice is
+to create a separate build directory outside of the source directory. It's only
+required for building GCC but recommended for the other elements. The generic
+process looks like:
 
 * download source package to your desktop
 * gunzip/untar/etc the archive: `$ gunzip --to-stdout ~/Desktop/<package>.tar.gz | tar -xv`
@@ -174,7 +180,7 @@ Everything except binutils and gcc is a stock build process:
 * change to the build directory: `$ cd ~/Desktop/build-<package>`
 * run the command: `$ ../<package-rev>/configure`
 * make the code: `$ make`
-* drink coffee in varying amounts
+* drink tea in varying amounts
 * install the package: `$ sudo make install`
 * update the shells knowledge: `hash -r`
 * check the version: `$ <program> --version`
@@ -186,6 +192,6 @@ Two of the packages require options for the `configure` commands:
 --with-multiarch --with-gnu-ld --with-gnu-as --with-multilib-list=m32,mx32,m64
 --enable-threads`
 
-Note that the "--with-cpu-32=i686 --with-cpu-64=core2" are not necessary. They
+Note that the "--with-cpu-32=i686 --with-cpu-64=core2" are not required. They
 simply provide default values for the target CPU when building for x86_32 and
 x86_64 chips.
