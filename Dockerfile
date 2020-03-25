@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates binutils git make g++ g++-multilib g++-7-multilib \
     gcc-7-doc apt-utils libstdc++6-7-dbg libstdc++-7-doc libacl1-dev \
     flex bison texinfo wget xz-utils doxygen libtool build-essential \
+    sudo \
 && rm -rf /var/lib/apt/lists/*
 
 ARG m4_v=1.4.18
@@ -108,6 +109,12 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && cd / \
     && rm -rf /gcc-${gcc_v}*
 
+# Create the user account
 RUN useradd -rm -d /home/user -s /bin/bash -u 1000 user
+
+# Add user to sudoers so they can get to root functions
+RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
+
+# Make user the default login and set working directory
 USER user
 WORKDIR /home/user
