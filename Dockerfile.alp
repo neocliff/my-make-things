@@ -1,0 +1,77 @@
+FROM alpine:3.11.3
+
+# Install packages we need
+RUN apk update \
+    && apk upgrade --update-cache \
+    && apk add sudo \
+    && apk add xz \
+    && apk add build-base \
+    && apk add git gcc-doc \
+    && apk add flex bison texinfo \
+    && apk add wget doxygen libtool \
+    && apk add gawk zstd
+
+# Set the versions for the source to pull
+ARG sed_v=4.8
+ARG binutils_v=2.33.1
+ARG make_v=4.3
+ARG gcc_v=9.2.0
+
+# Download necessary source code packages
+RUN wget https://ftp.gnu.org/gnu/sed/sed-${sed_v}.tar.xz \
+    && wget https://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.xz \
+    && wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz \
+    && wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz
+
+# Extract source code packages and remove compressed versions
+RUN for file in *.tar.xz; do tar -Jxf "$file"; done \
+    && for file in *.tar.gz; do tar -zxf "$file"; done \
+    && for file in *.tar.*; do rm "$file"; done
+
+# Configure and build packages
+RUN mkdir /build-sed \
+    && cd /build-sed \
+    && /sed-${sed_v}/configure \
+    && make -j$((`nproc`+1)) \
+    && make install-strip \
+    && cd / \
+    && rm -rf /sed-${sed_v}* /build-sed
+
+RUN mkdir /build-binutils \
+    && cd /build-binutils \
+    && /binutils-${binutils_v}/configure --enable-targets=all --enable-gold --enable-lto \
+    && make -j$((`nproc`+1)) \
+    && make install-strip \
+    && cd  / \
+    && rm -rf /binutils-${binutils_v}* /build-binutils
+
+RUN mkdir /build-make \
+    && cd /build-make \
+    && /make-${make_v}/configure \
+    && LD=/usr/local/bin/ld.gold make -j$((`nproc`+1)) \
+    && make install-strip \
+    && cd / \
+    && rm -rf make-${make_v}* /build-make
+
+#RUN mkdir /build-gcc \
+    #&& cd /gcc-${gcc_v} \
+    #&& ./contrib/download_prerequisites \
+    #&& cd /build-gcc \
+    #&& /gcc-${gcc_v}/configure --with-cpu-64=core2 --with-gnu-ld --with-gnu-as \
+        #--enable-threads=posix --enable-bootstrap --enable-languages=c,c++,lto \
+    #&& make -j$((`nproc`+1)) \
+    #&& make install-strip \
+    #&& cd / \
+    #&& rm -rf /gcc-${gcc_v}* /build-gcc
+
+# Descibe the user/group to create
+ENV USERID 1000
+ENV USERNAME user
+ENV GROUPNAME wheel
+ENV HOMEDIR /home/user
+
+# Create user and set running user/home directory
+RUN adduser -D -h $HOMEDIR -u $USERID $USERNAME $GROUPNAME
+RUN sed -e 's/^wheel:\(.*\)/wheel:\1,$USERNAME/g' -i /etc/group
+USER $USERNAME
+WORKDIR $HOMEDIR
