@@ -14,6 +14,8 @@ ARG gawk_v=5.0.1
 ARG binutils_v=2.33.1
 ARG make_v=4.3
 ARG gcc_v=9.2.0
+ARG gmp_v=6.1.0
+ARG isl_v=0.18
 ARG zstd_v=1.4.4
 
 # Download, configure, install necessary source code packages
@@ -43,6 +45,25 @@ RUN wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
     && make install-strip \
     && cd / \
     && rm -rf /gawk-${gawk_v}*
+
+RUN wget https://gcc.gnu.org/pub/gcc/infrastructure/gmp-${gmp_v}.tar.bz2 \
+    && tar -jxvf /gmp-${gmp_v}.tar.bz2 \
+    && cd /gmp-${gmp_v} \
+    && ./configure \
+    && make -j$((`nproc`+1)) \
+    && make check \
+    && make install-strip \
+    && cd / \
+    && rm -rf /gmp-${gmp_v}*
+
+RUN wget https://gcc.gnu.org/pub/gcc/infrastructure/isl-${isl_v}.tar.bz2 \
+    && tar -jxvf /isl-${isl_v}.tar.bz2 \
+    && cd /isl-${isl_v} \
+    && ./configure \
+    && make -j$((`nproc`+1)) \
+    && make install-strip \
+    && cd / \
+    && rm -rf /isl-${isl_v}*
 
 RUN wget https://github.com/facebook/zstd/releases/download/v${zstd_v}/zstd-${zstd_v}.tar.gz \
     && tar -zxf zstd-${zstd_v}.tar.gz \
@@ -76,8 +97,12 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && cd /gcc-${gcc_v} \
     && ./contrib/download_prerequisites \
     && cd build \
-    && ../configure --with-cpu-32=i686 --with-cpu-64=core2 --with-multiarch --with-gnu-ld \
-        --with-gnu-as --with-multilib-list=m32,mx32,m64 --enable-threads \
+    && ../configure --with-cpu-32=i686 --with-cpu-64=core2 \
+        --with-multiarch --with-multilib-list=m32,mx32,m64 \
+        --enable-languages=c,c++,lto \
+        --enable-threads=posix \
+        --enable-lto \
+        --with-gnu-as -with-gnu-gold \
     && make -j$((`nproc`+1)) \
     && make install-strip \
     && cd / \
