@@ -15,7 +15,7 @@ web, anything that's not a two sentence paragraph or a bulleted
 list is ignored.  The second reason is a bit more controversial.
 
 I don't believe in self-documenting code. It's like unicorns: we may
-dream of them but they don't exist. After more than 35 years of 
+dream of them but they don't exist. After more than 35 years of
 writing code, I've seen a *lot* of code. Much of it the author
 claimed was "self-documenting".  Yet, if you took it back to the
 author a few weeks or months later, they had to spend a fair amount
