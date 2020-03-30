@@ -2,12 +2,12 @@ FROM ubuntu:18.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    ca-certificates binutils git make g++ g++-multilib g++-7-multilib \
-    gcc-7-doc apt-utils libstdc++6-7-dbg libstdc++-7-doc libacl1-dev \
-    flex bison texinfo wget xz-utils doxygen libtool build-essential \
-    sudo \
-&& rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y \
+        ca-certificates binutils git make g++ g++-multilib apt-utils \
+        flex bison texinfo wget xz-utils doxygen libtool build-essential \
+        sudo ssh \
+    && rm -rf /var/lib/apt/lists/*
 
 # ############################## #
 #                                #
