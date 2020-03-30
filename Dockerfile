@@ -4,9 +4,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        ca-certificates binutils git make g++ g++-multilib apt-utils \
-        flex bison texinfo wget xz-utils doxygen libtool build-essential \
-        sudo ssh \
+        wget sudo ssh \
+        build-essential \
+        g++-multilib \
+        flex bison libtool texinfo \
+        git xz-utils doxygen \
     && rm -rf /var/lib/apt/lists/*
 
 # ############################## #
@@ -28,23 +30,23 @@ ARG sed_v=4.8
 #                                                         #
 # ####################################################### #
 
-RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
-    && tar -Jxf m4-${m4_v}.tar.xz \
-    && cd /m4-${m4_v} \
-    && ./configure \
-    && make -j$((`nproc`+1)) \
-    && make install-strip \
-    && cd / \
-    && rm -rf /m4-${m4_v}*
+# RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
+#     && tar -Jxf m4-${m4_v}.tar.xz \
+#     && cd /m4-${m4_v} \
+#     && ./configure \
+#     && make -j$((`nproc`+1)) \
+#     && make install-strip \
+#     && cd / \
+#     && rm -rf /m4-${m4_v}*
 
-RUN wget https://ftp.gnu.org/gnu/sed/sed-${sed_v}.tar.xz \
-    && tar -Jxf sed-${sed_v}.tar.xz \
-    && cd /sed-${sed_v} \
-    && ./configure \
-    && make -j$((`nproc`+1)) \
-    && make install-strip \
-    && cd / \
-    && rm -rf /sed-${sed_v}*
+# RUN wget https://ftp.gnu.org/gnu/sed/sed-${sed_v}.tar.xz \
+#     && tar -Jxf sed-${sed_v}.tar.xz \
+#     && cd /sed-${sed_v} \
+#     && ./configure \
+#     && make -j$((`nproc`+1)) \
+#     && make install-strip \
+#     && cd / \
+#     && rm -rf /sed-${sed_v}*
 
 RUN wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
     && tar -Jxf gawk-${gawk_v}.tar.xz \
@@ -111,4 +113,10 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
 RUN useradd -rm -d /home/user -s /bin/bash -u 1000 user
 RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
 USER user
+
+# Note that we are assigning a default working directory here. Normally, the
+# container will be invoked with the option '--workdir /path/to/working/dir'
+# to override the this. I did it this way because not everybody has the repo
+# located in the same place and since we are mounting that directory in the
+# container in the same place, this looked like the best option.
 WORKDIR /home/user
