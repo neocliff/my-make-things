@@ -1,15 +1,13 @@
 FROM alpine:3.11.3
 
 # Install packages we need
+#   isl, zstd   used for GCC's Link-Time Optimization (LTO)
 RUN apk update \
-    && apk upgrade --update-cache \
-    && apk add sudo \
-    && apk add xz \
-    && apk add build-base \
-    && apk add git gcc-doc \
-    && apk add flex bison texinfo \
-    && apk add wget doxygen libtool \
-    && apk add gawk zstd
+    && apk upgrade --no-cache \
+            sudo xz build-base git \
+            gcc-doc flex bison texinfo \
+            wget doxygen libtool \
+            gawk isl zstd
 
 # Set the versions for the source to pull
 ARG sed_v=4.8
