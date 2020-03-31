@@ -30,7 +30,8 @@ command_to_run="$(printf "${1+ %q}" "$@")"
 #       -t          allocate a pseudo-tty for the console
 #       -v          connect a volume using "source:destination[:ro]" syntax
 #           `git rev-parse --show-toplevel` is the root of the current repo (source)
-#           /home/user/my-make-things is the mount point in the container (destination)
+#                   and is the mount point in the container (destination)
+#           the "ro" indicates a mount is to be read-only within the container
 #       <image>     name of the container image in "image:tag" format
 #       <cmd [opts]>
 #                   name of the command to run in the container, usually a shell
