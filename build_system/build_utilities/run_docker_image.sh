@@ -7,14 +7,19 @@
 PROJ_ROOT=`git rev-parse --show-toplevel`
 
 if [ $# -lt 2 ]; then
-    echo "usage: $0 <dir> <command>"
+    echo "usage: $0 <dir> <command-and-args>"
     echo "where:"
     echo "  <dir> is the working directory relative to $PROJ_ROOT"
-    echo "  <command> is the command to run"
+    echo "  <command-and-args> is the command to run"
     exit 1
 fi
 
-# pull off the working directory and then shift the arguments
+# pull off the in-container working directory and then shift the arguments.
+# note that this working directory is relative to the root of the repository,
+# e.g., if my repo is at /home/user/Documents/my-make-things, and i use the
+# path src/hello, the working directory within the container will be set to
+# /home/user/Documents/my-make-things/src/hello. the command string passed
+# into the container to be run will do so in the working container.
 working_dir=$1
 shift
 
