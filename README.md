@@ -85,12 +85,23 @@ Doxygen
 ### Doxygen and Doxyfile
 
 Doxygen is used to generate developer documentation directly from the source.
-Rather than have every directory under src have its own Doxyfile (the name
-of the configuration file), I have a single project wide Doxyfile that is
+Rather than have every directory under src have its own `Doxyfile` (the name
+of the configuration file), I have a single project wide `Doxyfile` that is
 configured using variables set in the make files. If you use the make system,
 generating the documentation is as simple as `make ... -f path/to/makefile
 docs`. The variables are automatically set and passed in on the call to
 Doxygen.
+
+### Docker Containers
+
+The toolchain will run in a Docker container. The `Dockerfile` builds the container
+using the latest version of Ubuntu 18.04 (desktop). If you build the container,
+expect it to take quiet a bit of time (on the order of an hour).
+
+Note that Dockerfile.alp is an incomplete attempt to build the toolchain on the
+latest Alpine Linux distrobution (BusyBox-based). The main problem I have had is
+Alpine is based on musl's clib rather than GCC's clib. This causes no end of
+problems when compiling GCC 9.2.0. I may or may not finish that project.
 
 ## About this Project
 
@@ -140,23 +151,39 @@ your own projects.
 
 ## Tools I Used
 
-My VM is Ubuntu 18.04.1 64-bit desktop running GNOME. We made a decision on the
-project at work to upgrade the toolset now rather than "someday". Because
-"someday" never comes, right?
+I'm using a VM running Ubuntu 18.04.4 64-bit desktop with GNOME. We made a
+decision on the project at work to upgrade the toolset now rather than
+"someday". Because "someday" never comes, right?
 
 Before you can build the final toolset, you need to install the following using
-your favorite package manager (_e.g._, `sudo apt install -y <package(s)>)`:
+your favorite package manager (_e.g._, `sudo apt install -y <package(s)>)`,
+either on your system, within a VM, or using Docker and the `Dockerfile` herein:
 
-* binutils
-* make
-* g++, g++-multilib, g++-7-multilib, gcc-7-doc libstdc++6-7-dbg libstdc++-7-doc
-* flex, bison
+* wget
+* sudo (needed to allow user to do privileged commands in container)
+* ssh
+* build-essential (gets you make 4.1, gcc 7.5, sed 4.4, binutils 2.30)
+* g++-multilib (required to build x86_32/x86_64 compiler)
+* flex (gets you m4 1.4.18), bison
+* libtool
 * texinfo
+* git^ (optional)
+* xz-utils
+* doxygen
+
+^ Note that git is optional. If you include it in the Docker container, you can
+run Git commands on the mounted repository directly within the container. There
+a bunch of issues to think about before you do this but that is left as an
+exercise for the student.
 
 Other tools like Perl and GZip are pre-installed and are of a version sufficient
 to build the tools from source.
 
-You need to download the following source code packages.
+You need to download the following source code packages. Note that you don't
+need to download and build `m4` and `sed` if the packages yield the versions
+listed below. (They do at the time of writing this.) I've left the `RUN` steps
+to download and build them but they are commented out. This is not the case with
+`gawk`. The Ubuntu repo has version 4.1.4 and we are specing 5.0.1.
 
 * m4-1.4.18
 * sed-4.8
@@ -187,11 +214,12 @@ process looks like:
 
 Two of the packages require options for the `configure` commands:
 
-* For binutils-2.33.1: `$ ../binutils-2.33.1/configure --enable-targets=all`
+* For binutils-2.33.1: `$ ../binutils-2.33.1/configure --enable-targets=all
+--enable-gold --enable-lto`
 * For gcc-9.2.0: `$ ../gcc-9.2.0/configure --with-cpu-32=i686 --with-cpu-64=core2
---with-multiarch --with-gnu-ld --with-gnu-as --with-multilib-list=m32,mx32,m64
---enable-threads`
+--with-multiarch --with-multilib-list=m32,m64 --enable-languages=c,c++,lto
+--enable-threads=posix --enable-lto --with-gnu-gold --with-gnu-as`
 
-Note that the "--with-cpu-32=i686 --with-cpu-64=core2" are not required. They
+Note that the `--with-cpu-32=i686 --with-cpu-64=core2` are not required. They
 simply provide default values for the target CPU when building for x86_32 and
-x86_64 chips.
+x86_64 chips. We have some baseline requirements we have to meet.
