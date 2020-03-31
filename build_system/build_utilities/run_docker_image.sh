@@ -46,12 +46,5 @@ echo "PROJ_ROOT is      $PROJ_ROOT"
 echo "working_dir is    $working_dir"
 echo "command_to_run is $command_to_run"
 
-# if you want to live dangerously and process Git commands within the container
-# use this docker run command and comment out the following one...
-# docker run --rm -it -v $PROJ_ROOT:$PROJ_ROOT \
-#         -v $HOME/.gitconfig:$HOME/.gitconfig:ro \
-#         -v $HOME/.ssh:$HOME/.ssh:ro \
-#         --workdir $PROJ_ROOT/$working_dir toolset:latest $command_to_run
-
 docker run --rm -it -v $PROJ_ROOT:$PROJ_ROOT \
         --workdir $PROJ_ROOT/$working_dir toolset:latest $command_to_run
