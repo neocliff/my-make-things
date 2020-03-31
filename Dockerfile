@@ -1,5 +1,7 @@
 FROM ubuntu:18.04
 
+LABEL maintainer="neocliff@mac.com"
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
@@ -9,6 +11,7 @@ RUN apt-get update \
         g++-multilib \
         flex bison libtool texinfo \
         git xz-utils doxygen \
+        python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # ############################## #
