@@ -167,14 +167,10 @@ either on your system, within a VM, or using Docker and the `Dockerfile` herein:
 * flex (gets you m4 1.4.18), bison
 * libtool
 * texinfo
-* git^ (optional)
 * xz-utils
 * doxygen
-
-^ Note that git is optional. If you include it in the Docker container, you can
-run Git commands on the mounted repository directly within the container. There
-a bunch of issues to think about before you do this but that is left as an
-exercise for the student.
+* git
+* python3, python3-pip
 
 Other tools like Perl and GZip are pre-installed and are of a version sufficient
 to build the tools from source.
