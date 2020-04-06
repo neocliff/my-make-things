@@ -219,3 +219,7 @@ Two of the packages require options for the `configure` commands:
 Note that the `--with-cpu-32=i686 --with-cpu-64=core2` are not required. They
 simply provide default values for the target CPU when building for x86_32 and
 x86_64 chips. We have some baseline requirements we have to meet.
+
+You may also want to add a `--prefix=/usr` to all the `configure` invocations.
+This is replace existing installs of tools like GCC and Make. It also means that
+`cmake` (assuming you use it) will be able to find the tools.
