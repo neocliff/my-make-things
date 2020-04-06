@@ -26,6 +26,7 @@ ARG gcc_v=9.2.0
 ARG m4_v=1.4.18
 ARG make_v=4.3
 ARG sed_v=4.8
+ARG cmake_ver=3.17.0
 
 # ####################################################### #
 #                                                         #
@@ -45,7 +46,7 @@ ARG sed_v=4.8
 # RUN wget https://ftp.gnu.org/gnu/sed/sed-${sed_v}.tar.xz \
 #     && tar -Jxf sed-${sed_v}.tar.xz \
 #     && cd /sed-${sed_v} \
-#     && ./configure \
+#     && ./configure wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz
 #     && make -j$((`nproc`+1)) \
 #     && make install-strip \
 #     && cd / \
@@ -54,7 +55,7 @@ ARG sed_v=4.8
 RUN wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
     && tar -Jxf gawk-${gawk_v}.tar.xz \
     && cd /gawk-${gawk_v} \
-    && ./configure \
+    && ./configure --prefix=/usr \
     && make -j$((`nproc`+1)) \
     && make install-strip \
     && cd / \
@@ -63,7 +64,7 @@ RUN wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
 RUN wget http://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
     && tar -xf /binutils-${binutils_v}.tar.gz \
     && cd /binutils-${binutils_v} \
-    && ./configure --enable-targets=all --enable-gold --enable-lto \
+    && ./configure --enable-targets=all --enable-gold --enable-lto --prefix=/usr \
     && make \
     && make install-strip \
     && cd / \
@@ -72,7 +73,7 @@ RUN wget http://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
 RUN wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz \
     && tar -zxf make-${make_v}.tar.gz \
     && cd /make-${make_v} \
-    && ./configure \
+    && ./configure --prefix=/usr \
     && make -j$((`nproc`+1)) \
     && make install-strip \
     && cd / \
@@ -95,7 +96,7 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && cd /gcc-${gcc_v} \
     && ./contrib/download_prerequisites \
     && cd build \
-    && ../configure --with-cpu-32=i686 --with-cpu-64=core2 \
+    && ../configure --prefix=/usr --with-cpu-32=i686 --with-cpu-64=core2 \
         --with-multiarch --with-multilib-list=m32,m64 \
         --enable-languages=c,c++,lto \
         --enable-threads=posix \
@@ -105,6 +106,16 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && make install-strip \
     && cd / \
     && rm -rf /gcc-${gcc_v}*
+
+# ###################################################### #
+#                                                        #
+# download the cmake binaries from cmake.org and install #
+#                                                        #
+# ###################################################### #
+
+RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}-Linux-x86_64.sh \
+    && /bin/sh ./cmake-${cmake_ver}-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license \
+    && rm -rf cmake-${cmake_ver}-Linux-x86_64.sh
 
 # ################################### #
 #                                     #
