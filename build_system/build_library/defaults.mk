@@ -1,4 +1,4 @@
-# default.mk contains all the default definitions used in the 
+# default.mk contains all the default definitions used in the
 # project, identify tools, etc.
 
 # define paths to system directories
@@ -11,20 +11,20 @@ USR_LCL_BINDIR ?= /usr/local/bin
 # tools implicitly. the idea is you don't have to define them if you
 # don't want to do so. we are defining them here to allow the project
 # to use tools that are not in the standard locations.
-CC		= ${USR_LCL_BINDIR}/gcc
-CPP		= ${USR_LCL_BINDIR}/cpp
-CXX     = ${USR_LCL_BINDIR}/g++
-AS      = ${USR_LCL_BINDIR}/as
+CC		= ${USR_BINDIR}/gcc
+CPP		= ${USR_BINDIR}/cpp
+CXX     = ${USR_BINDIR}/g++
+AS      = ${USR_BINDIR}/as
 
 # use the new linker/loader called 'gold'. change it to 'ld' if
 # 'gold' is causing problems. what i found on the web says it's a
 # work-in-progress.
-LD		= ${USR_LCL_BINDIR}/ld.gold
+LD		= ${USR_BINDIR}/ld.gold
 
 # define more useful tools
 TAR		?= ${SYS_BINDIR}/tar
-AR		?= ${USR_LCL_BINDIR}/ar
-STRIP   ?= ${USR_LCL_BINDIR}/strip
+AR		?= ${USR_BINDIR}/ar
+STRIP   ?= ${USR_BINDIR}/strip
 INSTALL ?= ${USR_BINDIR}/install
 
 # tool used to run Doxygen for generating documentation from source
@@ -35,7 +35,7 @@ BUILD_TYPE ?= debug
 ARCH_TYPE  ?= x86_64
 
 # sample pre-build step
-PRE_BUILD = 
+PRE_BUILD =
 
 # standard post-build step. note that we are setting this step
 # as a default to be used on all 'release' builds. if this isn't
