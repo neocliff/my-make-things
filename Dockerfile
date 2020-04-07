@@ -65,7 +65,7 @@ RUN wget http://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
     && tar -xf /binutils-${binutils_v}.tar.gz \
     && cd /binutils-${binutils_v} \
     && ./configure --enable-targets=all --enable-gold --enable-lto --prefix=/usr \
-    && make \
+    && make  -j$((`nproc`+1)) \
     && make install-strip \
     && cd / \
     && rm -rf /binutils-${binutils_v}*
