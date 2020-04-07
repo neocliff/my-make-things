@@ -106,7 +106,7 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && ./contrib/download_prerequisites \
     && cd build \
     && ../configure --prefix=/usr --with-cpu-32=i686 --with-cpu-64=core2 \
-        --enable-shared --enable-libstdcxx \
+        --enable-shared --enable-libstdcxx --enable-clocale=gnu \
         --with-multiarch --with-multilib-list=m32,m64 \
         --enable-languages=c,c++,lto \
         --enable-threads=posix \
@@ -116,16 +116,6 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && make install-strip \
     && cd / \
     && rm -rf /gcc-${gcc_v}*
-
-# ####################################################### #
-#                                                         #
-# download the cmake binaries from cmake.org and install. #
-#                                                         #
-# ####################################################### #
-
-# RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}-Linux-x86_64.sh \
-#     && /bin/sh ./cmake-${cmake_ver}-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license \
-#     && rm -rf cmake-${cmake_ver}-Linux-x86_64.sh
 
 # ################################### #
 #                                     #
