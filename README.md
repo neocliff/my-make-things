@@ -213,8 +213,9 @@ Two of the packages require options for the `configure` commands:
 * For binutils-2.33.1: `$ ../binutils-2.33.1/configure --enable-targets=all
 --enable-gold --enable-lto`
 * For gcc-9.2.0: `$ ../gcc-9.2.0/configure --with-cpu-32=i686 --with-cpu-64=core2
---with-multiarch --with-multilib-list=m32,m64 --enable-languages=c,c++,lto
---enable-threads=posix --enable-lto --with-gnu-gold --with-gnu-as`
+--enable-shared --enable-libstdcxx --with-multiarch --with-multilib-list=m32,m64
+--enable-languages=c,c++,lto --enable-threads=posix --enable-lto
+--with-gnu-gold --with-gnu-as`
 
 Note that the `--with-cpu-32=i686 --with-cpu-64=core2` are not required. They
 simply provide default values for the target CPU when building for x86_32 and
