@@ -46,7 +46,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-
 # RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
 #     && tar -Jxf m4-${m4_v}.tar.xz \
 #     && cd /m4-${m4_v} \
-#     && ./configure \
+#     && ./configure --prefix=/usr \
 #     && make -j$((`nproc`+1)) \
 #     && make install-strip \
 #     && cd / \
@@ -55,7 +55,7 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-
 # RUN wget https://ftp.gnu.org/gnu/sed/sed-${sed_v}.tar.xz \
 #     && tar -Jxf sed-${sed_v}.tar.xz \
 #     && cd /sed-${sed_v} \
-#     && ./configure wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz
+#     && ./configure --prefix=/usr \
 #     && make -j$((`nproc`+1)) \
 #     && make install-strip \
 #     && cd / \
