@@ -97,6 +97,7 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && ./contrib/download_prerequisites \
     && cd build \
     && ../configure --prefix=/usr --with-cpu-32=i686 --with-cpu-64=core2 \
+        --enable-shared --enable-libstdcxx \
         --with-multiarch --with-multilib-list=m32,m64 \
         --enable-languages=c,c++,lto \
         --enable-threads=posix \
