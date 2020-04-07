@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        wget sudo ssh \
+        wget sudo ssh libssl-dev \
         build-essential \
         g++-multilib \
         flex bison libtool texinfo \
@@ -33,6 +33,15 @@ ARG cmake_ver=3.17.0
 # Download, configure, and install the 'utility' packages #
 #                                                         #
 # ####################################################### #
+
+RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
+    && tar -xf /cmake-${cmake_ver}.tar.gz \
+    && cd /cmake-${cmake_ver} \
+    && ./bootstrap --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+    && make install \
+    && cd / \
+    && rm -rf /cmake-${cmake_ver}*
 
 # RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
 #     && tar -Jxf m4-${m4_v}.tar.xz \
@@ -108,15 +117,15 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && cd / \
     && rm -rf /gcc-${gcc_v}*
 
-# ###################################################### #
-#                                                        #
-# download the cmake binaries from cmake.org and install #
-#                                                        #
-# ###################################################### #
+# ####################################################### #
+#                                                         #
+# download the cmake binaries from cmake.org and install. #
+#                                                         #
+# ####################################################### #
 
-RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}-Linux-x86_64.sh \
-    && /bin/sh ./cmake-${cmake_ver}-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license \
-    && rm -rf cmake-${cmake_ver}-Linux-x86_64.sh
+# RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}-Linux-x86_64.sh \
+#     && /bin/sh ./cmake-${cmake_ver}-Linux-x86_64.sh --prefix=/usr --exclude-subdir --skip-license \
+#     && rm -rf cmake-${cmake_ver}-Linux-x86_64.sh
 
 # ################################### #
 #                                     #
