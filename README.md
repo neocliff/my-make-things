@@ -98,10 +98,12 @@ The toolchain will run in a Docker container. The `Dockerfile` builds the contai
 using the latest version of Ubuntu 18.04 (desktop). If you build the container,
 expect it to take quiet a bit of time (on the order of an hour).
 
-Note that Dockerfile.alp is an incomplete attempt to build the toolchain on the
+Note that `Dockerfile.alp` is an incomplete attempt to build the toolchain on the
 latest Alpine Linux distrobution (BusyBox-based). The main problem I have had is
 Alpine is based on musl's clib rather than GCC's clib. This causes no end of
 problems when compiling GCC 9.2.0. I may or may not finish that project.
+
+For information on installing Docker on Ubuntu 18.04, see [Docker install](https://docs.docker.com/engine/install/ubuntu/).
 
 ## About this Project
 
