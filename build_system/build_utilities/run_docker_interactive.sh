@@ -32,4 +32,4 @@ echo "PROJ_ROOT is   $PROJ_ROOT"
 echo "working_dir is $WORKING_DIR"
 
 docker run --rm -it -v $PROJ_ROOT:$PROJ_ROOT \
-        --workdir $WORKING_DIR toolset:latest
+        --workdir $WORKING_DIR neocliff/toolset:latest

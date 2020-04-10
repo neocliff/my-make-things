@@ -42,4 +42,4 @@ echo "COMMAND_TO_RUN is $COMMAND_TO_RUN"
 echo ""
 
 docker run --rm -it -v $PROJ_ROOT:$PROJ_ROOT \
-        --workdir $WORKING_DIR toolset:latest $COMMAND_TO_RUN
+        --workdir $WORKING_DIR neocliff/toolset:latest $COMMAND_TO_RUN
