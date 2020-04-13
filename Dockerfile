@@ -137,7 +137,7 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
 #    container, for now stick with OpenJDK 11 because that will be
 #    on our dev instances.
 
-RUN wget https://services.gradle.org/distributions/gradle-6.3-bin.zip \
+RUN wget https://services.gradle.org/distributions/gradle-${gradle_ver}-bin.zip \
     && unzip gradle-${gradle_ver}-bin.zip -d /opt \
     && ln -s /opt/gradle-${gradle_ver} /opt/gradle \
     && rm -f /gradle-${gradle_ver}*
