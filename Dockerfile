@@ -26,7 +26,8 @@ ARG gcc_v=9.2.0
 ARG m4_v=1.4.18
 ARG make_v=4.3
 ARG sed_v=4.8
-ARG cmake_ver=3.17.0
+# ARG cmake_ver=3.17.0
+ARG gradle_ver=6.3
 
 # ####################################################### #
 #                                                         #
@@ -34,14 +35,14 @@ ARG cmake_ver=3.17.0
 #                                                         #
 # ####################################################### #
 
-RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
-    && tar -xf /cmake-${cmake_ver}.tar.gz \
-    && cd /cmake-${cmake_ver} \
-    && ./bootstrap --prefix=/usr \
-    && make -j$((`nproc`+1)) \
-    && make install \
-    && cd / \
-    && rm -rf /cmake-${cmake_ver}*
+# RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
+#     && tar -xf /cmake-${cmake_ver}.tar.gz \
+#     && cd /cmake-${cmake_ver} \
+#     && ./bootstrap --prefix=/usr \
+#     && make -j$((`nproc`+1)) \
+#     && make install \
+#     && cd / \
+#     && rm -rf /cmake-${cmake_ver}*
 
 # RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
 #     && tar -Jxf m4-${m4_v}.tar.xz \
@@ -116,6 +117,19 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && make install-strip \
     && cd / \
     && rm -rf /gcc-${gcc_v}*
+
+# ############################################################## #
+#                                                                #
+# Install Gradle binaries. It is positioned here just in case we #
+# have to build Gradle from source code rather than install the  #
+# binaries.                                                      #
+#                                                                #
+# ############################################################## #
+
+RUN wget https://services.gradle.org/distributions/gradle-6.3-bin.zip \
+    && unzip gradle-${gradle_ver}-bin.zip -d /opt \
+    && ln -s /opt/gradle-${gradle_ver} /opt/gradle \
+    && rm -f /gradle-${gradle_ver}*
 
 # ################################### #
 #                                     #
