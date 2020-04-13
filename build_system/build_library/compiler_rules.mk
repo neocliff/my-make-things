@@ -3,7 +3,7 @@
 #	libraries into finished binaries.
 
 # Differences between CFLAGS and PREPROCESSOR_DEFINES...
-# 
+#
 # because i am using Doxygen to generate documentation, we need to pass the
 # preprocessor defines. the C compiler want's '-D' in front of each while
 # Doxygen does not. rather than maintaining two lists of defines, we can use
@@ -18,7 +18,7 @@ CFLAGS = \
 		-Wpedantic
 
 # if we are doing a "debug" build, include the debugging information
-# (symbol tables, etc) but remove information for unused symbols. 
+# (symbol tables, etc) but remove information for unused symbols.
 # see the post-build steps in makefile for what to do for "release"
 # builds.
 ifeq (${BUILD_TYPE},debug)
@@ -83,7 +83,7 @@ LDFLAGS = -L/lib/ \
 #		and ‘$@’ is foo.a. ‘$%’ is empty when the target is not an
 #		archive member.
 #	$< - The name of the first prerequisite. If the target got its
-#		recipe from an implicit rule, this will be the first 
+#		recipe from an implicit rule, this will be the first
 #		prerequisite added by the implicit rule.
 #	$? - The names of all the prerequisites that are newer than the
 #		target, with spaces between them. For prerequisites which are
@@ -135,10 +135,10 @@ LDFLAGS = -L/lib/ \
 #		source suffix and applies a '.d' suffix. this generates the
 #		output dependency file as a side effect of the compilation stage.
 #		ugh! note that using '-MMD' causes the dependency generator to
-#		ignore system files. if you have a really large project, you 
+#		ignore system files. if you have a really large project, you
 #		might want to use that instead.
 #	-MP - creates a PHONY target for each dependency other that the main
-#		file, cause each to depend on nothing. these dummy rules get 
+#		file, cause each to depend on nothing. these dummy rules get
 #		around errors make generates if you remove header files without
 #		updating the make file.
 #	-MF <target> - specifies the name of the file to send the dependencies.
@@ -165,7 +165,7 @@ COMPILE.c = ${CC} ${C_INCLUDE_DIRS} ${DEPFLAGS} ${CFLAGS} -c -o $@
 
 # this is the default recipe to build a program binary. it should only
 # be invoked for a component that results in a finished binary (i.e.,
-# a program). do *not* use this rule if the intent of the component is 
+# a program). do *not* use this rule if the intent of the component is
 # just a set of object files that other components pick-and-chose from.
 # also, don't use this recipe to construct a library used for shared
 # or static linking.
