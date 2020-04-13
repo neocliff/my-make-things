@@ -12,6 +12,7 @@ RUN apt-get update \
         flex bison libtool texinfo \
         git xz-utils doxygen \
         python3 python3-pip \
+        openjdk-11-jdk unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # ############################## #
@@ -118,18 +119,32 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && cd / \
     && rm -rf /gcc-${gcc_v}*
 
-# ############################################################## #
-#                                                                #
-# Install Gradle binaries. It is positioned here just in case we #
-# have to build Gradle from source code rather than install the  #
-# binaries.                                                      #
-#                                                                #
-# ############################################################## #
+# ############################################################ #
+#                                                              #
+# Install Gradle binaries. It is positioned here just in case  #
+# we have to build Gradle from source code rather than install #
+# the binaries.                                                #
+#                                                              #
+# ############################################################ #
+
+#                            NOTES
+# 1. We need to install 'unzip' to decompress the gradle-*.zip file.
+#    In certain circumstances, 'gzip' can decompress a .zip file but
+#    the Gradle .zip file does not meet the requirements.
+# 2. Gradle 6.3 supports OpenJDK 14. Ghidra appears to support
+#    OpenJDK 14 however the Installation Guide still says OpenJDK 11.
+#    I can't think of a reason why we would put Ghidra in a Docker
+#    container, for now stick with OpenJDK 11 because that will be
+#    on our dev instances.
 
 RUN wget https://services.gradle.org/distributions/gradle-6.3-bin.zip \
     && unzip gradle-${gradle_ver}-bin.zip -d /opt \
     && ln -s /opt/gradle-${gradle_ver} /opt/gradle \
     && rm -f /gradle-${gradle_ver}*
+
+# Add the gradle binaries to the path using Debian's alternatives system
+RUN update-alternatives --install "/usr/bin/gradle" "gradle" "/opt/gradle/bin/gradle" 1 \
+    && update-alternatives --set "gradle" "/opt/gradle/bin/gradle"
 
 # ################################### #
 #                                     #
