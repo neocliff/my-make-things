@@ -12,6 +12,7 @@ RUN apt-get update \
         flex bison libtool texinfo \
         git xz-utils doxygen \
         python3 python3-pip \
+        openjdk-11-jdk unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # ############################## #
@@ -26,7 +27,8 @@ ARG gcc_v=9.2.0
 ARG m4_v=1.4.18
 ARG make_v=4.3
 ARG sed_v=4.8
-ARG cmake_ver=3.17.0
+# ARG cmake_ver=3.17.0
+ARG gradle_ver=6.3
 
 # ####################################################### #
 #                                                         #
@@ -34,14 +36,14 @@ ARG cmake_ver=3.17.0
 #                                                         #
 # ####################################################### #
 
-RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
-    && tar -xf /cmake-${cmake_ver}.tar.gz \
-    && cd /cmake-${cmake_ver} \
-    && ./bootstrap --prefix=/usr \
-    && make -j$((`nproc`+1)) \
-    && make install \
-    && cd / \
-    && rm -rf /cmake-${cmake_ver}*
+# RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
+#     && tar -xf /cmake-${cmake_ver}.tar.gz \
+#     && cd /cmake-${cmake_ver} \
+#     && ./bootstrap --prefix=/usr \
+#     && make -j$((`nproc`+1)) \
+#     && make install \
+#     && cd / \
+#     && rm -rf /cmake-${cmake_ver}*
 
 # RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
 #     && tar -Jxf m4-${m4_v}.tar.xz \
@@ -116,6 +118,33 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && make install-strip \
     && cd / \
     && rm -rf /gcc-${gcc_v}*
+
+# ############################################################ #
+#                                                              #
+# Install Gradle binaries. It is positioned here just in case  #
+# we have to build Gradle from source code rather than install #
+# the binaries.                                                #
+#                                                              #
+# ############################################################ #
+
+#                            NOTES
+# 1. We need to install 'unzip' to decompress the gradle-*.zip file.
+#    In certain circumstances, 'gzip' can decompress a .zip file but
+#    the Gradle .zip file does not meet the requirements.
+# 2. Gradle 6.3 supports OpenJDK 14. Ghidra appears to support
+#    OpenJDK 14 however the Installation Guide still says OpenJDK 11.
+#    I can't think of a reason why we would put Ghidra in a Docker
+#    container, for now stick with OpenJDK 11 because that will be
+#    on our dev instances.
+
+RUN wget https://services.gradle.org/distributions/gradle-6.3-bin.zip \
+    && unzip gradle-${gradle_ver}-bin.zip -d /opt \
+    && ln -s /opt/gradle-${gradle_ver} /opt/gradle \
+    && rm -f /gradle-${gradle_ver}*
+
+# Add the gradle binaries to the path using Debian's alternatives system
+RUN update-alternatives --install "/usr/bin/gradle" "gradle" "/opt/gradle/bin/gradle" 1 \
+    && update-alternatives --set "gradle" "/opt/gradle/bin/gradle"
 
 # ################################### #
 #                                     #
