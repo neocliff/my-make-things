@@ -6,11 +6,11 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-	apt-utils wget sudo ssh libssl-dev \
+        apt-utils wget sudo ssh libssl-dev \
         build-essential \
         g++-multilib \
         flex bison libtool texinfo \
-        git xz-utils doxygen \
+        git xz-utils doxygen graphviz \
         python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
@@ -22,12 +22,12 @@ RUN apt-get update \
 
 ARG binutils_v=2.34
 ARG gawk_v=5.0.1
-ARG gcc_v=9.2.0
+ARG gcc_v=9.3.0
 ARG m4_v=1.4.18
 ARG make_v=4.3
 ARG sed_v=4.8
 # ARG cmake_ver=3.17.0
-ARG gradle_ver=6.3
+# ARG gradle_ver=6.3
 
 # ####################################################### #
 #                                                         #
