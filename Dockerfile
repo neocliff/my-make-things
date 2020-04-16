@@ -6,13 +6,12 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        wget sudo ssh libssl-dev \
+	apt-utils wget sudo ssh libssl-dev \
         build-essential \
         g++-multilib \
         flex bison libtool texinfo \
         git xz-utils doxygen \
         python3 python3-pip \
-        openjdk-11-jdk unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # ############################## #
@@ -137,14 +136,14 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
 #    container, for now stick with OpenJDK 11 because that will be
 #    on our dev instances.
 
-RUN wget https://services.gradle.org/distributions/gradle-${gradle_ver}-bin.zip \
-    && unzip gradle-${gradle_ver}-bin.zip -d /opt \
-    && ln -s /opt/gradle-${gradle_ver} /opt/gradle \
-    && rm -f /gradle-${gradle_ver}*
+#RUN wget https://services.gradle.org/distributions/gradle-${gradle_ver}-bin.zip \
+#    && unzip gradle-${gradle_ver}-bin.zip -d /opt \
+#    && ln -s /opt/gradle-${gradle_ver} /opt/gradle \
+#    && rm -f /gradle-${gradle_ver}*
 
 # Add the gradle binaries to the path using Debian's alternatives system
-RUN update-alternatives --install "/usr/bin/gradle" "gradle" "/opt/gradle/bin/gradle" 1 \
-    && update-alternatives --set "gradle" "/opt/gradle/bin/gradle"
+#RUN update-alternatives --install "/usr/bin/gradle" "gradle" "/opt/gradle/bin/gradle" 1 \
+#    && update-alternatives --set "gradle" "/opt/gradle/bin/gradle"
 
 # ################################### #
 #                                     #
