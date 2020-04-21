@@ -186,9 +186,9 @@ to download and build them but they are commented out. This is not the case with
 * m4-1.4.18
 * sed-4.8
 * gawk-5.0.1
-* binutils-2.33.1
+* binutils-2.34
 * make-4.3
-* gcc-9.2.0 with gmp (4.3.2 or later), mpfr (3.0.1 or later), mpc (1.0.1 or
+* gcc-9.3.0 with gmp (4.3.2 or later), mpfr (3.0.1 or later), mpc (1.0.1 or
 later), isl^ (0.15 or later), and zstd^ (latest)
 
 ^ The isl and zstd libraries are required to use the Link-Time Optimization
