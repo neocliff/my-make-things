@@ -34,7 +34,7 @@ include ${I_AM_AT}/component.mk
 # to do this. this is brute-force but it always works. note
 # the creation of the COMP_BIN_DIR and COMP_LIB_DIR directories are
 # different from that for the objects and dependencies.
-# that later two preserve intermediate directories 
+# that later two preserve intermediate directories
 # (e.g., a/b/c.o gets us obj/a/b) while the first two are just
 # paths to directories. they can be changed to behave the same
 # as the other two if BIN (or BINS) has a path and not just a
@@ -57,7 +57,7 @@ include ${BUILD_LIBRARY}/compiler_rules.mk
 # component is a program, a set of object files, or a library.
 #
 # additionally, the top-level 'install' target is found in
-# component.mk as well. every component is responsible for 
+# component.mk as well. every component is responsible for
 # "delivering" its content to the distribution directories
 # (if appropriate).
 #

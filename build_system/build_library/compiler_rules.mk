@@ -2,20 +2,28 @@
 #	to transform source into objects and libraries, and objects and
 #	libraries into finished binaries.
 
-# Differences between CFLAGS and PREPROCESSOR_DEFINES...
+# Differences between CFLAGS and DEFINES...
 #
-# because i am using Doxygen to generate documentation, we need to pass the
+# because we are using Doxygen to generate documentation, we need to pass it the
 # preprocessor defines. the C compiler want's '-D' in front of each while
 # Doxygen does not. rather than maintaining two lists of defines, we can use
-# make's addprefix trick to make the change. also, i like to seperate settings of
-# the compiler flags from the defines. it makes things a bit wordier but i find
-# it cleaner and easier to understand.
+# make's `addprefix` trick to make the change. also, i like to seperate settings
+# of the compiler flags from the defines. it makes things a bit wordier but i
+# find it cleaner and easier to understand.
 
-# CFLAGS contains the default flags used to compile C code
+# CFLAGS contains the default flags used to compile C code. the code is mostly
+# C'99 with a few C'11-isms for fun. We use `-std=gnu11` because they have
+# non-compliant variadic macros.
 CFLAGS = \
 		-std=gnu11 \
 		-Wall \
-		-Wpedantic
+        -Wextra \
+		-Wpedantic \
+        -Wno-vla \
+        -Wno-builtin-declaration-mismatch \
+        -masm=intel \
+        -mstringop-strategy=rep_4byte \
+        -fno-inline
 
 # if we are doing a "debug" build, include the debugging information
 # (symbol tables, etc) but remove information for unused symbols.
@@ -26,33 +34,89 @@ CFLAGS  += -g \
 		-feliminate-unused-debug-symbols
 endif
 
-# set additonal CFLAGS values based on architecture type
-ifeq (${ARCH_TYPE},x86_32)
-CFLAGS += -m32 -DPROCESSOR_X86_32
-else
-CFLAGS += -m64 -DPROCESSOR_X86_64
+# set flags for "release" builds
+ifeq (${BUILD_TYPE},release)
+CFLAGS  += \
+        -Os
 endif
 
-ifeq (${ARCH_TYPE},x86_32)
-PREPROCESSOR_DEFINES += PROCESSOR_X86_32
-else
-PREPROCESSOR_DEFINES += PROCESSOR_X86_64
-endif
-
-# last step for defines is to prepare the string for the compiler and then
-# add that string to the CFLAGS variable.
+# set additonal CFLAGS values based on architecture type. project assumptions:
+#   32-bit - use i686 as the machine architecture
+#   64-bit - use core2 as the machine architecture
 #
-# note: this may not be the best way of doing this. if your project has a lot
-#	of one-offs for components (i.e., -DSOMETHING that is only used for one
-#	component), this may not be the right solution for you.
-C_PREPROCESSOR_DEFINES = ${addprefix -D,${PREPROCESSOR_DEFINES}}
+# for gcc, x86- bitness is defined using the following flags:
+#   -m32 - builds 32-bit binaries (32-bit pointers, ints, longs) for i386-type
+#   -mx32 - builds 32-bit binaries for 64-bit hardware (32-bit pointers,
+#          ints, longs)
+#   -m64 - builds 64-bit binaries (64-bit pointers, longs, 32-bit ints)
+ifeq (${ARCH_TYPE},x86_32)
+CFLAGS  += \
+        -m32 \
+        -march=i686
+else
+CFLAGS  += \
+        -m64 \
+        -march=core2
+endif
+
+# next create the #define values that control the source included/selected by
+# the preprocessor. at the same time, set the same defines for generating
+# Doxygen document generation. remember when setting them that C DEFINES
+# require a '-D' prefix but DOXY DEFINES do not.
+
+# first, set defines to indicate if we are doing a debug build
+ifeq (${BUILD_TYPE},debug)
+DEFINES += \
+		_DEBUG \
+        DEBUG
+endif
+
+# now set CPU-related defines based on processor class. assume we are doing
+# x86_64 if we are not explicitly doing x86_32.
+ifeq (${ARCH_TYPE},x86_32)
+DEFINES += \
+        PROCESSOR_X86_32
+else
+DEFINES += \
+        PROCESSOR_X64
+        PROCESSOR_X86_64
+endif
+
+# next step for defines is to prepare the string for the compiler and then
+# add that string to the CFLAGS variable. the setting for Doxygen happens in
+# defaults.mk.
+C_PREPROCESSOR_DEFINES = ${addprefix -D,${DEFINES}}
+DOXY_PREPROCESSOR_DEFINES ?= ${DEFINES}
+ifneq (${DEFINES_EXTRAS},)
+C_PREPROCESSOR_DEFINES      += ${addprefix -D,$(DEFINES_EXTRAS)}
+DOXY_PREPROCESSOR_DEFINES   += ${DEFINES_EXTRAS}
+endif
+
+# last step is to add the defines to CFLAGS
 CFLAGS += ${C_PREPROCESSOR_DEFINES}
 
-# loader flags
+# c++ flags. at the moment, the project has no c++ code but we'll plumb for
+# it just in case.
+CXXFLAGS =
+
+# set some assembler flags
+ASFLAGS =
+
+# loader flags. note: i have no idea if these make sense or not. they crept in
+# when I wasn't looking.
 LDFLAGS = -L/lib/ \
 			-L/usr/lib/ \
 			-L/usr/lib/x86_64-linux-gnu -Map=${COMP_BIN_DIR}/linker_map.txt \
 			-cref /usr/lib/x86_64-linux-gnu/crti.o -lc
+
+# next the nm flags. this is used to get the symbols from a binary (obj|bin)
+NMFLAGS = --print-armap
+
+# if this is a debug build, add the debug symbols to the map
+ifeq (${BUILD_TYPE},debug)
+NMFLAGS += \
+        --debug-syms
+endif
 
 # PRIMER ON GNU MAKE'S LEXICON
 #
@@ -63,9 +127,9 @@ LDFLAGS = -L/lib/ \
 #
 # recipe - the description of how to make something; think cooking and
 #		you're on the right track
-# target - the thing (or things) to be made; see '$@' below
+# target - the thing (or things) to be made; think dish in cooking see '$@' below
 # pre-requisite -: zero or more things that must be up-to-date to make
-#		the target
+#		the target; ingredients to cook with
 # rule	- zero or more steps to be executed to make the target
 #
 # GNU MAKE'S AUTOMATIC VARIABLES
@@ -163,18 +227,8 @@ SAVE.d = mv -f ${COMP_DEP_DIR}/$*.Td ${COMP_DEP_DIR}/$*.d
 # if for your specific project.
 COMPILE.c = ${CC} ${C_INCLUDE_DIRS} ${DEPFLAGS} ${CFLAGS} -c -o $@
 
-# this is the default recipe to build a program binary. it should only
-# be invoked for a component that results in a finished binary (i.e.,
-# a program). do *not* use this rule if the intent of the component is
-# just a set of object files that other components pick-and-chose from.
-# also, don't use this recipe to construct a library used for shared
-# or static linking.
-#${COMP_BIN_DIR}/${BIN_BUILT}: ${OBJ_FILES}
-#	@echo ""
-#	@echo "makefile: linking '${COMP_BIN_DIR}/${BIN_BUILT}' from '${OBJ_FILES}'"
-#	$(CC) -o ${COMP_BIN_DIR}/${BIN_BUILT} ${OBJ_FILES}
-
-# default compilation rule to turn a '.c' file into a '.o'
+# default compilation rule to turn a .c/.cpp file into a .o. this is applied
+# to C/C++ files that do not require any fiddling with the assembly language.
 ${COMP_OBJ_DIR}/%.o: %.c
 ${COMP_OBJ_DIR}/%.o: %.c ${COMP_DEP_DIR}/%.d
 	@echo ""
@@ -182,3 +236,22 @@ ${COMP_OBJ_DIR}/%.o: %.c ${COMP_DEP_DIR}/%.d
 	${COMPILE.c} $<
 	@echo "makefile: moving dependency file to ${COMP_DEP_DIR}/$*.d"
 	${SAVE.d}
+
+${COMP_OBJ_DIR}/%.o: %.cpp
+${COMP_OBJ_DIR}/%.o: %.cpp ${COMP_DEP_DIR}/%.d
+	@echo ""
+	@echo "makefile: COMPILING '$@' FROM '$<'"
+	${COMPILE.c} ${CXXFLAGS} $<
+	@echo "makefile: moving dependency file to ${COMP_DEP_DIR}/$*.d"
+	${SAVE.d}
+
+# default compilation rule to turn a .asm file into a .o. this is applied to
+# assembly language file that does not require any intermediate fiddling before
+# final assembly.
+${COMP_OBJ_DIR}/%.o: %.asm
+${COMP_OBJ_DIR}/%.o: %.asm ${COMP_DEP_DIR}/%.d
+    @echo""
+    @echo "$(COLOR CYAN) makefil.e: compiling $@ from $< $(COLOR NORMAL)"
+    ${AS} ${C_INCLUDE_DIRS} ${DEPFLAGS} ${ASFLAGS} -o $@ $<
+    @echo "makefile: move dependency file to ${COMP_DEP_DIR}/$*.d"
+    ${SAVE.d}
