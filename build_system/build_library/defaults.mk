@@ -1,5 +1,9 @@
 # default.mk contains all the default definitions used in the
-# project, identify tools, etc.
+# project, identifies tools, etc.
+
+# load standard subordinate make files here
+include ${BUILD_LIBRARY}/targets.mk
+-include ${BUILD_LIBRARY}/colorize.mk
 
 # define paths to system directories
 SYS_BINDIR ?= /bin
@@ -24,6 +28,7 @@ LD		= ${USR_BINDIR}/ld.gold
 # define more useful tools
 TAR		?= ${SYS_BINDIR}/tar
 AR		?= ${USR_BINDIR}/ar
+NM      ?= ${USR_BINDIR}/nm
 STRIP   ?= ${USR_BINDIR}/strip
 INSTALL ?= ${USR_BINDIR}/install
 
@@ -80,7 +85,9 @@ COMP_LIB_DIR	?= ${COMP_LIB_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 COMP_BIN_ROOT	?= ${I_AM_AT}/bin
 COMP_BIN_DIR	?= ${COMP_BIN_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 
-# create a few defaults for Doxygen document generation
+# create a few defaults for Doxygen document generation. the settings for
+# DOXY_PREPROCESSOR_DEFINES occurs in `compiler_rules.mk`. that is where the
+# defines are gathered together.
 DOXY_CONFIG     ?= ${BUILD_LIBRARY}/Doxyfile
 DOXY_ROOT       ?= ${I_AM_AT}/doxy-docs
 DOXY_OUTPUT_DIR ?= ${DOXY_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
@@ -89,7 +96,6 @@ DOXY_COMPONENT  ?= $(shell echo ${I_AM_AT} | \
 DOXY_INPUT_DIR  ?= ${I_AM_AT}
 DOXY_README     ?= ${I_AM_AT}/README.md
 DOXY_NUMBER     ?= $(shell git show --format="%h" --no-patch)
-DOXY_PREPROCESSOR_DEFINES ?= ${PREPROCESSOR_DEFINES}
 DOXY_INCLUDE_DIRS ?= ${INCLUDE_DIRS}
 
 # define colors used in message output

@@ -74,12 +74,9 @@ endif
 # now set CPU-related defines based on processor class. assume we are doing
 # x86_64 if we are not explicitly doing x86_32.
 ifeq (${ARCH_TYPE},x86_32)
-DEFINES += \
-        PROCESSOR_X86_32
+DEFINES += PROCESSOR_X86_32
 else
-DEFINES += \
-        PROCESSOR_X64
-        PROCESSOR_X86_64
+DEFINES += PROCESSOR_X64 PROCESSOR_X86_64
 endif
 
 # next step for defines is to prepare the string for the compiler and then
@@ -248,10 +245,10 @@ ${COMP_OBJ_DIR}/%.o: %.cpp ${COMP_DEP_DIR}/%.d
 # default compilation rule to turn a .asm file into a .o. this is applied to
 # assembly language file that does not require any intermediate fiddling before
 # final assembly.
-${COMP_OBJ_DIR}/%.o: %.asm
-${COMP_OBJ_DIR}/%.o: %.asm ${COMP_DEP_DIR}/%.d
-    @echo""
-    @echo "$(COLOR CYAN) makefil.e: compiling $@ from $< $(COLOR NORMAL)"
-    ${AS} ${C_INCLUDE_DIRS} ${DEPFLAGS} ${ASFLAGS} -o $@ $<
-    @echo "makefile: move dependency file to ${COMP_DEP_DIR}/$*.d"
-    ${SAVE.d}
+# ${COMP_OBJ_DIR}/%.o: %.asm
+# ${COMP_OBJ_DIR}/%.o: %.asm ${COMP_DEP_DIR}/%.d
+#     @echo""
+#     @echo "$(COLOR CYAN) makefil.e: compiling $@ from $< $(COLOR NORMAL)"
+#     ${AS} ${C_INCLUDE_DIRS} ${DEPFLAGS} ${ASFLAGS} -o $@ $<
+#     @echo "makefile: move dependency file to ${COMP_DEP_DIR}/$*.d"
+#     ${SAVE.d}
