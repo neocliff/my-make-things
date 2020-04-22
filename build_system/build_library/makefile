@@ -27,7 +27,7 @@ include ${BUILD_LIBRARY}/defaults.mk
 # need the list of source files that make up the component.
 include ${I_AM_AT}/component.mk
 
-.PHONY: all check-config check-tools clean cleanall
+.PHONY: all check-config check-tools clean clean-all
 .default: all
 
 # auto-build the directories we need. there are lots of ways
@@ -76,7 +76,7 @@ clean:
 # second, this is the target when we want to roll everything back
 # to the prebuild state (i.e., we just checked the code out of
 # the repo)
-cleanall:
+clean-all:
 	rm -rf ${COMP_DEP_ROOT}
 	rm -rf ${COMP_OBJ_ROOT}
 	rm -rf ${COMP_LIB_ROOT}
