@@ -1,5 +1,12 @@
 FROM ubuntu:18.04
 
+# label history
+#   u18.04v001 - with CMake 3.17
+#   u18.04v002 - add Gradle 6.3, OpenJDK 11; removed CMake 3.17
+#   u18.04v003 - removed Gradle 6.3, OpenJDK 11
+#   u18.04v004 - upgrade to GCC 9.3.0, add graphviz
+#	u18.04v005 - add pylint, googletest, lcov, gcovr
+
 LABEL maintainer="neocliff@mac.com"
 
 ENV DEBIAN_FRONTEND noninteractive
