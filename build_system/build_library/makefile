@@ -27,7 +27,7 @@ include ${BUILD_LIBRARY}/defaults.mk
 # need the list of source files that make up the component.
 include ${I_AM_AT}/component.mk
 
-.PHONY: all checkit clean
+.PHONY: all check-config check-tools clean cleanall
 .default: all
 
 # auto-build the directories we need. there are lots of ways
@@ -44,8 +44,9 @@ $(shell mkdir -p ${COMP_LIB_DIR} > /dev/null)
 $(shell mkdir -p ${dir ${OBJ_FILES}} > /dev/null)
 $(shell mkdir -p ${dir ${DEP_FILES}} > /dev/null)
 
-# pull in the definition of the compiler rules, a generic set
-# of recipes that tell make how to transform x.y -> x.z
+# pull in the definition of the compiler rules, a generic set of recipes that
+# tell make how to transform x.y -> x.z. throw an error if this file is
+# missing.
 include ${BUILD_LIBRARY}/compiler_rules.mk
 
 # ########################################################### #
@@ -86,9 +87,51 @@ cleanall:
 	rm -rf ${PROJ_LIB}
 	rm -rf ${PROJ_DOXY_DOCS}
 
+# this is the target that dumps information about the tools we are using
+check-tools:
+	@echo "SHELL           is ${SHELL}"
+	@echo ""
+	ls -l ${SHELL}
+	@echo "----------------------------------------------------------"
+	@echo "CC              is ${CC}"
+	@echo ""
+	${CC} --version
+	@echo "----------------------------------------------------------"
+	@echo "CXX             is ${CXX}"
+	@echo ""
+	${CXX} --version
+	@echo "----------------------------------------------------------"
+	@echo "LD              is ${LD}"
+	@echo ""
+	${LD} --version
+	@echo "----------------------------------------------------------"
+	@echo "TAR             is ${TAR}"
+	@echo ""
+	${TAR} --version
+	@echo "----------------------------------------------------------"
+	@echo "AR              is ${AR}"
+	@echo ""
+	${AR} --version
+	@echo "----------------------------------------------------------"
+	@echo "NM              is ${NM}"
+	@echo ""
+	${NM} --version
+	@echo "----------------------------------------------------------"
+	@echo "SED             is ${SED}"
+	@echo ""
+	${SED} --version
+	@echo "----------------------------------------------------------"
+	@echo "GAWK            is ${GAWK}"
+	@echo ""
+	${GAWK} --version
+	@echo "----------------------------------------------------------"
+	@echo "M4              is ${M4}"
+	@echo ""
+	${M4} --version
+
 # this is the target that dumps variables so that we can check
 # the build process.
-checkit:
+check-config:
 	@echo "makefile configured variables.."
 	@echo "=============================="
 	@echo "tools..."
