@@ -31,6 +31,9 @@ AR		?= ${USR_BINDIR}/ar
 NM      ?= ${USR_BINDIR}/nm
 STRIP   ?= ${USR_BINDIR}/strip
 INSTALL ?= ${USR_BINDIR}/install
+SED		?= ${SYS_BINDIR}/sed
+GAWK	?= ${USR_BINDIR}/gawk
+M4		?= ${USR_BINDIR}/m4
 
 # tool used to run Doxygen for generating documentation from source
 DOXYGEN = ${USR_BINDIR}/doxygen
