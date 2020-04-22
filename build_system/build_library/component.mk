@@ -22,9 +22,9 @@
 
 # define identifiers for this component. these should be used to build names and
 # paths for this component.
-MODULE_NAME=core
-MODULE_GUID=0x87654321
-MODULE_SUFFIX=bin
+MODULE_NAME		= example
+MODULE_GUID		= 0x12345678
+MODULE_SUFFIX	= bin
 
 # build a binary out of this
 BIN_BUILT=${MODULE_NAME}.${MODULE_SUFFIX}
@@ -38,8 +38,7 @@ BIN_BUILT=${MODULE_NAME}.${MODULE_SUFFIX}
 #	${PROJ_SRC_SHARED}/interfaces/include - the 'include' subdirectory in
 #			the ' shared/ component ' directory
 #	${PROJ_SRC}/${BUILD_FOR}/include - the 'include' subdirectory of the component
-INCLUDE_DIRS = ${I_AM_AT}/include \
-	...lots of directories...
+INCLUDE_DIRS = ${I_AM_AT}/include
 
 #                                WARNING
 # when adding source files to EXPORTED_INTERFACES, EXTERNAL_SOURCES, or
@@ -52,36 +51,29 @@ INCLUDE_DIRS = ${I_AM_AT}/include \
 # identify the source files to be compiled/assembled. first, identify the
 # interfaces of this component that are going to be exported to other
 # components.
-EXPORTED_INTERFACES	= \
-					external_interfaces/some_source_file.c \
-					...lots of files...
+EXPORTED_INTERFACES	=
 
 # next identify, source files that are outside this specific subtree, e.g.,
 # "${PROJ_SRC_SHARED}/<element/paths>/<file.c>", of the repo filesystem.
-EXTERNAL_SOURCES	= \
-					${PROJ_SRC_SHARED}/dependency/DependencyLibrary.c \
-					...lots of files...
+EXTERNAL_SOURCES	= 
 
 # lastly, identify the source files that are inside this specific subtree of
 # the repo filesystem. make sure that if you use ${EXPORTED_INTERFACES} and/or
 # ${EXTERNAL_SOURCES}, append them to ${C_SRC_FILES}.
 C_SRC_FILES	= \
-			memory_management/AdditionalMemoryCloaking.c \
-			...lots of files...
-			${PROJ_SRC_SHARED}/minimal_hooking/MinimalHooking.c \
-			...lots of files...
+			main.c \
 			${EXPORTED_INTERFACES} \
 			${EXTERNAL_SOURCES}
 
 # now identify the same for C++ and assembly code files
-CXX_SRC_FILES =
-S_SRC_FILES =
-ASM_SRC_FILES = CoreHdr.asm
+CXX_SRC_FILES	=
+S_SRC_FILES		=
+ASM_SRC_FILES	= 
 
 # create local defines rules. note that we don't have to do the transforms
 # here. they will be handled in compiler_rules.mk. we can do that because
 # compiler_rules.mk is included in makefile after component.mk.
-DEFINES_EXTRAS =
+DEFINES_EXTRAS	=
 
 # ######################################################################## #
 #                                                                          #
@@ -112,10 +104,10 @@ DEP_FILES = ${C_DEP_FILES} ${CXX_DEP_FILES} ${S_DEP_FILES} ${ASM_DEP_FILES}
 
 # add the -I prefix to each of the include directories . note that this variable
 # is automatically added to CFLAGS in compiler_rules.mk.
-C_INCLUDE_DIRS = $(addprefix -I,${INCLUDE_DIRS})
+C_INCLUDE_DIRS = ${addprefix -I,${INCLUDE_DIRS}}
 
 # define where the table of contents text file is going
-LIBTOC = ${addprefix ${COMP_LIB_DIR}/,$(LIB_BUILT:.ar=.toc.txt)}
+LIBTOC = ${addprefix ${COMP_LIB_DIR}/,${LIB_BUILT:.ar=.toc.txt}}
 
 #                                                                          #
 # ######################################################################## #
