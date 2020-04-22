@@ -27,7 +27,7 @@ include ${BUILD_LIBRARY}/defaults.mk
 # need the list of source files that make up the component.
 include ${I_AM_AT}/component.mk
 
-.PHONY: all check-config check-tools clean clean-all
+.PHONY: all check-config check-tools clean clean-all install install-strip
 .default: all
 
 # auto-build the directories we need. there are lots of ways
