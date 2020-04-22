@@ -41,29 +41,37 @@ BIN_BUILT=${MODULE_NAME}.${MODULE_SUFFIX}
 INCLUDE_DIRS = ${I_AM_AT}/include \
 	...lots of directories...
 
- # identify the source files to be compiled/assembled. first, identify the
- # interfaces of this component that are going to be exported to other
- # components.
-EXPORTED_INTERFACES = \
+#                                WARNING
+# when adding source files to EXPORTED_INTERFACES, EXTERNAL_SOURCES, or
+# C_SRC_FILES, use relative path names rather than absolute. this is
+# because the step to convert C_SRC_FILES to OBJ_FILES will prepend the
+# absolute path COMP_OBJ_DIR. if files in the C_SRC_FILES already have an
+# absolute path, you will get something like:
+#   /home/user/repo/src/hello/obj/debug/x86_32//home/user/repo/src/hello/c_dir/c.o
+
+# identify the source files to be compiled/assembled. first, identify the
+# interfaces of this component that are going to be exported to other
+# components.
+EXPORTED_INTERFACES	= \
 					external_interfaces/some_source_file.c \
 					...lots of files...
 
 # next identify, source files that are outside this specific subtree, e.g.,
 # "${PROJ_SRC_SHARED}/<element/paths>/<file.c>", of the repo filesystem.
-EXTERNAL_SOURCES = \
+EXTERNAL_SOURCES	= \
 					${PROJ_SRC_SHARED}/dependency/DependencyLibrary.c \
 					...lots of files...
 
 # lastly, identify the source files that are inside this specific subtree of
 # the repo filesystem. make sure that if you use ${EXPORTED_INTERFACES} and/or
 # ${EXTERNAL_SOURCES}, append them to ${C_SRC_FILES}.
-C_SRC_FILES = \
-					memory_management/AdditionalMemoryCloaking.c \
-					...lots of files...
-					${PROJ_SRC_SHARED}/minimal_hooking/MinimalHooking.c \
-					...lots of files...
-					${EXPORTED_INTERFACES} \
-					${EXTERNAL_SOURCES}
+C_SRC_FILES	= \
+			memory_management/AdditionalMemoryCloaking.c \
+			...lots of files...
+			${PROJ_SRC_SHARED}/minimal_hooking/MinimalHooking.c \
+			...lots of files...
+			${EXPORTED_INTERFACES} \
+			${EXTERNAL_SOURCES}
 
 # now identify the same for C++ and assembly code files
 CXX_SRC_FILES =
