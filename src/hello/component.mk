@@ -22,9 +22,6 @@ C_SRC_FILES	:=	\
 				hello.c \
 				c_dir/c.c
 
-C_SRC_EXTRAS := \
-	shared/s_dir_${S_DIR_VERSION}/s.c
-
 OBJS_EXTRAS = \
 	${PROJ_SRC}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a.o \
 	${PROJ_SRC}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a2.o
