@@ -18,11 +18,12 @@ INCLUDE_DIRS = \
 	${PROJ_SRC}/b_dir/include \
 	${PROJ_SRC}/shared/s_dir_${S_DIR_VERSION}/include
 
-C_SRC_FILES := hello.c \
-		${I_AM_AT}/c_dir/c.c
+C_SRC_FILES	:=	\
+				hello.c \
+				c_dir/c.c
 
 C_SRC_EXTRAS := \
-		shared/s_dir_${S_DIR_VERSION}/s.c
+	shared/s_dir_${S_DIR_VERSION}/s.c
 
 OBJS_EXTRAS = \
 	${PROJ_SRC}/a_dir/obj/${BUILD_TYPE}/${ARCH_TYPE}/a.o \
