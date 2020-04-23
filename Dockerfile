@@ -20,7 +20,6 @@ RUN apt-get update \
         flex bison libtool texinfo \
         git xz-utils doxygen graphviz \
         python3 python3-pip \
-		gcovr \
     && rm -rf /var/lib/apt/lists/*
 
 # ############################## #
@@ -40,7 +39,7 @@ ARG cmake_ver=3.17.0
 
 # grab our python packages
 
-RUN pip3 install pylint
+RUN pip3 install pylint gcovr
 
 # ####################################################### #
 #                                                         #
