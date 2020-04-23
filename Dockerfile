@@ -6,6 +6,7 @@ FROM ubuntu:18.04
 #   u18.04v003 - removed Gradle 6.3, OpenJDK 11
 #   u18.04v004 - upgrade to GCC 9.3.0, add graphviz
 #	u18.04v005 - add pylint, googletest, lcov, gcovr
+#	u18.04v006 - in process building from source
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -13,13 +14,13 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        apt-utils wget sudo ssh libssl-dev \
+        apt-utils wget curl sudo ssh libssl-dev \
         build-essential \
         g++-multilib \
         flex bison libtool texinfo \
         git xz-utils doxygen graphviz \
         python3 python3-pip \
-		googletest gcovr lcov \
+		gcovr \
     && rm -rf /var/lib/apt/lists/*
 
 # ############################## #
@@ -34,7 +35,7 @@ ARG gcc_v=9.3.0
 ARG m4_v=1.4.18
 ARG make_v=4.3
 ARG sed_v=4.8
-# ARG cmake_ver=3.17.0
+ARG cmake_ver=3.17.0
 # ARG gradle_ver=6.3
 
 # grab our python packages
@@ -47,14 +48,16 @@ RUN pip3 install pylint
 #                                                         #
 # ####################################################### #
 
-# RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
-#     && tar -xf /cmake-${cmake_ver}.tar.gz \
-#     && cd /cmake-${cmake_ver} \
-#     && ./bootstrap --prefix=/usr \
-#     && make -j$((`nproc`+1)) \
-#     && make install \
-#     && cd / \
-#     && rm -rf /cmake-${cmake_ver}*
+# downloading CMake for building Google Test
+
+RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
+    && tar -xf /cmake-${cmake_ver}.tar.gz \
+    && cd /cmake-${cmake_ver} \
+    && ./bootstrap --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+    && make install \
+    && cd / \
+    && rm -rf /cmake-${cmake_ver}*
 
 # RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
 #     && tar -Jxf m4-${m4_v}.tar.xz \
@@ -156,6 +159,32 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
 # Add the gradle binaries to the path using Debian's alternatives system
 #RUN update-alternatives --install "/usr/bin/gradle" "gradle" "/opt/gradle/bin/gradle" 1 \
 #    && update-alternatives --set "gradle" "/opt/gradle/bin/gradle"
+
+# #########################################
+#                                         #
+# Build Google Test and associated tools. #
+#                                         #
+# #########################################
+
+RUN apt-get update \
+	&& apt-get install -y libjson-perl libperlio-gzip-perl \
+	&& rm -rf /var/lib/apt/lists/*
+
+RUN git clone https://github.com/linux-test-project/lcov /lcov \
+	&& cd /lcov \
+	&& make install \
+	&& cd / \
+	&& rm -rf /lcov*
+
+RUN cd / \
+	&& git clone https://github.com/google/googletest.git googletest \
+	&& mkdir /gtest_build \
+	&& cd /gtest_build \
+	&& cmake /googletest \
+	&& make -j$((`nproc`+1)) \
+	&& make install \
+	&& cd / \
+	&& rm -rf /googletest /gtest_build
 
 # ################################### #
 #                                     #
