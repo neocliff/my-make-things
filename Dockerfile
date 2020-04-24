@@ -1,3 +1,5 @@
+# syntax = docker/dockerfile:1.0-experimental
+
 FROM ubuntu:18.04 AS builder
 
 # label history
@@ -7,7 +9,7 @@ FROM ubuntu:18.04 AS builder
 #   u18.04v004 - upgrade to GCC 9.3.0, add graphviz
 #	u18.04v005 - add pylint, googletest, lcov, gcovr
 #	u18.04v006 - in process building from source
-#	u18.04v007 - add pytest, turned off lcov
+#	u18.04v007 - add pytest, turned off lcov, first multi-stage version
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -15,30 +17,23 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        apt-utils wget curl sudo libssl-dev \
+        apt-utils wget libssl-dev \
         build-essential \
         g++-multilib \
         flex bison libtool texinfo \
-        git xz-utils doxygen graphviz \
-        python3 python3-pip \
+        git xz-utils \
     && rm -rf /var/lib/apt/lists/*
+
+# define the directory for building/packaging the tools.
+
+ARG build_dir=build_directory
+WORKDIR /${build_dir}
 
 # ####################################################### #
 #                                                         #
 # Download, configure, and install the 'utility' packages #
 #                                                         #
 # ####################################################### #
-
-ARG cmake_ver=3.17.0
-
-RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
-    && tar -xf /cmake-${cmake_ver}.tar.gz \
-    && cd /cmake-${cmake_ver} \
-    && ./bootstrap --prefix=/usr \
-    && make -j$((`nproc`+1)) \
-    && make install \
-    && cd / \
-    && rm -rf /cmake-${cmake_ver}*
 
 # ARG m4_v=1.4.18
 
@@ -64,36 +59,33 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-
 
 ARG gawk_v=5.0.1
 
-RUN wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
-    && tar -Jxf gawk-${gawk_v}.tar.xz \
-    && cd /gawk-${gawk_v} \
+RUN cd /${build_dir} \
+	&& wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
+    && tar -Jxf gawk-${gawk_v}.tar.xz
+RUN cd gawk-${gawk_v} \
     && ./configure --prefix=/usr \
     && make -j$((`nproc`+1)) \
-    && make install-strip \
-    && cd / \
-    && rm -rf /gawk-${gawk_v}*
+    && make DESTDIR=/${build_dir}/toolset install-strip
 
 ARG binutils_v=2.34
 
-RUN wget http://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
-    && tar -xf /binutils-${binutils_v}.tar.gz \
-    && cd /binutils-${binutils_v} \
+RUN cd /$build_dir \
+	&& wget https://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
+    && tar -xf binutils-${binutils_v}.tar.gz
+RUN cd binutils-${binutils_v} \
     && ./configure --enable-targets=all --enable-gold --enable-lto --prefix=/usr \
     && make  -j$((`nproc`+1)) \
-    && make install-strip \
-    && cd / \
-    && rm -rf /binutils-${binutils_v}*
+    && make DESTDIR=/${build_dir}/toolset install-strip
 
 ARG make_v=4.3
 
-RUN wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz \
-    && tar -zxf make-${make_v}.tar.gz \
-    && cd /make-${make_v} \
+RUN cd /${build_dir} \
+	&& wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz \
+    && tar -zxf make-${make_v}.tar.gz
+RUN cd make-${make_v} \
     && ./configure --prefix=/usr \
     && make -j$((`nproc`+1)) \
-    && make install-strip \
-    && cd / \
-    && rm -rf /make-${make_v}*
+    && make DESTDIR=/${build_dir}/toolset install-strip
 
 # ########################################################### #
 #                                                             #
@@ -108,10 +100,11 @@ RUN wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz \
 
 ARG gcc_v=9.3.0
 
-RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
-    && tar -Jxf gcc-${gcc_v}.tar.xz \
-    && mkdir /gcc-${gcc_v}/build \
-    && cd /gcc-${gcc_v} \
+RUN cd /${build_dir} \
+	&& wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
+    && tar -Jxf gcc-${gcc_v}.tar.xz
+RUN mkdir gcc-${gcc_v}/build \
+    && cd gcc-${gcc_v} \
     && ./contrib/download_prerequisites \
     && cd build \
     && ../configure --prefix=/usr --with-cpu-32=i686 --with-cpu-64=core2 \
@@ -122,9 +115,7 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
         --enable-lto \
         --with-gnu-as -with-gnu-gold \
     && make -j$((`nproc`+1)) \
-    && make install-strip \
-    && cd / \
-    && rm -rf /gcc-${gcc_v}*
+    && make DESTDIR=/${build_dir}/toolset install-strip
 
 # ############################################################ #
 #                                                              #
@@ -161,8 +152,6 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
 #                                         #
 # #########################################
 
-RUN pip3 install pylint pytest gcovr
-
 #                             NOTE
 # we don't need this if `gcovr` provides adequate reports
 
@@ -176,15 +165,69 @@ RUN pip3 install pylint pytest gcovr
 # 	&& cd / \
 # 	&& rm -rf /lcov*
 
-RUN cd / \
+#                           NOTE
+# Download and build CMake just for Google Test. Note that when we do the
+# `make install`, we are not installing it to `/${build_dir}` directory.
+# That is because we are *not* carrying the tool into future stages.
+
+ARG cmake_ver=3.17.0
+
+RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
+    && tar -xf cmake-${cmake_ver}.tar.gz
+RUN cd cmake-${cmake_ver} \
+    && ./bootstrap --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+    && make install
+
+RUN cd /${build_dir} \
 	&& git clone https://github.com/google/googletest.git googletest \
-	&& mkdir /gtest_build \
-	&& cd /gtest_build \
-	&& cmake /googletest \
+	&& mkdir googletest/gtest_build \
+	&& cd googletest/gtest_build \
+	&& cmake .. \
 	&& make -j$((`nproc`+1)) \
-	&& make install \
+	&& make DESTDIR=/${build_dir}/toolset install
+
+# #################################### #
+#                                      #
+# Build the artifacts from this stage. #
+#                                      #
+# #################################### #
+
+RUN cd /${build_dir} \
+	&& find toolset -type f | xargs strip -s | 2> /dev/null
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
+
+# ##################################### #
+#                                       #
+# Final stage: Build the toolset Image. #
+#                                       #
+# ##################################### #
+
+FROM ubuntu:18.04
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+    && apt-get install -y \
+        apt-utils curl sudo \
+        build-essential \
+        g++-multilib \
+        flex bison libtool texinfo \
+        git doxygen graphviz \
+        python3 python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN sudo cp --recursive /tmp/toolset/* / \
 	&& cd / \
-	&& rm -rf /googletest /gtest_build
+	&& rm -rf /tmp/*
+
+RUN pip3 install pylint pytest gcovr
 
 # ################################################################ #
 #                                                                  #
@@ -201,4 +244,5 @@ USER user
 # to override the this. I did it this way because not everybody has the repo
 # located in the same place and since we are mounting that directory in the
 # container in the same place, this looked like the best option.
+
 WORKDIR /home/user
