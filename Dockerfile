@@ -1,4 +1,4 @@
-FROM ubuntu:18.04
+FROM ubuntu:18.04 AS builder
 
 # label history
 #   u18.04v001 - with CMake 3.17
@@ -7,6 +7,7 @@ FROM ubuntu:18.04
 #   u18.04v004 - upgrade to GCC 9.3.0, add graphviz
 #	u18.04v005 - add pylint, googletest, lcov, gcovr
 #	u18.04v006 - in process building from source
+#	u18.04v007 - add pytest, turned off lcov
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -14,7 +15,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        apt-utils wget curl sudo ssh libssl-dev \
+        apt-utils wget curl sudo libssl-dev \
         build-essential \
         g++-multilib \
         flex bison libtool texinfo \
@@ -22,32 +23,13 @@ RUN apt-get update \
         python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
-# ############################## #
-#                                #
-# Define package version numbers #
-#                                #
-# ############################## #
-
-ARG binutils_v=2.34
-ARG gawk_v=5.0.1
-ARG gcc_v=9.3.0
-ARG m4_v=1.4.18
-ARG make_v=4.3
-ARG sed_v=4.8
-ARG cmake_ver=3.17.0
-# ARG gradle_ver=6.3
-
-# grab our python packages
-
-RUN pip3 install pylint gcovr
-
 # ####################################################### #
 #                                                         #
 # Download, configure, and install the 'utility' packages #
 #                                                         #
 # ####################################################### #
 
-# downloading CMake for building Google Test
+ARG cmake_ver=3.17.0
 
 RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
     && tar -xf /cmake-${cmake_ver}.tar.gz \
@@ -58,6 +40,8 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-
     && cd / \
     && rm -rf /cmake-${cmake_ver}*
 
+# ARG m4_v=1.4.18
+
 # RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
 #     && tar -Jxf m4-${m4_v}.tar.xz \
 #     && cd /m4-${m4_v} \
@@ -66,6 +50,8 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-
 #     && make install-strip \
 #     && cd / \
 #     && rm -rf /m4-${m4_v}*
+
+# ARG sed_v=4.8
 
 # RUN wget https://ftp.gnu.org/gnu/sed/sed-${sed_v}.tar.xz \
 #     && tar -Jxf sed-${sed_v}.tar.xz \
@@ -76,6 +62,8 @@ RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-
 #     && cd / \
 #     && rm -rf /sed-${sed_v}*
 
+ARG gawk_v=5.0.1
+
 RUN wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
     && tar -Jxf gawk-${gawk_v}.tar.xz \
     && cd /gawk-${gawk_v} \
@@ -85,6 +73,8 @@ RUN wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
     && cd / \
     && rm -rf /gawk-${gawk_v}*
 
+ARG binutils_v=2.34
+
 RUN wget http://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
     && tar -xf /binutils-${binutils_v}.tar.gz \
     && cd /binutils-${binutils_v} \
@@ -93,6 +83,8 @@ RUN wget http://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
     && make install-strip \
     && cd / \
     && rm -rf /binutils-${binutils_v}*
+
+ARG make_v=4.3
 
 RUN wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz \
     && tar -zxf make-${make_v}.tar.gz \
@@ -113,6 +105,8 @@ RUN wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz \
 # build process.                                              #
 #                                                             #
 # ########################################################### #
+
+ARG gcc_v=9.3.0
 
 RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
     && tar -Jxf gcc-${gcc_v}.tar.xz \
@@ -150,13 +144,15 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
 #    container, for now stick with OpenJDK 11 because that will be
 #    on our dev instances.
 
-#RUN wget https://services.gradle.org/distributions/gradle-${gradle_ver}-bin.zip \
+# ARG gradle_ver=6.3
+
+# RUN wget https://services.gradle.org/distributions/gradle-${gradle_ver}-bin.zip \
 #    && unzip gradle-${gradle_ver}-bin.zip -d /opt \
 #    && ln -s /opt/gradle-${gradle_ver} /opt/gradle \
 #    && rm -f /gradle-${gradle_ver}*
 
 # Add the gradle binaries to the path using Debian's alternatives system
-#RUN update-alternatives --install "/usr/bin/gradle" "gradle" "/opt/gradle/bin/gradle" 1 \
+# RUN update-alternatives --install "/usr/bin/gradle" "gradle" "/opt/gradle/bin/gradle" 1 \
 #    && update-alternatives --set "gradle" "/opt/gradle/bin/gradle"
 
 # #########################################
@@ -165,15 +161,20 @@ RUN wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
 #                                         #
 # #########################################
 
-RUN apt-get update \
-	&& apt-get install -y libjson-perl libperlio-gzip-perl \
-	&& rm -rf /var/lib/apt/lists/*
+RUN pip3 install pylint pytest gcovr
 
-RUN git clone https://github.com/linux-test-project/lcov /lcov \
-	&& cd /lcov \
-	&& make install \
-	&& cd / \
-	&& rm -rf /lcov*
+#                             NOTE
+# we don't need this if `gcovr` provides adequate reports
+
+# RUN apt-get update \
+# 	&& apt-get install -y libjson-perl libperlio-gzip-perl \
+# 	&& rm -rf /var/lib/apt/lists/*
+
+# RUN git clone https://github.com/linux-test-project/lcov /lcov \
+# 	&& cd /lcov \
+# 	&& make install \
+# 	&& cd / \
+# 	&& rm -rf /lcov*
 
 RUN cd / \
 	&& git clone https://github.com/google/googletest.git googletest \
@@ -185,12 +186,11 @@ RUN cd / \
 	&& cd / \
 	&& rm -rf /googletest /gtest_build
 
-# ################################### #
-#                                     #
-# Last steps... create a user account #
-# and give it sudo privileges         #
-#                                     #
-# ################################### #
+# ################################################################ #
+#                                                                  #
+# Last steps... create a user account and give it sudo privileges. #
+#                                                                  #
+# ################################################################ #
 
 RUN useradd -rm -d /home/user -s /bin/bash -u 1000 user
 RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
