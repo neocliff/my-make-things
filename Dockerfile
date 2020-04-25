@@ -1,4 +1,5 @@
 # syntax = docker/dockerfile:1.0-experimental
+# TODO: do we still need the 'syntax' line?
 
 FROM ubuntu:18.04 AS builder
 
