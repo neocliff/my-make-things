@@ -11,6 +11,7 @@ FROM ubuntu:18.04 AS builder
 #	u18.04v005 - add pylint, googletest, lcov, gcovr
 #	u18.04v006 - in process building from source
 #	u18.04v007 - add pytest, turned off lcov, first multi-stage version
+#   u18.04v008 - add splint
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -187,6 +188,21 @@ RUN cd /${build_dir} \
 	&& cmake .. \
 	&& make -j$((`nproc`+1)) \
 	&& make DESTDIR=/${build_dir}/toolset install
+
+# ########################## #
+#                            #
+# Build the splint binaries. #
+#                            #
+# ########################## #
+
+RUN cd /${build_dir} \
+	&& git clone https://github.com/splintchecker/splint.git splint \
+	&& cd splint \
+	&& ./bootstrap \
+	&& ./configure --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+	&& make -j$((`nproc`+1)) check \
+    && make DESTDIR=/${build_dir}/toolset install-strip
 
 # #################################### #
 #                                      #
