@@ -21,7 +21,7 @@ RUN apt-get update \
     && apt-get install -y \
         apt-utils wget libssl-dev \
         build-essential \
-        g++-multilib \
+        g++-multilib automake autoconf \
         flex bison libtool texinfo \
         git xz-utils \
     && rm -rf /var/lib/apt/lists/*
