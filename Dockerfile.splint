@@ -1,0 +1,97 @@
+# syntax = docker/dockerfile:1.0-experimental
+# TODO: do we still need the 'syntax' line?
+
+FROM ubuntu:18.04 AS builder
+
+# label history
+#   splint:u18.04v001 - add splint, pylint on Ubuntu
+
+LABEL maintainer="neocliff@mac.com"
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+    && apt-get install -y \
+        apt-utils sudo \
+        build-essential g++-multilib \
+        flex bison automake autoconf libtool texinfo \
+        git  \
+    && rm -rf /var/lib/apt/lists/*
+
+# define the directory for building/packaging the tools.
+
+ARG build_dir=build_directory
+WORKDIR /${build_dir}
+
+# use git to clone the splint repository
+RUN cd /${build_dir} \
+	&& git clone https://github.com/splintchecker/splint.git splint \
+	&& cd splint \
+	&& ./bootstrap \
+	&& ./configure --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+	&& make -j$((`nproc`+1)) check \
+    && make DESTDIR=/${build_dir}/lint_toolset install-strip
+
+# #################################### #
+#                                      #
+# Build the artifacts from this stage. #
+#                                      #
+# #################################### #
+
+RUN cd /${build_dir} \
+	&& find lint_toolset -type f | xargs strip -s | 2> /dev/null
+RUN cd /${build_dir} \
+	&& tar cvfJ lint_toolset.tar.xz lint_toolset
+
+# ########################################## #
+#                                            #
+# Final stage: Build the lint_toolset Image. #
+#                                            #
+# ########################################## #
+
+FROM ubuntu:18.04
+
+ENV DEBIAN_FRONTEND noninteractive
+
+#                           NOTE
+# I am including `flex` in this `apt-get install ...` because we need the
+# flex 'fl' shared library. There may be a way to get around this. See the
+# following article for information: 
+#   https://stackoverflow.com/questions/10175795/flex-and-yacc-cannot-find-lfl.
+RUN apt-get update \
+    && apt-get install -y \
+        apt-utils sudo \
+		flex \
+		python3 python3-pip \
+        git  \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /build_directory/lint_toolset.tar.xz /tmp/lint_toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf lint_toolset.tar.xz
+
+RUN sudo cp --recursive /tmp/lint_toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+RUN pip3 install pylint
+
+# ################################################################ #
+#                                                                  #
+# Last steps... create a user account and give it sudo privileges. #
+#                                                                  #
+# ################################################################ #
+
+RUN useradd -rm -d /home/user -s /bin/bash -u 1000 user
+RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
+USER user
+
+# Note that we are assigning a default working directory here. Normally, the
+# container will be invoked with the option '--workdir /path/to/working/dir'
+# to override the this. I did it this way because not everybody has the repo
+# located in the same place and since we are mounting that directory in the
+# container in the same place, this looked like the best option.
+
+WORKDIR /home/user
