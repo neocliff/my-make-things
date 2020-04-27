@@ -200,8 +200,8 @@ RUN cd /${build_dir} \
 	&& cd splint \
 	&& ./bootstrap \
 	&& ./configure --prefix=/usr \
-    && make -j$((`nproc`+1)) --prefix=/usr \
-	&& make -j$((`nproc`+1)) --prefix=/usr check \
+    && make -j$((`nproc`+1)) \
+	&& make -j$((`nproc`+1)) check \
     && make DESTDIR=/${build_dir}/toolset --prefix=/usr install-strip
 
 # #################################### #
@@ -210,8 +210,8 @@ RUN cd /${build_dir} \
 #                                      #
 # #################################### #
 
-# RUN cd /${build_dir} \
-#	&& find toolset -type f | xargs strip -s | 2> /dev/null
+RUN cd /${build_dir} \
+	&& find toolset -type f | xargs strip -g | 2> /dev/null
 RUN cd /${build_dir} \
 	&& tar cvfJ toolset.tar.xz toolset
 
