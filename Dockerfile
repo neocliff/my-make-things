@@ -22,7 +22,7 @@ RUN apt-get update \
         apt-utils wget libssl-dev \
         build-essential \
         g++-multilib automake autoconf \
-        flex bison libtool texinfo \
+        flex bison libtool-bin texinfo \
         git xz-utils \
     && rm -rf /var/lib/apt/lists/*
 
@@ -230,7 +230,7 @@ RUN apt-get update \
         apt-utils curl sudo \
         build-essential \
         g++-multilib \
-        flex bison libtool texinfo \
+        flex bison libtool-bin texinfo \
         git doxygen graphviz \
         python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
@@ -243,6 +243,9 @@ RUN cd /tmp \
 RUN sudo cp --recursive /tmp/toolset/* / \
 	&& cd / \
 	&& rm -rf /tmp/*
+
+RUN sudo libtool --finish /usr/lib/../lib32 \
+	&& sudo libtool --finish /usr/lib/../lib64
 
 RUN pip3 install pylint pytest gcovr
 
