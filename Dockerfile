@@ -202,7 +202,7 @@ RUN cd /${build_dir} \
 	&& ./configure --prefix=/usr \
     && make -j$((`nproc`+1)) \
 	&& make -j$((`nproc`+1)) check \
-    && make DESTDIR=/${build_dir}/toolset --prefix=/usr install-strip
+    && make DESTDIR=/${build_dir}/toolset install-strip
 
 # #################################### #
 #                                      #
