@@ -11,7 +11,7 @@ FROM ubuntu:18.04 AS builder
 #	u18.04v005 - add pylint, googletest, lcov, gcovr
 #	u18.04v006 - in process building from source
 #	u18.04v007 - add pytest, turned off lcov, first multi-stage version
-#   u18.04v008 - add splint
+#   u18.04v008 - add splint, fixed some library issues (I hope)
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -244,9 +244,16 @@ RUN sudo cp --recursive /tmp/toolset/* / \
 	&& cd / \
 	&& rm -rf /tmp/*
 
+# need to relink libstdc++.so.6 because the installers don't seem to be doing
+# it for us. checking on the internet shows people doing the same thing. grr!
+RUN sudo rm /usr/lib/x86_64-linux-gnu/libstdc++.so.6 \
+	&& sudo ln -s  /usr/lib64/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+
+# final run of libtool to finish the 32- and 64-bit library installations.
 RUN sudo libtool --finish /usr/lib/../lib32 \
 	&& sudo libtool --finish /usr/lib/../lib64
 
+# add python modules we need
 RUN pip3 install pylint pytest gcovr
 
 # ################################################################ #
