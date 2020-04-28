@@ -4,7 +4,7 @@
 FROM ubuntu:18.04 AS builder
 
 # label history
-#   splint:u18.04v001 - add splint, pylint on Ubuntu
+#   lint_toolset:u18.04v001 - add splint, pylint on Ubuntu
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -40,7 +40,7 @@ RUN cd /${build_dir} \
 # #################################### #
 
 RUN cd /${build_dir} \
-	&& find lint_toolset -type f | xargs strip -s | 2> /dev/null
+	&& find lint_toolset -type f | xargs strip --strip-debug | 2> /dev/null
 RUN cd /${build_dir} \
 	&& tar cvfJ lint_toolset.tar.xz lint_toolset
 
