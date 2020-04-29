@@ -247,8 +247,8 @@ RUN sudo cp --recursive /tmp/toolset/* / \
 
 # need to relink libstdc++.so.6 because the installers don't seem to be doing
 # it for us. checking on the internet shows people doing the same thing. grr!
-RUN sudo rm /usr/lib/x86_64-linux-gnu/libstdc++.so.6 \
-	&& sudo ln -s  /usr/lib64/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+# RUN sudo rm /usr/lib/x86_64-linux-gnu/libstdc++.so.6 \
+#	&& sudo ln -s  /usr/lib64/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
 
 # final run of libtool to finish the 32- and 64-bit library installations.
 RUN sudo libtool --finish /usr/lib/../lib32 \
