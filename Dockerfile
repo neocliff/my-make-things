@@ -108,6 +108,7 @@ RUN cd /${build_dir} \
 RUN mkdir gcc-${gcc_v}/build \
     && cd gcc-${gcc_v} \
     && ./contrib/download_prerequisites \
+ 	&& sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 \
     && cd build \
     && ../configure --prefix=/usr --with-cpu-32=i686 --with-cpu-64=core2 \
         --enable-shared --enable-libstdcxx --enable-clocale=gnu \
