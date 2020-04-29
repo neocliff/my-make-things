@@ -211,8 +211,8 @@ RUN cd /${build_dir} \
 #                                      #
 # #################################### #
 
-RUN cd /${build_dir} \
-	&& find toolset -type f | xargs strip -g | 2> /dev/null
+# RUN cd /${build_dir} \
+# 	&& find toolset -type f | xargs strip -g | 2> /dev/null
 RUN cd /${build_dir} \
 	&& tar cvfJ toolset.tar.xz toolset
 
