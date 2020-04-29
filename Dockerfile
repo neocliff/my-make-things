@@ -252,7 +252,7 @@ RUN sudo cp --recursive /tmp/toolset/* / \
 
 # final run of libtool to finish the 32- and 64-bit library installations.
 RUN sudo libtool --finish /usr/lib/../lib32 \
-	&& sudo libtool --finish /usr/lib/../lib64
+	&& sudo libtool --finish /usr/lib/../lib
 
 # add python modules we need
 RUN pip3 install pylint pytest gcovr
