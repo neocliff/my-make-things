@@ -12,6 +12,7 @@ FROM ubuntu:18.04 AS builder
 #	u18.04v006 - in process building from source
 #	u18.04v007 - add pytest, turned off lcov, first multi-stage version
 #   u18.04v008 - add splint, fixed some library issues (I hope)
+#	u18.04v009 - fixed more library issues; resolved libstdc++.so.6 issue
 
 LABEL maintainer="neocliff@mac.com"
 
