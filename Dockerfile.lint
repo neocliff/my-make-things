@@ -5,6 +5,7 @@ FROM ubuntu:18.04 AS builder
 
 # label history
 #   lint_toolset:u18.04v001 - add splint, pylint on Ubuntu
+#	lint_toolset:u18.04v002 - turn-off `strip -g` step
 
 LABEL maintainer="neocliff@mac.com"
 
