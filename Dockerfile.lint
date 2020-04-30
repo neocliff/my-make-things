@@ -39,8 +39,8 @@ RUN cd /${build_dir} \
 #                                      #
 # #################################### #
 
-RUN cd /${build_dir} \
-	&& find lint_toolset -type f | xargs strip --strip-debug | 2> /dev/null
+# RUN cd /${build_dir} \
+# 	&& find lint_toolset -type f | xargs strip --strip-debug | 2> /dev/null
 RUN cd /${build_dir} \
 	&& tar cvfJ lint_toolset.tar.xz lint_toolset
 
