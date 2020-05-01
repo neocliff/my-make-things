@@ -23,13 +23,17 @@ WORKING_DIR=`pwd`
 #       -i          run the container in interactive mode
 #       -t          allocate a pseudo-tty for the console
 #       -v          connect a volume using "source:destination[:ro]" syntax
-#           `git rev-parse --show-toplevel` is the root of the current repo (source)
-#                   and is the mount point in the container (destination)
-#           the "ro" indicates a mount is to be read-only within the container
+#           		`git rev-parse --show-toplevel` is the root of the current
+#					repo (source) and is the mount point in the container
+#					(destination); add ":ro" to indicate a mount is to be
+#					read-only within the container
 #       <image>     name of the container image in "image:tag" format
 
 echo "PROJ_ROOT is   $PROJ_ROOT"
 echo "working_dir is $WORKING_DIR"
+echo ""
+echo "pulling neocliff/toolset:latest"
+docker pull neocliff/toolset:latest
 
 docker run --rm -it -v $PROJ_ROOT:$PROJ_ROOT \
         --workdir $WORKING_DIR neocliff/toolset:latest

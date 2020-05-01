@@ -40,6 +40,9 @@ echo "PROJ_ROOT is      $PROJ_ROOT"
 echo "WORKING_DIR is    $WORKING_DIR"
 echo "COMMAND_TO_RUN is $COMMAND_TO_RUN"
 echo ""
+echo "pulling neocliff/toolset:latest"
+docker pull neocliff/toolset:latest
 
+echo "launching container"
 docker run --rm -it -v $PROJ_ROOT:$PROJ_ROOT \
         --workdir $WORKING_DIR neocliff/toolset:latest $COMMAND_TO_RUN
