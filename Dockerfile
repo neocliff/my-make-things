@@ -225,6 +225,9 @@ RUN cd /${build_dir} \
 
 FROM ubuntu:18.04
 
+# define an argument which can be passed during build time
+ARG UID=1000
+
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
@@ -264,9 +267,10 @@ RUN pip3 install pylint pytest gcovr
 #                                                                  #
 # ################################################################ #
 
-RUN useradd -rm -d /home/user -s /bin/bash -u 1000 user
+RUN useradd -rm -d /home/user -s /bin/bash -u $UID user
 RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
 USER user
+RUN id
 
 # Note that we are assigning a default working directory here. Normally, the
 # container will be invoked with the option '--workdir /path/to/working/dir'
