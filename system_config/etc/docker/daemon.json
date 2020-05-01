@@ -1,0 +1,4 @@
+{
+	"features": { "buildkit": true },
+	"userns-remap" : "user"
+}
