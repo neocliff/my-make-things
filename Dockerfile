@@ -1,7 +1,8 @@
 # syntax = docker/dockerfile:1.0-experimental
 # TODO: do we still need the 'syntax' line?
 
-FROM ubuntu:18.04 AS builder
+#FROM ubuntu:18.04 AS builder
+FROM neocliff/toolset_base:u18.04v001 AS builder
 
 # label history
 #   u18.04v001 - with CMake 3.17
@@ -19,14 +20,14 @@ LABEL maintainer="neocliff@mac.com"
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update \
-    && apt-get install -y \
-        apt-utils wget libssl-dev \
-        build-essential \
-        g++-multilib automake autoconf \
-        flex bison libtool-bin texinfo \
-        git xz-utils \
-    && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update \
+#     && apt-get install -y \
+#         apt-utils wget libssl-dev \
+#         build-essential \
+#         g++-multilib automake autoconf \
+#         flex bison libtool-bin texinfo \
+#         git xz-utils \
+#     && rm -rf /var/lib/apt/lists/*
 
 # define the directory for building/packaging the tools.
 
@@ -222,19 +223,27 @@ RUN cd /${build_dir} \
 #                                       #
 # ##################################### #
 
-FROM ubuntu:18.04
+# FROM ubuntu:18.04
+FROM neocliff/toolset_base:u18.04v001
 
 # define an argument which can be passed during build time
 ARG UID=1000
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# RUN apt-get update \
+#     && apt-get install -y \
+#         apt-utils curl sudo \
+#         build-essential \
+#         g++-multilib \
+#         flex bison libtool-bin texinfo \
+#         git doxygen graphviz \
+#         python3 python3-pip \
+#     && rm -rf /var/lib/apt/lists/*
+
 RUN apt-get update \
     && apt-get install -y \
-        apt-utils curl sudo \
-        build-essential \
-        g++-multilib \
-        flex bison libtool-bin texinfo \
+        curl sudo \
         git doxygen graphviz \
         python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
