@@ -16,5 +16,5 @@ RUN apt-get update \
         build-essential \
         g++-multilib automake autoconf \
         flex bison libtool-bin texinfo \
-        git xz-utils \
+        git xz-utils libpcre3-dev \
     && rm -rf /var/lib/apt/lists/*
