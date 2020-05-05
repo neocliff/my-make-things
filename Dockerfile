@@ -13,6 +13,7 @@ FROM ubuntu:18.04 AS builder
 #	u18.04v007 - add pytest, turned off lcov, first multi-stage version
 #   u18.04v008 - add splint, fixed some library issues (I hope)
 #	u18.04v009 - fixed more library issues; resolved libstdc++.so.6 issue
+#	u18.04v010 - multi-stage builds; requires DOCKER_BUILDKIT=1 in user environment
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -212,8 +213,6 @@ RUN cd /${build_dir} \
 #                                      #
 # #################################### #
 
-# RUN cd /${build_dir} \
-# 	&& find toolset -type f | xargs strip -g | 2> /dev/null
 RUN cd /${build_dir} \
 	&& tar cvfJ toolset.tar.xz toolset
 
