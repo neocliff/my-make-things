@@ -1,0 +1,20 @@
+
+FROM neocliff/toolset_base:u18.04v001 as builder
+
+LABEL maintainer="neocliff@mac.com"
+
+ENV DEBIAN_FRONTEND noninteractive
+
+ARG build_dir=build_directory
+WORKDIR /${build_dir}
+
+ARG gawk_v=5.0.1
+
+RUN cd /${build_dir} \
+    && sudo wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
+    && sudo tar -Jxf gawk-${gawk_v}.tar.xz
+RUN cd gawk-${gawk_v} \
+    && ./configure --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+    && make DESTDIR=/${build_dir}/toolset install-strip
+
