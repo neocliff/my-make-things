@@ -1,11 +1,9 @@
-# syntax = docker/dockerfile:1.0-experimental
-# TODO: do we still need the 'syntax' line?
-
 FROM ubuntu:18.04 AS builder
 
 # label history
 #   lint_toolset:u18.04v001 - add splint, pylint on Ubuntu
 #	lint_toolset:u18.04v002 - turn-off `strip -g` step
+#   lint_toolset:u18.04v003 - build cppcheck from source
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -13,16 +11,36 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
     && apt-get install -y \
-        apt-utils sudo \
+        apt-utils wget sudo \
         build-essential g++-multilib \
         flex bison automake autoconf libtool texinfo \
-        git  \
+        git  python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # define the directory for building/packaging the tools.
 
 ARG build_dir=build_directory
 WORKDIR /${build_dir}
+
+# ############################################ #
+#                                              #
+# Build tools in the quality/linting tool set. #
+#                                              #
+# ############################################ #
+
+#
+# Build cppcheck.
+#
+
+RUN wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
+    && tar xvf 1.90.tar.gz \
+    && cd cppcheck-1.90 \
+    && make MATCHCOMPILER=yes FILESDIR=/usr/share/cppcheck HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function" \
+    && make FILESDIR=/usr/share/cppcheck DESTDIR=/${build_dir}/toolset install
+
+#
+# Build splint even though we almost certainly won't use it.
+#
 
 # use git to clone the splint repository
 RUN cd /${build_dir} \
@@ -40,8 +58,6 @@ RUN cd /${build_dir} \
 #                                      #
 # #################################### #
 
-# RUN cd /${build_dir} \
-# 	&& find lint_toolset -type f | xargs strip --strip-debug | 2> /dev/null
 RUN cd /${build_dir} \
 	&& tar cvfJ lint_toolset.tar.xz lint_toolset
 
