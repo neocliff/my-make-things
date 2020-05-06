@@ -32,7 +32,8 @@ WORKDIR /${build_dir}
 # Build cppcheck.
 #
 
-RUN wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
+RUN cd /${build_dir} \
+	&& wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
     && tar xvf 1.90.tar.gz \
     && cd cppcheck-1.90 \
     && make MATCHCOMPILER=yes FILESDIR=/usr/share/cppcheck HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function" \
@@ -43,14 +44,14 @@ RUN wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
 #
 
 # use git to clone the splint repository
-RUN cd /${build_dir} \
-	&& git clone https://github.com/splintchecker/splint.git splint \
-	&& cd splint \
-	&& ./bootstrap \
-	&& ./configure --prefix=/usr \
-    && make -j$((`nproc`+1)) \
-	&& make -j$((`nproc`+1)) check \
-    && make DESTDIR=/${build_dir}/lint_toolset install-strip
+# RUN cd /${build_dir} \
+#	&& git clone https://github.com/splintchecker/splint.git splint \
+#	&& cd splint \
+#	&& ./bootstrap \
+#	&& ./configure --prefix=/usr \
+#    && make -j$((`nproc`+1)) \
+#	&& make -j$((`nproc`+1)) check \
+#    && make DESTDIR=/${build_dir}/lint_toolset install-strip
 
 # #################################### #
 #                                      #
