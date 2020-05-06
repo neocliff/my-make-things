@@ -14,7 +14,7 @@ RUN apt-get update \
         apt-utils wget sudo \
         build-essential g++-multilib \
         flex bison automake autoconf libtool texinfo \
-        git  python3 python3-pip \
+        git  python3 python3-pip libpcre3-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # define the directory for building/packaging the tools.
