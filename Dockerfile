@@ -2,7 +2,7 @@
 # TODO: do we still need the 'syntax' line?
 
 #FROM ubuntu:18.04 AS builder
-FROM neocliff/toolset_base:u18.04v001 AS builder
+FROM ubuntu:18.04 AS builder
 
 # label history
 #   u18.04v001 - with CMake 3.17
@@ -20,14 +20,14 @@ LABEL maintainer="neocliff@mac.com"
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# RUN apt-get update \
-#     && apt-get install -y \
-#         apt-utils wget libssl-dev \
-#         build-essential \
-#         g++-multilib automake autoconf \
-#         flex bison libtool-bin texinfo \
-#         git xz-utils \
-#     && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+    && apt-get install -y \
+        apt-utils wget libssl-dev \
+        build-essential \
+        g++-multilib automake autoconf \
+        flex bison libtool-bin texinfo \
+        git xz-utils libpcre3-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # define the directory for building/packaging the tools.
 
@@ -78,7 +78,9 @@ RUN cd /$build_dir \
 	&& wget https://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
     && tar -xf binutils-${binutils_v}.tar.gz
 RUN cd binutils-${binutils_v} \
-    && ./configure --enable-targets=all --enable-gold --enable-lto --prefix=/usr \
+    && ./configure --enable-targets=all \
+		--enable-gold --enable-lto --enable-plugins \
+		--prefix=/usr \
     && make  -j$((`nproc`+1)) \
     && make DESTDIR=/${build_dir}/toolset install-strip
 
@@ -195,18 +197,30 @@ RUN cd /${build_dir} \
 
 # ########################## #
 #                            #
+# Add CPPCheck to container. #
+#                            #
+# ########################## #
+
+RUN wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
+    && tar xvf 1.90.tar.gz \
+    && cd cppcheck-1.90 \
+    && make MATCHCOMPILER=yes FILESDIR=/usr/share/cppcheck HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function" \
+    && make FILESDIR=/usr/share/cppcheck DESTDIR=/${build_dir}/toolset install
+
+# ########################## #
+#                            #
 # Build the splint binaries. #
 #                            #
 # ########################## #
 
-RUN cd /${build_dir} \
-	&& git clone https://github.com/splintchecker/splint.git splint \
-	&& cd splint \
-	&& ./bootstrap \
-	&& ./configure --prefix=/usr \
-    && make -j$((`nproc`+1)) \
-	&& make -j$((`nproc`+1)) check \
-    && make DESTDIR=/${build_dir}/toolset install-strip
+# RUN cd /${build_dir} \
+# 	&& git clone https://github.com/splintchecker/splint.git splint \
+# 	&& cd splint \
+# 	&& ./bootstrap \
+# 	&& ./configure --prefix=/usr \
+#   && make -j$((`nproc`+1)) \
+# 	&& make -j$((`nproc`+1)) check \
+#   && make DESTDIR=/${build_dir}/toolset install-strip
 
 # #################################### #
 #                                      #
@@ -231,22 +245,22 @@ ARG UID=1000
 
 ENV DEBIAN_FRONTEND noninteractive
 
-# RUN apt-get update \
-#     && apt-get install -y \
-#         apt-utils curl sudo \
-#         build-essential \
-#         g++-multilib \
-#         flex bison libtool-bin texinfo \
-#         git doxygen graphviz \
-#         python3 python3-pip \
-#     && rm -rf /var/lib/apt/lists/*
-
 RUN apt-get update \
     && apt-get install -y \
-        curl sudo \
+        apt-utils curl sudo \
+        build-essential \
+        g++-multilib \
+        flex bison libtool-bin texinfo \
         git doxygen graphviz \
         python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
+
+# RUN sudo apt-get update \
+#     && apt-get install -y \
+#         curl sudo \
+#         git doxygen graphviz \
+#         python3 python3-pip \
+#     && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
 
