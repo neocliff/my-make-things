@@ -14,7 +14,9 @@ FROM ubuntu:18.04 AS builder
 #	u18.04v007 - add pytest, turned off lcov, first multi-stage version
 #   u18.04v008 - add splint, fixed some library issues (I hope)
 #	u18.04v009 - fixed more library issues; resolved libstdc++.so.6 issue
-#	u18.04v010 - multi-stage builds; requires DOCKER_BUILDKIT=1 in user environment
+#	u18.04v010 - multi-stage builds; requires DOCKER_BUILDKIT=1 in user
+#				environment and `"buildkit":true` entry in the `features` list
+#				in the /etc/docker/daemon.json file
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -27,6 +29,7 @@ RUN apt-get update \
         g++-multilib automake autoconf \
         flex bison libtool-bin texinfo \
         git xz-utils libpcre3-dev \
+		python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 # define the directory for building/packaging the tools.
@@ -237,8 +240,8 @@ RUN cd /${build_dir} \
 #                                       #
 # ##################################### #
 
-# FROM ubuntu:18.04
-FROM neocliff/toolset_base:u18.04v001
+FROM ubuntu:18.04
+# FROM neocliff/toolset_base:u18.04v001
 
 # define an argument which can be passed during build time
 ARG UID=1000
