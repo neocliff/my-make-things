@@ -43,28 +43,6 @@ WORKDIR /${build_dir}
 #                                                         #
 # ####################################################### #
 
-# ARG m4_v=1.4.18
-
-# RUN wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
-#     && tar -Jxf m4-${m4_v}.tar.xz \
-#     && cd /m4-${m4_v} \
-#     && ./configure --prefix=/usr \
-#     && make -j$((`nproc`+1)) \
-#     && make install-strip \
-#     && cd / \
-#     && rm -rf /m4-${m4_v}*
-
-# ARG sed_v=4.8
-
-# RUN wget https://ftp.gnu.org/gnu/sed/sed-${sed_v}.tar.xz \
-#     && tar -Jxf sed-${sed_v}.tar.xz \
-#     && cd /sed-${sed_v} \
-#     && ./configure --prefix=/usr \
-#     && make -j$((`nproc`+1)) \
-#     && make install-strip \
-#     && cd / \
-#     && rm -rf /sed-${sed_v}*
-
 ARG gawk_v=5.0.1
 
 RUN cd /${build_dir} \
@@ -181,22 +159,22 @@ RUN mkdir gcc-${gcc_v}/build \
 # `make install`, we are not installing it to `/${build_dir}` directory.
 # That is because we are *not* carrying the tool into future stages.
 
-ARG cmake_ver=3.17.0
+# ARG cmake_ver=3.17.0
 
-RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
-    && tar -xf cmake-${cmake_ver}.tar.gz
-RUN cd cmake-${cmake_ver} \
-    && ./bootstrap --prefix=/usr \
-    && make -j$((`nproc`+1)) \
-    && make install
+# RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
+#     && tar -xf cmake-${cmake_ver}.tar.gz
+# RUN cd cmake-${cmake_ver} \
+#     && ./bootstrap --prefix=/usr \
+#     && make -j$((`nproc`+1)) \
+#     && make install
 
-RUN cd /${build_dir} \
-	&& git clone https://github.com/google/googletest.git googletest \
-	&& mkdir googletest/gtest_build \
-	&& cd googletest/gtest_build \
-	&& cmake .. \
-	&& make -j$((`nproc`+1)) \
-	&& make DESTDIR=/${build_dir}/toolset install
+# RUN cd /${build_dir} \
+# 	&& git clone https://github.com/google/googletest.git googletest \
+# 	&& mkdir googletest/gtest_build \
+# 	&& cd googletest/gtest_build \
+# 	&& cmake .. \
+# 	&& make -j$((`nproc`+1)) \
+# 	&& make DESTDIR=/${build_dir}/toolset install
 
 # ########################## #
 #                            #
@@ -204,26 +182,12 @@ RUN cd /${build_dir} \
 #                            #
 # ########################## #
 
-RUN wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
+RUN cd /${build_dir} \
+	&& wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
     && tar xvf 1.90.tar.gz \
     && cd cppcheck-1.90 \
     && make MATCHCOMPILER=yes FILESDIR=/usr/share/cppcheck HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function" \
     && make FILESDIR=/usr/share/cppcheck DESTDIR=/${build_dir}/toolset install
-
-# ########################## #
-#                            #
-# Build the splint binaries. #
-#                            #
-# ########################## #
-
-# RUN cd /${build_dir} \
-# 	&& git clone https://github.com/splintchecker/splint.git splint \
-# 	&& cd splint \
-# 	&& ./bootstrap \
-# 	&& ./configure --prefix=/usr \
-#   && make -j$((`nproc`+1)) \
-# 	&& make -j$((`nproc`+1)) check \
-#   && make DESTDIR=/${build_dir}/toolset install-strip
 
 # #################################### #
 #                                      #
