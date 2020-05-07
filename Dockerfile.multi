@@ -119,3 +119,6 @@ RUN mkdir gcc-${gcc_v}/build \
         --with-gnu-as -with-gnu-gold \
     && make -j$((`nproc`+1)) \
     && make DESTDIR=/${build_dir}/toolset install-strip
+
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
