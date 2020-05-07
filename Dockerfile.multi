@@ -122,3 +122,19 @@ RUN mkdir gcc-${gcc_v}/build \
 
 RUN cd /${build_dir} \
 	&& tar cvfJ toolset.tar.xz toolset
+
+# ########################## #
+#                            #
+# Add CPPCheck to container. #
+#                            #
+# ########################## #
+
+RUN cd /${build_dir} \
+	&& wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
+    && tar xvf 1.90.tar.gz \
+    && cd cppcheck-1.90 \
+    && make MATCHCOMPILER=yes FILESDIR=/usr/share/cppcheck HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function" \
+    && make FILESDIR=/usr/share/cppcheck DESTDIR=/${build_dir}/toolset install
+
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
