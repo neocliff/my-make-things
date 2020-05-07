@@ -17,6 +17,7 @@ FROM ubuntu:18.04 AS builder
 #	u18.04v010 - multi-stage builds; requires DOCKER_BUILDKIT=1 in user
 #				environment and `"buildkit":true` entry in the `features` list
 #				in the /etc/docker/daemon.json file
+#	u18.04v011 - delete `RUN id`;
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -259,7 +260,6 @@ RUN pip3 install pylint pytest gcovr
 RUN useradd -rm -d /home/user -s /bin/bash -u $UID user
 RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
 USER user
-RUN id
 
 # Note that we are assigning a default working directory here. Normally, the
 # container will be invoked with the option '--workdir /path/to/working/dir'
