@@ -1,0 +1,121 @@
+FROM ubuntu:18.04 AS base
+
+# label history
+#   u18.04v001 - with CMake 3.17
+#   u18.04v002 - add Gradle 6.3, OpenJDK 11; removed CMake 3.17
+#   u18.04v003 - removed Gradle 6.3, OpenJDK 11
+#   u18.04v004 - upgrade to GCC 9.3.0, add graphviz
+#	u18.04v005 - add pylint, googletest, lcov, gcovr
+#	u18.04v006 - in process building from source
+#	u18.04v007 - add pytest, turned off lcov, first multi-stage version
+#   u18.04v008 - add splint, fixed some library issues (I hope)
+#	u18.04v009 - fixed more library issues; resolved libstdc++.so.6 issue
+#	u18.04v010 - multi-stage builds; requires DOCKER_BUILDKIT=1 in user
+#				environment and `"buildkit":true` entry in the `features` list
+#				in the /etc/docker/daemon.json file
+#	u18.04v011 - delete `RUN id`;
+
+LABEL maintainer="neocliff@mac.com"
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update \
+    && apt-get install -y \
+        apt-utils wget libssl-dev \
+        build-essential \
+        g++-multilib automake autoconf \
+        flex bison libtool-bin texinfo \
+        git xz-utils libpcre3-dev \
+		python3 python3-pip \
+    && rm -rf /var/lib/apt/lists/*
+
+# define the directory for building/packaging the tools.
+
+ARG build_dir=build_directory
+WORKDIR /${build_dir}
+
+# ####################################################### #
+#                                                         #
+# Download, configure, and install the 'utility' packages #
+#                                                         #
+# ####################################################### #
+
+FROM base AS gawk_bin
+
+ARG gawk_v=5.0.1
+
+RUN cd /${build_dir} \
+	&& wget https://ftp.gnu.org/gnu/gawk/gawk-${gawk_v}.tar.xz \
+    && tar -Jxf gawk-${gawk_v}.tar.xz
+RUN cd gawk-${gawk_v} \
+    && ./configure --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+    && make DESTDIR=/${build_dir}/toolset install-strip
+
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
+
+FROM base AS binutils_bin
+
+ARG binutils_v=2.34
+
+RUN cd /$build_dir \
+	&& wget https://ftp.gnu.org/gnu/binutils/binutils-${binutils_v}.tar.gz \
+    && tar -xf binutils-${binutils_v}.tar.gz
+RUN cd binutils-${binutils_v} \
+    && ./configure --enable-targets=all \
+		--enable-gold --enable-lto --enable-plugins \
+		--prefix=/usr \
+    && make  -j$((`nproc`+1)) \
+    && make DESTDIR=/${build_dir}/toolset install-strip
+
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
+
+FROM base AS make_bin
+
+ARG make_v=4.3
+
+RUN cd /${build_dir} \
+	&& wget https://ftp.gnu.org/gnu/make/make-${make_v}.tar.gz \
+    && tar -zxf make-${make_v}.tar.gz
+RUN cd make-${make_v} \
+    && ./configure --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+    && make DESTDIR=/${build_dir}/toolset install-strip
+
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
+
+# ########################################################### #
+#                                                             #
+# And now, download, configure and install gcc. note that gcc #
+# runs a script called download_prerequisites that pulls down #
+# the libraries that are needed to build gcc. we don't have   #
+# to pull them down and build them beforehand. in fact, you   #
+# will likely have errors if you do it outside of the gcc     #
+# build process.                                              #
+#                                                             #
+# ########################################################### #
+
+FROM base AS gcc_bin
+
+ARG gcc_v=9.3.0
+
+RUN cd /${build_dir} \
+	&& wget https://ftp.gnu.org/gnu/gcc/gcc-${gcc_v}/gcc-${gcc_v}.tar.xz \
+    && tar -Jxf gcc-${gcc_v}.tar.xz
+RUN mkdir gcc-${gcc_v}/build \
+    && cd gcc-${gcc_v} \
+    && ./contrib/download_prerequisites \
+ 	&& sed -e '/m64=/s/lib64/lib/' -i.orig gcc/config/i386/t-linux64 \
+    && cd build \
+    && ../configure --prefix=/usr --with-cpu-32=i686 --with-cpu-64=core2 \
+        --enable-shared --enable-libstdcxx --enable-clocale=gnu \
+        --with-multiarch --with-multilib-list=m32,m64 \
+        --enable-languages=c,c++,lto \
+        --enable-threads=posix \
+        --enable-lto \
+        --with-gnu-as -with-gnu-gold \
+    && make -j$((`nproc`+1)) \
+    && make DESTDIR=/${build_dir}/toolset install-strip
