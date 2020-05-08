@@ -196,6 +196,83 @@ RUN apt-get update \
 		python3 python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
+#
+# Load the artifacts from the "gawk_bin" stage.
+#
+
+COPY --from=gawk_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN sudo cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
+# Load the artifacts from the "binutils_bin" stage.
+#
+
+COPY --from=binutils_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN sudo cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
+# Load the artifacts from the "make_bin" stage.
+#
+
+COPY --from=make_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN sudo cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
+# Load the artifacts from the "gcc_bin" stage.
+#
+
+COPY --from=gcc_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN sudo cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
+# Load the artifacts from the "cppcheck_bin" stage.
+#
+
+COPY --from=cppcheck_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN sudo cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+# need to relink libstdc++.so.6 because the installers don't seem to be doing
+# it for us. checking on the internet shows people doing the same thing. grr!
+RUN sudo rm /usr/lib/x86_64-linux-gnu/libstdc++.so.6 \
+	&& sudo ln -s  /usr/lib64/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+
+# final run of libtool to finish the 32- and 64-bit library installations.
+RUN sudo libtool --finish /usr/lib/../lib32 \
+	&& sudo libtool --finish /usr/lib/../lib
+
+# add python modules we need
+RUN pip3 install pylint pytest gcovr
+
 # ################################################################ #
 #                                                                  #
 # Last steps... create a user account and give it sudo privileges. #
