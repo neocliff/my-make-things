@@ -249,7 +249,9 @@ RUN pip3 install pylint pytest gcovr
 #                                                                  #
 # ################################################################ #
 
-RUN useradd -rm -d /home/user -s /bin/bash -u $UID -g $GID user
+RUN groupadd -g ${GID} user \
+	&& useradd -rm -d /home/user -s /bin/bash -u ${UID} -g ${GID} user
+
 # RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
 USER user
 
