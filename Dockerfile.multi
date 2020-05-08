@@ -148,10 +148,10 @@ RUN cd /${build_dir} \
 # ##################################### #
 
 FROM ubuntu:18.04
-# FROM neocliff/toolset_base:u18.04v001
 
 # define an argument which can be passed during build time
 ARG UID=1000
+ARG GID=1000
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -163,7 +163,7 @@ run apt-get update \
         libtool-bin texinfo \
 		libpcre3-dev xz-utils \
         doxygen graphviz \
-        python3 python3-pip \
+        python3 python3-setuptools python3-pip \
     && rm -rf /var/lib/apt/lists/*
 
 #
@@ -249,7 +249,7 @@ RUN pip3 install pylint pytest gcovr
 #                                                                  #
 # ################################################################ #
 
-RUN useradd -rm -d /home/user -s /bin/bash -u $UID user
+RUN useradd -rm -d /home/user -s /bin/bash -u $UID -g $GID user
 # RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
 USER user
 
