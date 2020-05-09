@@ -124,10 +124,6 @@ check-tools:
 	@echo "GAWK            is ${GAWK}"
 	@echo ""
 	${GAWK} --version
-	@echo "----------------------------------------------------------"
-	@echo "M4              is ${M4}"
-	@echo ""
-	${M4} --version
 
 # this is the target that dumps variables so that we can check
 # the build process.
