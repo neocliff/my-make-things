@@ -198,6 +198,19 @@ run apt-get update \
 	&& rm -rf /var/lib/apt/lists/*
 
 #
+# Load the artifacts from the "m4_bin" stage.
+#
+
+COPY --from=m4_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
 # Load the artifacts from the "gawk_bin" stage.
 #
 
