@@ -181,7 +181,7 @@ RUN cd /${build_dir} \
 #                                                                      #
 # #################################################################### #
 
-FROM ubuntu:18.04
+FROM ubuntu:18.04 AS final
 
 # define an argument which can be passed during build time
 ARG UID=1000
