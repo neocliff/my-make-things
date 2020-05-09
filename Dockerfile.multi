@@ -158,7 +158,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # removing build-essential, g++multilib, git, curl
 
 run apt-get update \
-	&& apt-get-install -y \
+	&& apt-get install -y \
 		ca-certificates \
 		libtool-bin \
 		libpcre3-dev xz-utils \

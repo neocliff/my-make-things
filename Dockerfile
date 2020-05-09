@@ -1,7 +1,3 @@
-# syntax = docker/dockerfile:1.0-experimental
-# TODO: do we still need the 'syntax' line?
-
-#FROM ubuntu:18.04 AS builder
 FROM ubuntu:18.04 AS builder
 
 # label history
@@ -17,7 +13,7 @@ FROM ubuntu:18.04 AS builder
 #	u18.04v010 - multi-stage builds; requires DOCKER_BUILDKIT=1 in user
 #				environment and `"buildkit":true` entry in the `features` list
 #				in the /etc/docker/daemon.json file
-#	u18.04v011 - delete `RUN id`;
+#	u18.04v011 - delete `RUN id`; delete "experimental" text from first line
 
 LABEL maintainer="neocliff@mac.com"
 
