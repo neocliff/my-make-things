@@ -13,14 +13,15 @@ FROM ubuntu:18.04 AS base
 #	u18.04v010 - multi-stage builds; requires DOCKER_BUILDKIT=1 in user
 #				environment and `"buildkit":true` entry in the `features` list
 #				in the /etc/docker/daemon.json file
-#	u18.04v011 - delete `RUN id`; use --no-install-recommends
+#	u18.04v011 - delete `RUN id`; use --no-install-recommends; multi-stage
+#				builds
 
 LABEL maintainer="neocliff@mac.com"
 
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
-    && apt-get install -y \
+    && apt-get install -y --no-install-recommends \
         apt-utils ca-certificates wget libssl-dev \
         build-essential \
         g++-multilib automake autoconf \
@@ -158,9 +159,9 @@ ENV DEBIAN_FRONTEND noninteractive
 # removing build-essential, g++multilib, git, curl
 
 run apt-get update \
-	&& apt-get install -y \
+	&& apt-get install -y --no-install-recommends \
 		ca-certificates \
-		libtool-bin \
+		libtool-bin git \
 		libpcre3-dev xz-utils \
 		python3 python3-setuptools python3-pip \
 	&& rm -rf /var/lib/apt/lists/*
