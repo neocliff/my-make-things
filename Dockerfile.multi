@@ -43,9 +43,13 @@ WORKDIR /${build_dir}
 #                                                         #
 # ####################################################### #
 
+#
+# Build the artifacts for `m4`.
+#
+
 FROM base as m4_bin
 
- ARG m4_v=1.4.18
+ARG m4_v=1.4.18
 
 RUN cd /${build_dir} \
  	&& wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
@@ -54,6 +58,13 @@ RUN cd m4-${m4_v} \
     && ./configure --prefix=/usr \
     && make -j$((`nproc`+1)) \
     && make DEST_DIR=/${build_dir}/toolset install-strip
+
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
+
+#
+# Build the artifacts for `gawk`.
+#
 
 FROM base AS gawk_bin
 
@@ -69,6 +80,10 @@ RUN cd gawk-${gawk_v} \
 
 RUN cd /${build_dir} \
 	&& tar cvfJ toolset.tar.xz toolset
+
+#
+# Build the artifacts for `binutils`.
+#
 
 FROM base AS binutils_bin
 
@@ -86,6 +101,10 @@ RUN cd binutils-${binutils_v} \
 
 RUN cd /${build_dir} \
 	&& tar cvfJ toolset.tar.xz toolset
+
+#
+# Build the artifacts for `make`.
+#
 
 FROM base AS make_bin
 
@@ -148,19 +167,19 @@ FROM base AS cppcheck_bin
 
 RUN cd /${build_dir} \
 	&& wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
-    && tar xvf 1.90.tar.gz \
-    && cd cppcheck-1.90 \
+    && tar xvf 1.90.tar.gz
+RUN cd cppcheck-1.90 \
     && make MATCHCOMPILER=yes FILESDIR=/usr/share/cppcheck HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function" \
     && make FILESDIR=/usr/share/cppcheck DESTDIR=/${build_dir}/toolset install
 
 RUN cd /${build_dir} \
 	&& tar cvfJ toolset.tar.xz toolset
 
-# ##################################### #
-#                                       #
-# Final stage: Build the toolset Image. #
-#                                       #
-# ##################################### #
+# #################################################################### #
+#                                                                      #
+# Final stage: Build the toolset Image.                                #
+#                                                                      #
+# #################################################################### #
 
 FROM ubuntu:18.04
 
