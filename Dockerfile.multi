@@ -44,25 +44,6 @@ WORKDIR /${build_dir}
 # ####################################################### #
 
 #
-# Build the artifacts for `m4`.
-#
-
-FROM base as m4_bin
-
-ARG m4_v=1.4.18
-
-RUN cd /${build_dir} \
- 	&& wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
-    && tar -Jxf m4-${m4_v}.tar.xz
-RUN cd m4-${m4_v} \
-    && ./configure --prefix=/usr \
-    && make -j$((`nproc`+1)) \
-    && make DEST_DIR=/${build_dir}/toolset install-strip
-
-RUN cd /${build_dir} \
-	&& tar cvfJ toolset.tar.xz toolset
-
-#
 # Build the artifacts for `gawk`.
 #
 
@@ -196,19 +177,6 @@ run apt-get update \
 		libpcre3-dev xz-utils \
 		python3 python3-setuptools python3-pip \
 	&& rm -rf /var/lib/apt/lists/*
-
-#
-# Load the artifacts from the "m4_bin" stage.
-#
-
-COPY --from=m4_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
-
-RUN cd /tmp \
-	&& tar -xvf toolset.tar.xz
-
-RUN cp --recursive /tmp/toolset/* / \
-	&& cd / \
-	&& rm -rf /tmp/*
 
 #
 # Load the artifacts from the "gawk_bin" stage.
