@@ -14,7 +14,9 @@ FROM ubuntu:18.04 AS base
 #				environment and `"buildkit":true` entry in the `features` list
 #				in the /etc/docker/daemon.json file
 #	u18.04v011 - delete `RUN id`; use --no-install-recommends; multi-stage
-#				builds
+#				builds; removed several packages including sudo,
+#				build-essential, g++multilib, git, curl, doxygen, graphviz;
+#				re-included m4 because we are not including build-essential
 
 LABEL maintainer="neocliff@mac.com"
 
@@ -37,9 +39,21 @@ WORKDIR /${build_dir}
 
 # ####################################################### #
 #                                                         #
-# Download, configure, and install the 'utility' packages #
+# Download, configure, and install the tool packages.     #
 #                                                         #
 # ####################################################### #
+
+FROM base as m4_bin
+
+ ARG m4_v=1.4.18
+
+RUN cd /${build_dir} \
+ 	&& wget https://ftp.gnu.org/gnu/m4/m4-${m4_v}.tar.xz \
+    && tar -Jxf m4-${m4_v}.tar.xz
+RUN cd m4-${m4_v} \
+    && ./configure --prefix=/usr \
+    && make -j$((`nproc`+1)) \
+    && make DEST_DIR=/${build_dir}/toolset install-strip
 
 FROM base AS gawk_bin
 
@@ -155,8 +169,6 @@ ARG UID=1000
 ARG GID=1000
 
 ENV DEBIAN_FRONTEND noninteractive
-
-# removing build-essential, g++multilib, git, curl
 
 run apt-get update \
 	&& apt-get install -y --no-install-recommends \
