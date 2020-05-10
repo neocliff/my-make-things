@@ -1,4 +1,4 @@
-FROM ubuntu:18.04 AS builder
+FROM ubuntu:18.04 AS base
 
 # label history
 #   u18.04v001 - with CMake 3.17
@@ -13,15 +13,18 @@ FROM ubuntu:18.04 AS builder
 #	u18.04v010 - multi-stage builds; requires DOCKER_BUILDKIT=1 in user
 #				environment and `"buildkit":true` entry in the `features` list
 #				in the /etc/docker/daemon.json file
-#	u18.04v011 - delete `RUN id`; delete "experimental" text from first line
+#	u18.04v011 - delete `RUN id`; use --no-install-recommends; multi-stage
+#				builds; removed several packages including sudo,
+#				build-essential, g++multilib, git, curl, doxygen, graphviz;
+#				re-included m4 because we are not including build-essential
 
 LABEL maintainer="neocliff@mac.com"
 
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update \
-    && apt-get install -y \
-        apt-utils wget libssl-dev \
+    && apt-get install -y --no-install-recommends \
+        apt-utils ca-certificates wget libssl-dev \
         build-essential \
         g++-multilib automake autoconf \
         flex bison libtool-bin texinfo \
@@ -36,9 +39,15 @@ WORKDIR /${build_dir}
 
 # ####################################################### #
 #                                                         #
-# Download, configure, and install the 'utility' packages #
+# Download, configure, and install the tool packages.     #
 #                                                         #
 # ####################################################### #
+
+#
+# Build the artifacts for `gawk`.
+#
+
+FROM base AS gawk_bin
 
 ARG gawk_v=5.0.1
 
@@ -49,6 +58,15 @@ RUN cd gawk-${gawk_v} \
     && ./configure --prefix=/usr \
     && make -j$((`nproc`+1)) \
     && make DESTDIR=/${build_dir}/toolset install-strip
+
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
+
+#
+# Build the artifacts for `binutils`.
+#
+
+FROM base AS binutils_bin
 
 ARG binutils_v=2.34
 
@@ -62,6 +80,15 @@ RUN cd binutils-${binutils_v} \
     && make  -j$((`nproc`+1)) \
     && make DESTDIR=/${build_dir}/toolset install-strip
 
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
+
+#
+# Build the artifacts for `make`.
+#
+
+FROM base AS make_bin
+
 ARG make_v=4.3
 
 RUN cd /${build_dir} \
@@ -71,6 +98,9 @@ RUN cd make-${make_v} \
     && ./configure --prefix=/usr \
     && make -j$((`nproc`+1)) \
     && make DESTDIR=/${build_dir}/toolset install-strip
+
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
 
 # ########################################################### #
 #                                                             #
@@ -82,6 +112,8 @@ RUN cd make-${make_v} \
 # build process.                                              #
 #                                                             #
 # ########################################################### #
+
+FROM base AS gcc_bin
 
 ARG gcc_v=9.3.0
 
@@ -103,75 +135,8 @@ RUN mkdir gcc-${gcc_v}/build \
     && make -j$((`nproc`+1)) \
     && make DESTDIR=/${build_dir}/toolset install-strip
 
-# ############################################################ #
-#                                                              #
-# Install Gradle binaries. It is positioned here just in case  #
-# we have to build Gradle from source code rather than install #
-# the binaries.                                                #
-#                                                              #
-# ############################################################ #
-
-#                            NOTES
-# 1. We need to install 'unzip' to decompress the gradle-*.zip file.
-#    In certain circumstances, 'gzip' can decompress a .zip file but
-#    the Gradle .zip file does not meet the requirements.
-# 2. Gradle 6.3 supports OpenJDK 14. Ghidra appears to support
-#    OpenJDK 14 however the Installation Guide still says OpenJDK 11.
-#    I can't think of a reason why we would put Ghidra in a Docker
-#    container, for now stick with OpenJDK 11 because that will be
-#    on our dev instances.
-
-# ARG gradle_ver=6.3
-
-# RUN wget https://services.gradle.org/distributions/gradle-${gradle_ver}-bin.zip \
-#    && unzip gradle-${gradle_ver}-bin.zip -d /opt \
-#    && ln -s /opt/gradle-${gradle_ver} /opt/gradle \
-#    && rm -f /gradle-${gradle_ver}*
-
-# Add the gradle binaries to the path using Debian's alternatives system
-# RUN update-alternatives --install "/usr/bin/gradle" "gradle" "/opt/gradle/bin/gradle" 1 \
-#    && update-alternatives --set "gradle" "/opt/gradle/bin/gradle"
-
-# #########################################
-#                                         #
-# Build Google Test and associated tools. #
-#                                         #
-# #########################################
-
-#                             NOTE
-# we don't need this if `gcovr` provides adequate reports
-
-# RUN apt-get update \
-# 	&& apt-get install -y libjson-perl libperlio-gzip-perl \
-# 	&& rm -rf /var/lib/apt/lists/*
-
-# RUN git clone https://github.com/linux-test-project/lcov /lcov \
-# 	&& cd /lcov \
-# 	&& make install \
-# 	&& cd / \
-# 	&& rm -rf /lcov*
-
-#                           NOTE
-# Download and build CMake just for Google Test. Note that when we do the
-# `make install`, we are not installing it to `/${build_dir}` directory.
-# That is because we are *not* carrying the tool into future stages.
-
-# ARG cmake_ver=3.17.0
-
-# RUN wget https://github.com/Kitware/CMake/releases/download/v${cmake_ver}/cmake-${cmake_ver}.tar.gz \
-#     && tar -xf cmake-${cmake_ver}.tar.gz
-# RUN cd cmake-${cmake_ver} \
-#     && ./bootstrap --prefix=/usr \
-#     && make -j$((`nproc`+1)) \
-#     && make install
-
-# RUN cd /${build_dir} \
-# 	&& git clone https://github.com/google/googletest.git googletest \
-# 	&& mkdir googletest/gtest_build \
-# 	&& cd googletest/gtest_build \
-# 	&& cmake .. \
-# 	&& make -j$((`nproc`+1)) \
-# 	&& make DESTDIR=/${build_dir}/toolset install
+RUN cd /${build_dir} \
+	&& tar cvfJ toolset.tar.xz toolset
 
 # ########################## #
 #                            #
@@ -179,70 +144,113 @@ RUN mkdir gcc-${gcc_v}/build \
 #                            #
 # ########################## #
 
+FROM base AS cppcheck_bin
+
 RUN cd /${build_dir} \
 	&& wget https://github.com/danmar/cppcheck/archive/1.90.tar.gz \
-    && tar xvf 1.90.tar.gz \
-    && cd cppcheck-1.90 \
+    && tar xvf 1.90.tar.gz
+RUN cd cppcheck-1.90 \
     && make MATCHCOMPILER=yes FILESDIR=/usr/share/cppcheck HAVE_RULES=yes CXXFLAGS="-O2 -DNDEBUG -Wall -Wno-sign-compare -Wno-unused-function" \
     && make FILESDIR=/usr/share/cppcheck DESTDIR=/${build_dir}/toolset install
-
-# #################################### #
-#                                      #
-# Build the artifacts from this stage. #
-#                                      #
-# #################################### #
 
 RUN cd /${build_dir} \
 	&& tar cvfJ toolset.tar.xz toolset
 
-# ##################################### #
-#                                       #
-# Final stage: Build the toolset Image. #
-#                                       #
-# ##################################### #
+# #################################################################### #
+#                                                                      #
+# Final stage: Build the toolset Image.                                #
+#                                                                      #
+# #################################################################### #
 
-FROM ubuntu:18.04
-# FROM neocliff/toolset_base:u18.04v001
+FROM ubuntu:18.04 AS final
 
 # define an argument which can be passed during build time
 ARG UID=1000
+ARG GID=1000
 
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt-get update \
-    && apt-get install -y \
-        apt-utils curl sudo \
-        build-essential \
-        g++-multilib \
-        flex bison libtool-bin texinfo \
-        git doxygen graphviz \
-        python3 python3-pip \
-    && rm -rf /var/lib/apt/lists/*
+run apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		ca-certificates \
+		libtool-bin git \
+		libpcre3-dev xz-utils \
+		python3 python3-setuptools python3-pip \
+	&& rm -rf /var/lib/apt/lists/*
 
-# RUN sudo apt-get update \
-#     && apt-get install -y \
-#         curl sudo \
-#         git doxygen graphviz \
-#         python3 python3-pip \
-#     && rm -rf /var/lib/apt/lists/*
+#
+# Load the artifacts from the "gawk_bin" stage.
+#
 
-COPY --from=builder /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+COPY --from=gawk_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
 
 RUN cd /tmp \
 	&& tar -xvf toolset.tar.xz
 
-RUN sudo cp --recursive /tmp/toolset/* / \
+RUN cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
+# Load the artifacts from the "binutils_bin" stage.
+#
+
+COPY --from=binutils_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
+# Load the artifacts from the "make_bin" stage.
+#
+
+COPY --from=make_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
+# Load the artifacts from the "gcc_bin" stage.
+#
+
+COPY --from=gcc_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN cp --recursive /tmp/toolset/* / \
+	&& cd / \
+	&& rm -rf /tmp/*
+
+#
+# Load the artifacts from the "cppcheck_bin" stage.
+#
+
+COPY --from=cppcheck_bin /build_directory/toolset.tar.xz /tmp/toolset.tar.xz
+
+RUN cd /tmp \
+	&& tar -xvf toolset.tar.xz
+
+RUN cp --recursive /tmp/toolset/* / \
 	&& cd / \
 	&& rm -rf /tmp/*
 
 # need to relink libstdc++.so.6 because the installers don't seem to be doing
 # it for us. checking on the internet shows people doing the same thing. grr!
-RUN sudo rm /usr/lib/x86_64-linux-gnu/libstdc++.so.6 \
-	&& sudo ln -s  /usr/lib64/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
+RUN rm /usr/lib/x86_64-linux-gnu/libstdc++.so.6 \
+	&& ln -s  /usr/lib64/libstdc++.so.6 /usr/lib/x86_64-linux-gnu/libstdc++.so.6
 
 # final run of libtool to finish the 32- and 64-bit library installations.
-RUN sudo libtool --finish /usr/lib/../lib32 \
-	&& sudo libtool --finish /usr/lib/../lib
+RUN libtool --finish /usr/lib/../lib32 \
+	&& libtool --finish /usr/lib/../lib
 
 # add python modules we need
 RUN pip3 install pylint pytest gcovr
@@ -253,8 +261,10 @@ RUN pip3 install pylint pytest gcovr
 #                                                                  #
 # ################################################################ #
 
-RUN useradd -rm -d /home/user -s /bin/bash -u $UID user
-RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
+RUN groupadd -g ${GID} user \
+	&& useradd -rm -d /home/user -s /bin/bash -u ${UID} -g ${GID} user
+
+# RUN echo "user ALL=(ALL:ALL) NOPASSWD: ALL" | sudo tee /etc/sudoers.d/user
 USER user
 
 # Note that we are assigning a default working directory here. Normally, the
