@@ -15,8 +15,7 @@ FROM ubuntu:18.04 AS base
 #				in the /etc/docker/daemon.json file
 #	u18.04v011 - delete `RUN id`; use --no-install-recommends; multi-stage
 #				builds; removed several packages including sudo,
-#				build-essential, g++multilib, git, curl, doxygen, graphviz;
-#				re-included m4 because we are not including build-essential
+#				build-essential, g++multilib, git, curl, doxygen, graphviz
 
 LABEL maintainer="neocliff@mac.com"
 
