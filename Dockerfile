@@ -169,7 +169,7 @@ ARG GID=1000
 
 ENV DEBIAN_FRONTEND noninteractive
 
-run apt-get update \
+RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
 		ca-certificates \
 		libtool-bin git \
