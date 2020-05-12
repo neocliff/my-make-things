@@ -82,7 +82,7 @@ DEFINES_EXTRAS	=
 # this rule produces a set of object files that make up the binaries. this #
 # is done in two phases:
 #	1. for each file in ${*_SRC_FILES), change the extension to .o
-#	2. for each object file, prepend '${COMP_BIN_DIR)/'
+#	2. for each object file, prepend '${COMP_OBJ_DIR)/'
 #
 # then do the same for dependency files.
 
@@ -132,7 +132,7 @@ ${COMP_LIB_DIR}/${LIB_BUILT}: | ${OBJ_FILES}
 		$(shell rm -f ${COMP_LIB_DIR}/${LIB_BUILT})
 		@ECHO "creating the archive file..."
 		@${AR} -qsv ${COMP_LIB_DIR}/${LIB_BUILT} ${OBJ_FILES}
-		@echo "building tabl e of contents in: ${LIB_TOC}"
+		@echo "building table of contents in: ${LIB_TOC}"
 		@echo "Archive TOC for ${COMP_LIB_DIR}/${LIB_BUILT}" > ${LIB_TOC}
 		@echo "this file is : ${LIB_TOC}" >> ${LIB_TOC}
 		@nm --print-map ${COMP_LIB_DIR}/${LIB_BUILT} >> ${LIB_TOC}
