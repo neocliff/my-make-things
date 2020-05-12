@@ -10,8 +10,11 @@ SHELL = /bin/sh
 # do this here to be able to find files we are including.
 PROJ_ROOT ?= $(shell git rev-parse --show-toplevel)
 
-# now figure out where i'm located
-I_AM_AT = $(shell pwd)
+# now figure out where i'm located. need two versions of this:
+#	I_AM_AT_FULL = absolute path to the current working directory
+#	I_AM_AT_PART = is the part of ${I_AM_AT_FULL} minus ${PROJ_ROOT}
+I_AM_AT_FULL = $(shell pwd)
+I_AM_AT_PART = $(subst ${PROJ_ROOT}/,,${I_AM_AT_FULL})
 
 # figure out where the build_system directories are located.
 # we need these to locate things like compiler_rules.mk and
@@ -25,7 +28,7 @@ include ${BUILD_LIBRARY}/defaults.mk
 
 # this file defines what we are building. in particular, we
 # need the list of source files that make up the component.
-include ${I_AM_AT}/component.mk
+include ${I_AM_AT_FULL}/component.mk
 
 .PHONY: all check-config check-tools clean clean-all install install-strip
 .default: all
@@ -156,7 +159,8 @@ check-config:
 	@echo "PROJ_LIB                  is ${PROJ_LIB}"
 	@echo "PROJ_LIB_SHARED           is ${PROJ_LIB_SHARED}"
 	@echo "PROJ_DOXY_DOCS            is ${PROJ_DOXY_DOCS}"
-	@echo "I_AM_AT                   is ${I_AM_AT}"
+	@echo "I_AM_AT_FULL              is ${I_AM_AT_FULL}"
+	@echo "I_AM_AT_PART              is ${I_AM_AT_PART}"
 	@echo "BUILD_TYPE                is ${BUILD_TYPE}"
 	@echo "ARCH_TYPE                 is ${ARCH_TYPE}"
 	@echo "CFLAGS                    is ${CFLAGS}"

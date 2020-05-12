@@ -34,11 +34,11 @@ BIN_BUILT=${MODULE_NAME}.${MODULE_SUFFIX}
 
 # define the list of include directories to seach in order. do not include '-I'
 # as it is added by the make system automatically . examples of paths are:
-#	${I_AM_AT}/include - the 'include' subdirectory in component directory
+#	${I_AM_AT_FULL}/include - the 'include' subdirectory in component directory
 #	${PROJ_SRC_SHARED}/interfaces/include - the 'include' subdirectory in
 #			the ' shared/ component ' directory
 #	${PROJ_SRC}/${BUILD_FOR}/include - the 'include' subdirectory of the component
-INCLUDE_DIRS = ${I_AM_AT}/include
+INCLUDE_DIRS = ${I_AM_AT_FULL}/include
 
 #                                WARNING
 # when adding source files to EXPORTED_INTERFACES, EXTERNAL_SOURCES, or

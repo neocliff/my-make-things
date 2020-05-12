@@ -1,7 +1,7 @@
 # component.mk - component's description file
 
 INCLUDE_DIRS = \
-	${I_AM_AT}/include
+	${I_AM_AT_FULL}/include
 
 C_SRC_FILES = a.c a2.c
 

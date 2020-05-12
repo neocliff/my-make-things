@@ -55,7 +55,7 @@ POST_BUILD = ${BUILD_UTILITIES}/post_build_strip.sh
 endif
 
 # define the path to the project's src directory. this is needed if
-# we need files that are not subordinate to ${I_AM_AT}. we also
+# we need files that are not subordinate to ${I_AM_AT_FULL}. we also
 # need to keep track of where the shared source code is kept. on
 # some projects it is gathered components under a single 'shared'
 # directory. a similar concept can be used for third-party source
@@ -73,31 +73,31 @@ PROJ_DOXY_DOCS  ?= ${PROJ_ROOT}/doxy-docs
 # as the directory for obj files, the INCLUDE_DIRS is a list of
 # directories that is scanned to locate header files. that
 # means we could have multiple paths.
-INCLUDE_DIRS ?= -I${I_AM_AT}/include
+INCLUDE_DIRS ?= -I${I_AM_AT_FULL}/include
 
 # define the default paths for everything else. these can be
 # redefined in the component.mk files using something like the
 # following syntax:
 #		OBJDIR = my/obj/dir/path
-COMP_DEP_ROOT	?= ${I_AM_AT}/dep
+COMP_DEP_ROOT	?= ${I_AM_AT_FULL}/dep
 COMP_DEP_DIR	?= ${COMP_DEP_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
-COMP_OBJ_ROOT	?= ${I_AM_AT}/obj
+COMP_OBJ_ROOT	?= ${I_AM_AT_FULL}/obj
 COMP_OBJ_DIR	?= ${COMP_OBJ_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
-COMP_LIB_ROOT	?= ${I_AM_AT}/lib
+COMP_LIB_ROOT	?= ${I_AM_AT_FULL}/lib
 COMP_LIB_DIR	?= ${COMP_LIB_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
-COMP_BIN_ROOT	?= ${I_AM_AT}/bin
+COMP_BIN_ROOT	?= ${I_AM_AT_FULL}/bin
 COMP_BIN_DIR	?= ${COMP_BIN_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
 
 # create a few defaults for Doxygen document generation. the settings for
 # DOXY_PREPROCESSOR_DEFINES occurs in `compiler_rules.mk`. that is where the
 # defines are gathered together.
 DOXY_CONFIG     ?= ${BUILD_LIBRARY}/Doxyfile
-DOXY_ROOT       ?= ${I_AM_AT}/doxy-docs
+DOXY_ROOT       ?= ${I_AM_AT_FULL}/doxy-docs
 DOXY_OUTPUT_DIR ?= ${DOXY_ROOT}/${BUILD_TYPE}/${ARCH_TYPE}
-DOXY_COMPONENT  ?= $(shell echo ${I_AM_AT} | \
+DOXY_COMPONENT  ?= $(shell echo ${I_AM_AT_FULL} | \
 						   sed -e 's,${PROJ_ROOT}/,,')
-DOXY_INPUT_DIR  ?= ${I_AM_AT}
-DOXY_README     ?= ${I_AM_AT}/README.md
+DOXY_INPUT_DIR  ?= ${I_AM_AT_FULL}
+DOXY_README     ?= ${I_AM_AT_FULL}/README.md
 DOXY_NUMBER     ?= $(shell git show --format="%h" --no-patch)
 DOXY_INCLUDE_DIRS ?= ${INCLUDE_DIRS}
 

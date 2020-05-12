@@ -12,8 +12,8 @@ S_DIR_VERSION = 200105
 # is passed to Doxygen as is *and* is transformed into C_INCLUDE_DIRS below.
 # Doxygen doesn't want the '-I' but the compiler does.
 INCLUDE_DIRS = \
-	${I_AM_AT}/include \
-	${I_AM_AT}/c_dir/include \
+	${I_AM_AT_FULL}/include \
+	${I_AM_AT_FULL}/c_dir/include \
 	${PROJ_SRC}/a_dir/include \
 	${PROJ_SRC}/b_dir/include \
 	${PROJ_SRC}/shared/s_dir_${S_DIR_VERSION}/include
