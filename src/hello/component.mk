@@ -18,7 +18,7 @@ INCLUDE_DIRS = \
 	${PROJ_SRC}/b_dir/include \
 	${PROJ_SRC}/shared/s_dir_${S_DIR_VERSION}/include
 
-C_SRC_FILES	:=	\
+C_SRC_FILES	=	\
 				hello.c \
 				c_dir/c.c
 

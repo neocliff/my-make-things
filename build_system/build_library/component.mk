@@ -1,9 +1,9 @@
-# component . mk - component description file for 'COMPONENT_NAME ·
+# component.mk - component description file for 'COMPONENT_NAME ·
 #
 #						TAILORING INSTRUCTIONS
 # this file contains the component-specific build instructions. in POWDER
 # KEG, we build one of three things: a complete binary, an archive, or a set of
-# object files . if building a binary, use the BIN_BUILT noun. if building an
+# object files. if building a binary, use the BIN_BUILT noun. if building an
 # archive, use the LIB_BUILT noun. if building to object files, no specific
 # noun is required; OBJ_FILES is built automatically .
 #
