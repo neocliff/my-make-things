@@ -99,7 +99,7 @@ using the latest version of Ubuntu 18.04 (desktop). If you build the container,
 expect it to take quiet a bit of time (on the order of an hour).
 
 Note that `Dockerfile.alp` is an incomplete attempt to build the toolchain on the
-latest Alpine Linux distrobution (BusyBox-based). The main problem I have had is
+latest Alpine Linux distribution (BusyBox-based). The main problem I have had is
 Alpine is based on musl's clib rather than GCC's clib. This causes no end of
 problems when compiling GCC 9.2.0. I may or may not finish that project.
 
@@ -191,10 +191,10 @@ to download and build them but they are commented out. This is not the case with
 * gcc-9.3.0 with gmp (4.3.2 or later), mpfr (3.0.1 or later), mpc (1.0.1 or
 later), isl^ (0.15 or later), and zstd^ (latest)
 
-^ The isl and zstd libraries are required to use the Link-Time Optimization
-features in GCC and the new linker/loader, gold.
+^ The `isl` and `zstd` libraries are required to use the Link-Time Optimization
+features in GCC and the new linker/loader, `gold`.
 
-Everything except binutils and gcc is a stock build process. Best practice is
+Everything except `binutils` and `gcc` is a stock build process. Best practice is
 to create a separate build directory outside of the source directory. It's only
 required for building GCC but recommended for the other elements. The generic
 process looks like:
